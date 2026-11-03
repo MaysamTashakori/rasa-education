@@ -21,4 +21,5 @@
 | [06-business-model.md](06-business-model.md) | مدل درآمد و ارزش برای والدین |
 | [07-security-privacy.md](07-security-privacy.md) | امنیت، رمزنگاری و حریم خصوصی |
 | [08-deployment.md](08-deployment.md) | استقرار روی سرور و میرورها |
+| [09-platform-architecture.md](09-platform-architecture.md) | نقش‌ها، ایجنت‌ها، اعلان بله/تلگرام، مارکت‌پلیس |
 | [CHANGELOG.md](CHANGELOG.md) | تاریخچهٔ تغییرات |
