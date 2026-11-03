@@ -1,0 +1,19 @@
+{
+  "name": "رسا اجوکیشن — کلاس دوم",
+  "short_name": "رسا · کلاس دوم",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F7F7F7",
+  "theme_color": "#F7F7F7",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
