@@ -20,4 +20,5 @@
 | [05-curriculum-iran.md](05-curriculum-iran.md) | ابزارها بر اساس مقطع در نظام آموزشی ایران |
 | [06-business-model.md](06-business-model.md) | مدل درآمد و ارزش برای والدین |
 | [07-security-privacy.md](07-security-privacy.md) | امنیت، رمزنگاری و حریم خصوصی |
+| [08-deployment.md](08-deployment.md) | استقرار روی سرور و میرورها |
 | [CHANGELOG.md](CHANGELOG.md) | تاریخچهٔ تغییرات |
