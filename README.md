@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | **نسخهٔ تک‌فایلی (آفلاین)** | [`dist/rasa-planner.html`](dist/rasa-planner.html) — دانلود کن و با Chrome / Edge / Safari باز کن |
-| **وب‌اپ نصب‌شدنی (PWA)** | https://maysamtashakori.github.io/rasa-education/ |
+| **وب‌اپ نصب‌شدنی (PWA)** | https://edu.5-9-89-137.sslip.io/ (موقت) · GitHub Pages: https://maysamtashakori.github.io/rasa-education/ |
 | **برندبوک** | [`brand/brandbook.html`](brand/brandbook.html) · نسخهٔ زنده: https://maysamtashakori.github.io/rasa-education/brand.html |
 | **اسناد زنده** | [`docs/`](docs/README.md) |
 
