@@ -133,7 +133,7 @@ function home(){
     <div class="hl-copy">
       <p class="st-eyebrow" dir="ltr">LEARNING × FAMILY</p>
       <h1 class="hl-h1">هر روز یک گام،<br><span class="st-grad">خانواده می‌بیند.</span></h1>
-      <svg class="st-ecg" viewBox="0 0 480 44" preserveAspectRatio="none" aria-hidden="true"><path class="st-ecg-base" d="M0 22 H480"/><path class="st-ecg-line" pathLength="1" d="M0 22 H60 L70 8 L80 36 L90 22 H150 L160 8 L170 36 L180 22 H240 L250 8 L260 36 L270 22 H330 L340 8 L350 36 L360 22 H420 L430 8 L440 36 L450 22 H480"/></svg>
+      <svg class="st-steps" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="var(--line2)" stroke-width="1.5"><path d="M470 58 H428 V44 H386 V30 H344 V16 H302"/><path d="M470 52 H434 V40 H398 V28 H362 V18" opacity=".5"/></g><path id="stPath" d="M470 58 H428 V44 H386 V30 H344 V16 H302" fill="none" stroke="var(--y)" stroke-width="2.5" stroke-dasharray="4 6"/><circle r="6" fill="var(--y)"><animateMotion dur="7s" repeatCount="indefinite" rotate="0"><mpath href="#stPath"/></animateMotion></circle><path d="M302 8 l4.5 9 10 .8 -7.4 6.8 2.1 9.8 -9.2-5.4 -9.2 5.4 2.1-9.8 -7.4-6.8 10-.8z" fill="var(--y)"><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.8;1" dur="7s" repeatCount="indefinite"/></path></svg>
       <p class="hl-sub">رسا آموزش پلتفرم یادگیری گام‌به‌گام است: درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — برای دانش‌آموزان، والدین و معلمان.</p>
       <form class="search hl-search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
       <div class="hl-cta"><a class="btn y lg" href="/c">دیدن کاتالوگ</a><a class="btn ghost lg hl-ghost" href="/quiz">آزمون رایگان</a></div>
@@ -150,6 +150,7 @@ function home(){
         <div class="hl-fb" id="dq-f"></div>
       </div>
       <div class="hl-demo-f"><span class="st-tag" style="--c:var(--ok)">کارنامه</span><span class="dim" style="font-size:12px">بلد است ۷۲٪ · در حال تمرین ۱۸٪ · گام بعدی ۱۰٪</span></div>
+    <div class="hl-today" id="today"><div class="hl-today-h"><b>📋 امروز</b><span class="dim" id="td-n">۰ از ۳</span></div><div class="hl-prog"><i id="td-p" style="width:0%"></i></div><div class="hl-tasks" id="td-t"></div><div class="hl-streak">🔥 <b id="td-s">۴</b> روز پیاپی مطالعه</div></div>
     </div>
   </div></section>
   <div class="hl-band" aria-hidden="true"><div class="hl-band-in">${[0,1].map(k=>`<div class="hl-band-r" ${k?'aria-hidden="true"':''}>${band.map(b=>`<span>${b}<i>✦</i></span>`).join('')}</div>`).join('')}</div></div>
@@ -169,7 +170,7 @@ function home(){
 
   const hf=$('#hs')||$('#hss');if(hf)hf.onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/search?q='+encodeURIComponent(q))};
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
-  journeyRail();bindDemo();
+  journeyRail();bindDemo();bindToday();
   const rv=$$('.st-reveal'),io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.dataset.in='true';io2.unobserve(e.target)}}),{threshold:.1});
   rv.forEach((el,i)=>{el.style.setProperty('--i',i%6);io2.observe(el)});
   $$('.st-spot').forEach(el=>el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true}));
@@ -185,6 +186,11 @@ function bindDemo(){const root=$('#demo');if(!root)return;let i=0,score=0;
    if(ok){score++;$('#dq-f').innerHTML=`<b class="hl-ok">آفرین!</b> ${Q.f}`;setTimeout(()=>{i=(i+1)%DEMO_Q.length;show()},1600)}
    else $('#dq-f').innerHTML=`<b class="hl-no">نه — پاسخ درست: ${Q.o[Q.a]}</b> ${Q.f} <button class="hl-next" id="dq-next">سؤال بعدی</button>`;$('#dq-next').onclick=()=>{i=(i+1)%DEMO_Q.length;show()}})};
  show()}
+const TODAY_TASKS=[['۱۰ دقیقه ریاضی — صفحهٔ ۴۲','lesson'],['۵ واژهٔ جدید فارسی','vocab'],['آزمونک علوم — ۵ سؤال','quiz']];
+function bindToday(){const root=$('#today');if(!root)return;const KEY='rasa-today';let done={};try{done=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+ const paint=()=>{const n=Object.values(done).filter(Boolean).length;$('#td-n').textContent=`${fa(n)} از ${fa(TODAY_TASKS.length)}`;$('#td-p').style.width=(n/TODAY_TASKS.length*100)+'%';
+  $('#td-t').innerHTML=TODAY_TASKS.map((t,i)=>`<button class="hl-task ${done[i]?'on':''}" data-i="${i}"><i></i><span>${t[0]}</span></button>`).join('')};
+ paint();$('#td-t').onclick=e=>{const b=e.target.closest('.hl-task');if(!b)return;const i=+b.dataset.i;done[i]=!done[i];localStorage.setItem(KEY,JSON.stringify(done));paint()}}
 function journeyRail(){const rn=$('#jrn');if(!rn)return;
   const sts=[...$$('[data-st]')];
   rn.innerHTML=sts.map((s,i)=>`<button class="jr-node ${i===0?'on':''}" data-i="${i}" data-n="${s.dataset.sn}" aria-label="${s.dataset.sn}">${s.dataset.st}</button>`).join('');
