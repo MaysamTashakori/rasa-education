@@ -750,3 +750,28 @@ a.st-tag:hover{color:var(--ink);border-color:var(--line2)}
 .lv-item em{margin-inline-start:auto;font-style:normal;font-size:10px;color:var(--ok);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);border-radius:99px;padding:2px 8px}
 @media(max-width:960px){.wk-grid{grid-template-columns:repeat(4,1fr)}.bdg-row{grid-template-columns:repeat(3,1fr)}.lv-feed{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.wk-grid{grid-template-columns:repeat(2,1fr)}.bdg-row{grid-template-columns:repeat(2,1fr)}.lv-feed{grid-template-columns:1fr}}
+/* phone: jalali calendar + real report + real planner iframe */
+.ph-cal,.ph-rc,.ph-planner{border:1px solid var(--line);border-radius:20px;background:var(--card);padding:14px 16px}
+.ph-calw{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0 4px}
+.ph-calw span{text-align:center;font-size:9px;color:var(--dim);font-weight:800}
+.ph-calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.ph-cd{aspect-ratio:1;display:grid;place-items:center;font-size:10.5px;font-weight:700;border-radius:8px;color:var(--ink);font-style:normal}
+.ph-cd.off{visibility:hidden}
+.ph-cd.today{background:var(--y);color:#111;font-weight:900;box-shadow:0 0 0 2px color-mix(in srgb,var(--y) 35%,transparent)}
+.ph-cd.study{position:relative}
+.ph-cd.study::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;border-radius:99px;background:var(--cy)}
+.ph-call{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:10.5px;color:var(--dim)}
+.ph-rc .rc{grid-template-columns:1fr;gap:8px}
+.ph-rc .rc>div{padding:10px 12px;border-radius:12px}
+.ph-rc .rc .k{font-size:11px;margin-bottom:4px}
+.ph-rc .rc>div>div{font-size:10.5px!important}
+.ph-rc .ladder{height:64px;gap:5px}
+.ph-rc .ladder i span{font-size:9px;top:-16px}
+.ph-rc .tbl{font-size:10px}
+.ph-rc .tbl th,.ph-rc .tbl td{padding:4px 6px}
+.ph-rc h2{font-size:15px!important}
+.ph-rc .eyebrow{font-size:9px!important}
+.ph-rc .dim{font-size:10px!important}
+.ph-rc .btn{display:none}
+.ph-planner iframe{display:block;width:100%;height:300px;border:0;border-radius:14px;margin-top:10px;background:#fff}
+@media(max-width:560px){.ph-planner iframe{height:340px}}

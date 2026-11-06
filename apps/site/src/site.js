@@ -150,15 +150,9 @@ function home(){
       <div class="br-stage" id="br-stage"></div>
       <div class="br-bar"><i id="br-p"></i></div>
     </div>
-    <div class="br-report">
-      <div class="br-rh"><span class="st-eyebrow" dir="ltr">SMART REPORT</span><span class="dim" style="font-size:11px">کارنامهٔ هوشمند — نمونه</span></div>
-      <div class="br-rbars">
-        <div class="br-rb"><span class="br-rl">بلد است</span><div class="br-rtrack"><i style="width:72%;background:var(--ok)"></i></div><b>۷۲٪</b></div>
-        <div class="br-rb"><span class="br-rl">در حال تمرین</span><div class="br-rtrack"><i style="width:18%;background:var(--y)"></i></div><b>۱۸٪</b></div>
-        <div class="br-rb"><span class="br-rl">گام بعدی</span><div class="br-rtrack"><i style="width:10%;background:var(--cy)"></i></div><b>۱۰٪</b></div>
-      </div>
-      <p class="br-rf">«مبحث «عددهای صحیح» را یک گام دیگر تمرین کن؛ فردا مرور کوتاهش در برنامه‌ست.»</p>
-    </div>
+    <div class="ph-cal" id="ph-cal"></div>
+    <div class="ph-rc" id="ph-rc"></div>
+    <div class="ph-planner"><div class="br-rh"><span class="st-eyebrow" dir="ltr">RASA PLANNER</span><span class="dim" style="font-size:10px">برنامه‌ریز واقعی — زنده</span></div><iframe src="/planner/" title="برنامه‌ریز رسا آموزش" loading="lazy" tabindex="-1"></iframe></div>
         <div class="br-bot">
           <div class="br-bh"><i>🧭</i> رسا آموزش · بله</div>
           <div class="br-msg"><b>کارنامهٔ امروز امیر</b><br>ریاضی ۸/۱۰ · علوم ۷/۱۰<br><span class="dim">گام بعدی: کسرها — ۱۲ دقیقه مرور در برنامه‌ست.</span></div>
@@ -197,7 +191,7 @@ function home(){
 
   const hf=$('#hs')||$('#hss');if(hf)hf.onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/search?q='+encodeURIComponent(q))};
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
-  journeyRail();bindLesson();bindTabs();
+  journeyRail();bindLesson();bindPhone();bindTabs();
   const rv=$$('.st-reveal'),io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.dataset.in='true';io2.unobserve(e.target)}}),{threshold:.1});
   rv.forEach((el,i)=>{el.style.setProperty('--i',i%6);io2.observe(el)});
   $$('.st-spot').forEach(el=>el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true}));
@@ -302,6 +296,25 @@ async function product(id){
 function reviewModal(p){let st=5;const m=modal(`<h2 style="font-size:20px">نظر شما دربارهٔ «${esc(p.title)}»</h2><div class="row mt" id="stars" style="font-size:30px;cursor:pointer">${[1,2,3,4,5].map(i=>`<span data-s="${i}" class="y">★</span>`).join('')}</div><div class="f mt"><textarea class="in" id="rt" placeholder="تجربهٔ شما برای خانواده‌های دیگر مفید است"></textarea></div><button class="btn y" id="rs" style="width:100%">ثبت نظر</button><p class="dim" style="font-size:12px">نظر پس از بازبینی منتشر می‌شود.</p>`);
   $('#stars',m).onclick=e=>{const s=e.target.dataset.s;if(!s)return;st=+s;$$('#stars span',m).forEach((x,i)=>x.style.opacity=i<st?1:.25)};
   $('#rs',m).onclick=async()=>{try{await api('store/review',{body:{pid:p.id,stars:st,text:$('#rt',m).value}});closeModal();toast('نظر شما ثبت شد و پس از بازبینی منتشر می‌شود')}catch(e){toast(e.message)}}}
+
+/* ===== Jalali calendar (same algorithm as planner core.js) ===== */
+const _dv=(a,b)=>~~(a/b),_md=(a,b)=>a-~~(a/b)*b;
+function _jalCal(jy){const br=[-61,9,38,199,426,686,756,818,1111,1181,1210,1635,2060,2097,2192,2262,2324,2394,2456,3178];let bl=br.length,gy=jy+621,leapJ=-14,jp=br[0],jm,jump,leap,n,i;for(i=1;i<bl;i++){jm=br[i];jump=jm-jp;if(jy<jm)break;leapJ+=_dv(jump,33)*8+_dv(_md(jump,33),4);jp=jm}n=jy-jp;leapJ+=_dv(n,33)*8+_dv(_md(n,33)+3,4);if(_md(jump,33)===4&&jump-n===4)leapJ++;const leapG=_dv(gy,4)-_dv((_dv(gy,100)+1)*3,4)-150,march=20+leapJ-leapG;if(jump-n<6)n=n-jump+_dv(jump+4,33)*33;leap=_md(_md(n+1,33)-1,4);if(leap===-1)leap=4;return{leap,gy,march}}
+function _g2d(gy,gm,gd){let d=_dv((gy+_dv(gm-8,6)+100100)*1461,4)+_dv(153*_md(gm+9,12)+2,5)+gd-34840408;return d-_dv(_dv(gy+100100+_dv(gm-8,6),100)*3,4)+752}
+function _d2g(jdn){let j=4*jdn+139361631;j=j+_dv(_dv(4*jdn+183187720,146097)*3,4)*4-3908;const i=_dv(_md(j,1461),4)*5+308;const gd=_dv(_md(i,153),5)+1,gm=_md(_dv(i,153),12)+1,gy=_dv(j,1461)-100100+_dv(8-gm,6);return{gy,gm,gd}}
+function _j2d(jy,jm,jd){const r=_jalCal(jy);return _g2d(r.gy,3,r.march)+(jm-1)*31-_dv(jm,7)*(jm-7)+jd-1}
+function _d2j(jdn){const gy=_d2g(jdn).gy;let jy=gy-621;const r=_jalCal(jy);const f=_g2d(gy,3,r.march);let k=jdn-f,jm,jd;if(k>=0){if(k<=185){jm=1+_dv(k,31);jd=_md(k,31)+1;return{jy,jm,jd}}k-=186}else{jy--;k+=179;if(r.leap===1)k++}jm=7+_dv(k,30);jd=_md(k,30)+1;return{jy,jm,jd}}
+const _JMON=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+const _JWDS=['ش','ی','د','س','چ','پ','ج'];
+const _jLen=(jy,jm)=>jm<=6?31:jm<=11?30:(_jalCal(jy).leap===0?30:29);
+const _now=new Date(),_iso=`${_now.getFullYear()}-${String(_now.getMonth()+1).padStart(2,'0')}-${String(_now.getDate()).padStart(2,'0')}`;
+const _jNow=_d2j(_g2d(_now.getFullYear(),_now.getMonth()+1,_now.getDate()));
+const _jFirst=_j2d(_jNow.jy,_jNow.jm,1),_jWdi=(_jFirst+2)%7;
+const _studyDays=new Set([3,7,12,15,19,22,26,29]); // sample study days this month
+function bindPhone(){
+ const cal=$('#ph-cal');if(cal){const cells=[];for(let i=0;i<_jWdi;i++)cells.push('<i class="ph-cd off"></i>');for(let d=1;d<=_jLen(_jNow.jy,_jNow.jm);d++){const iso=_d2g(_j2d(_jNow.jy,_jNow.jm,d));const g=_d2g(iso);const isToday=d===_jNow.jd;cells.push(`<i class="ph-cd ${isToday?'today':''} ${_studyDays.has(d)?'study':''}">${fa(d)}</i>`)}
+  cal.innerHTML=`<div class="br-rh"><span class="st-eyebrow" dir="ltr">CALENDAR</span><b style="font-size:12px">${_JMON[_jNow.jm-1]} ${fa(_jNow.jy)}</b></div><div class="ph-calw">${_JWDS.map(w=>`<span>${w}</span>`).join('')}</div><div class="ph-calgrid">${cells.join('')}</div><div class="ph-call"><i>🟡</i> امروز · <i class="ph-cd study" style="display:inline-grid;place-items:center;width:14px;height:14px;border-radius:4px;font-size:8px"></i> روز مطالعه</div>`}
+ const rc=$('#ph-rc');if(rc)reportCard(rc,{learner:'امیر',title:'ریاضی هشتم',attempts:[{score:6,total:10,at:Date.now()-6*864e5},{score:7,total:10,at:Date.now()-3*864e5},{score:9,total:10,at:Date.now()}],topics:[{name:'عددهای صحیح',score:5,total:5},{name:'محور عدد',score:4,total:5},{name:'ضرب گویا',score:2,total:5},{name:'تقسیم گویا',score:1,total:4}]})}
 
 // Narrative report card: «بلد است / در حال تمرین / گام بعدی» + step ladder
 function reportCard(el,{learner,title,attempts,topics}){
