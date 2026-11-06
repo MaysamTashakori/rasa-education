@@ -115,40 +115,57 @@ const SERVICES=[
   ['۱۰','پشتیبانی درسی','تیکت، ربات و پاسخ‌گویی انسانی — کنار خانواده هستیم.','پشتیبانی','#FF8A65','/support'],
   ['۱۱','تعرفه و اشتراک','ابزارهای پایه رایگان؛ محتواهای ویژه با پرداخت امن زرین‌پال.','مالی','#8A8A8A','/pricing']
 ];
-const SVC_HOME=[
-  ['کانال‌های دسترسی','کانال‌ها',[['وب‌اپ موبایل (PWA)','همهٔ خدمات بدون نصب، روی هر دستگاه','/planner/'],['ربات بله','یادآوری، کارنامه و پیام‌رسانی مستقیم','/me#notice'],['ربات تلگرام','اطلاع‌رسانی و ارتباط با خانواده','/me#notice']]],
-  ['خدمات یادگیری','یادگیری',[['درس‌های تعاملی','گام‌های کوچک با شبیه‌ساز و بازخورد فوری','/c?kind=lesson'],['جزوه‌های گام‌به‌گام','مرحله‌به‌مرحله با تمرین و پاسخ','/c?kind=booklet'],['مسیرهای یادگیری','از ابتدا تا تسلط، مرتب و شماره‌دار','/#paths'],['آزمون آنلاین','بانک سؤال واقعی بر اساس مقطع و درس','/quiz']]],
-  ['خدمات ردیابی','ردیابی',[['کارنامهٔ هوشمند','«بلد است، در حال تمرین، گام بعدی» + ارسال به والد','/me#report'],['برنامه‌ریز درسی','برنامهٔ هفتگی، مرور فاصله‌دار، پشتیبان ابری','/planner/'],['اطلاع‌رسانی والد','یادآوری روال، مشق و گزارش هفتگی در ربات','/me#notice']]],
-  ['بازار و کسب‌وکار','بازار',[['فروشگاه کاتالوگ','دسته‌بندی‌شده با جست‌وجو و پیش‌نمایش','/c'],['بازار سازندگان','جزوه و گزارش سازندگان مستقل','/creators'],['تعرفه و اشتراک','هستهٔ رایگان + محتوای ویژه با زرین‌پال','/pricing']]]
-];
 function home(){
-  const st=S.store,live=st.products.filter(p=>p.status==='live'),lv=st.live||{};
-  setMeta('رسا آموزش · گام‌به‌گام، تا رسیدن','رسا آموزش: درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند، برنامه‌ریز درسی و بازار سازندگان برای خانواده‌ها و مدارس ایران.');
-  let pg=0;
-  main().innerHTML=`<section class="nt-hero" data-st="۰۰" data-sn="شروع"><div class="nt-margin" aria-hidden="true"><i></i><i></i><i></i></div><div class="wrap nt-heroin">
-  <div class="nt-stamp"><span class="live-dot"></span>فروشگاه محصولات آموزشی تعاملی · ${fa(lv.attempts||0)} آزمونک امروز</div>
-  <h1 class="nt-title"><span>گام‌به‌گام،</span><span class="nt-hl">تا رسیدن.</span></h1>
-  <p class="nt-lead">درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — سازمان‌یافته در یک پلتفرم.</p>
-  <form class="search nt-search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
-  <div class="nt-stats">${[['محصول زنده',live.length],['گام تعاملی',live.reduce((s,p)=>s+(p.meta?.steps||0),0)],['آزمونک امروز',lv.attempts||0],['خانوادهٔ فعال',lv.families||0]].map(x=>`<div><b data-cu="${x[1]}">۰</b><span>${x[0]}</span></div>`).join('')}</div>
-  </div></section>
-  <div class="nt-tear" aria-hidden="true"></div>
-  <aside class="jr-rail" id="jr" aria-hidden="true"><div class="jr-line"></div><div class="jr-dot" id="jrd"></div><div class="jr-nodes" id="jrn"></div></aside>
-  ${SVC_HOME.map(([g,sn,items],gi)=>`<section class="nt-sec" data-st="${fa(gi+1).padStart(2,'۰')}" data-sn="${sn}"><div class="wrap"><div class="nt-sh"><span class="nt-pg">لایهٔ ${fa(gi+1)}</span><h2>${g}</h2><span class="nt-rule"></span></div>
-  <div class="tkts">${items.map((x,i)=>`<a class="tkt" style="--c:${['#4BE8E2','#F4D438','#4BE68A','#7C9CFF'][gi]};--rot:${i%2?'.4deg':'-.4deg'}" href="${x[2]}"><span class="tkt-stub"><b>${fa(++pg).padStart(2,'۰')}</b><i>${['کانال','یادگیری','ردیابی','بازار'][gi]}</i><span class="tkt-bc"></span></span><span class="tkt-body"><strong>${x[0]}</strong><em>${x[1]}</em></span><span class="tkt-a">←</span></a>`).join('')}</div></div></section>`).join('')}
-  <div class="nt-tear" aria-hidden="true"></div>
-  <section class="nt-sec" data-st="۰۵" data-sn="ویترین"><div class="wrap"><div class="nt-sh"><span class="nt-pg">ویترین</span><h2>تازه و محبوب کاتالوگ</h2><span class="nt-rule"></span><a class="btn sm ghost" href="/c">همه ←</a></div>
-  <div class="grid3">${st.products.slice(0,8).map(pcard).join('')}</div></div></section>
-  ${st.paths?.length?`<section class="nt-sec" id="paths" data-st="۰۶" data-sn="مسیرها"><div class="wrap"><div class="nt-sh"><span class="nt-pg">مسیرها</span><h2>مسیرهای یادگیری</h2><span class="nt-rule"></span></div>
-  <div class="hp-paths">${st.paths.map((pa,pi)=>`<div class="path hp-path" style="--c:${esc(pa.color||'#F4D438')}"><div class="hp-pnum">${fa(pi+1).padStart(2,'۰')}</div><div class="row"><span style="font-size:26px">${esc(pa.icon||'🧭')}</span><div style="flex:1"><h3 style="font-size:17px">${esc(pa.title)}</h3><div class="dim" style="font-size:12.5px">${esc(pa.audience||'')}</div></div><span class="tag" style="--c:var(--mute)">${fa(pa.steps.length)} گام</span></div>
-  <p class="mute" style="font-size:13.5px;margin:10px 0 14px">${esc(pa.desc)}</p>
-  <div class="psteps">${pa.steps.map((s,i)=>`<a class="pstep ${s.status==='soon'?'soon':''}" href="/p/${esc(s.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(s.title)}</span></a>`).join('')}</div>
-  <a class="btn sm ghost mt" href="/p/${esc(pa.steps[0].id)}" style="margin-top:14px">شروع مسیر ←</a></div>`).join('')}</div></div></section>`:''}
-  <div class="nt-tear" aria-hidden="true"></div>
-  <section class="nt-sec"><div class="wrap"><div class="cta"><div><h2 class="h2" style="font-size:clamp(24px,3.4vw,38px)">اولین گام را همین حالا بردارید</h2><p class="mute" style="margin:8px 0 0">ثبت‌نام رایگان است و در کمتر از یک دقیقه انجام می‌شود.</p></div><div class="row wrapr"><a class="btn y" href="/c">دیدن کاتالوگ</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/quiz">آزمون آنلاین</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/services">همهٔ خدمات</a></div></div></div></section>`;
-  $('#hs').onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/search?q='+encodeURIComponent(q))};
+  const st=S.store,live=st.products.filter(p=>p.status==='live'),lv=st.live||{},cats=st.categories.filter(c=>!c.parent);
+  setMeta('رسا آموزش · فروشگاه محصولات آموزشی','رسا آموزش: فروشگاه درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی برای دانش‌آموزان و خانواده‌های ایران.');
+  const svc=[['دسترسی','کانال‌ها'],['یادگیری','خدمات اصلی'],['ردیابی','پیشرفت و گزارش'],['بازار','فروش و درآمد']];
+  const items={'کانال‌ها':[['وب‌اپ موبایل','همهٔ خدمات بدون نصب','/planner/','فعال'],['ربات بله','یادآوری و کارنامه در بله','/me#notice','فعال'],['ربات تلگرام','اطلاع‌رسانی به خانواده','/me#notice','فعال']],
+   'خدمات اصلی':[['درس‌های تعاملی','گام‌های کوچک با بازخورد فوری','/c?kind=lesson','فعال'],['جزوهٔ گام‌به‌گام','مرحله‌به‌مرحله با تمرین','/c?kind=booklet','فعال'],['مسیر یادگیری','از ابتدا تا تسلط','/#paths','فعال'],['آزمون آنلاین','سؤال واقعی بر اساس مقطع','/quiz','فعال']],
+   'پیشرفت و گزارش':[['کارنامهٔ هوشمند','بلد است / در حال تمرین / گام بعدی','/me#report','فعال'],['برنامه‌ریز درسی','برنامهٔ هفتگی و مرور فاصله‌دار','/planner/','فعال'],['اطلاع‌رسانی والد','یادآوری و گزارش هفتگی','/me#notice','فعال']],
+   'فروش و درآمد':[['فروشگاه کاتالوگ','دسته‌بندی‌شده با پیش‌نمایش','/c','فعال'],['بازار سازندگان','سازندگان مستقل','/creators','فعال'],['تعرفه','هستهٔ رایگان + محتوای ویژه','/pricing','فعال']]};
+  const show=live.slice(0,6);
+  main().innerHTML=`<div class="ap">
+  <aside class="ap-side">
+    <a class="ap-logo" href="/">رسا آموزش<small>Rasa Amozesh</small></a>
+    <form class="search" id="hss"><input name="q" placeholder="جست‌وجوی کاتالوگ…" aria-label="جست‌وجو"></form>
+    <nav class="ap-nav" aria-label="بخش‌های صفحه">
+      ${svc.map((x,i)=>`<a href="#ap-s${i}" class="ap-ni"><i>${fa(i+1)}</i>${x[1]}<small>${x[0]}</small></a>`).join('')}
+      <a href="#ap-cat" class="ap-ni"><i>${fa(svc.length+1)}</i>کاتالوگ<small>محصولات</small></a>
+      <a href="#ap-paths" class="ap-ni"><i>${fa(svc.length+2)}</i>مسیرها<small>یادگیری</small></a>
+      <a href="#ap-price" class="ap-ni"><i>${fa(svc.length+3)}</i>تعرفه<small>قیمت</small></a>
+    </nav>
+    <div class="ap-live"><div class="ap-liveh"><span class="live-dot"></span>زنده</div>
+      <div class="ap-liveg">${[['محصول',live.length],['گام',live.reduce((s,p)=>s+(p.meta?.steps||0),0)],['آزمونک امروز',lv.attempts||0],['خانواده',lv.families||0]].map(x=>`<div><b data-cu="${x[1]}">۰</b><span>${x[0]}</span></div>`).join('')}</div>
+      <a class="ap-livea" href="/quiz">آزمون آنلاین ←</a>
+    </div>
+    <div class="ap-sidefoot"><a href="/me">حساب من</a><a href="/support">پشتیبانی</a><a href="/pricing">تعرفه</a></div>
+  </aside>
+  <div class="ap-main">
+  <section class="ap-hero">
+    <div class="ap-hero-in">
+      <div class="ap-eyebrow"><span class="live-dot"></span>پلتفرم یادگیری فارسی — نسخهٔ عمومی</div>
+      <h1>درس بخوانید،<br><span class="ap-yl">گام بردارید،</span><br>پیش بروید.</h1>
+      <p class="ap-sub">فروشگاه محصولات آموزشی تعاملی: درس و جزوهٔ گام‌به‌گام، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — برای دانش‌آموزان، والدین و معلمان.</p>
+      <div class="ap-cta"><a class="btn y" href="/c">دیدن کاتالوگ</a><a class="btn ghost ap-ghost" href="/quiz">آزمون آنلاین</a><a class="btn ghost ap-ghost" href="/services">همهٔ خدمات</a></div>
+    </div>
+    <svg class="ap-art" viewBox="0 0 360 300" aria-hidden="true"><g fill="none" stroke="#F4D438" stroke-width="1.5" opacity=".5"><path d="M20 260 H340 M20 230 H300 M20 200 H260 M20 170 H220 M20 140 H180 M20 110 H140 M20 80 H100 M20 50 H60"/></g><circle cx="60" cy="50" r="9" fill="#F4D438"/><circle cx="60" cy="50" r="20" fill="none" stroke="#F4D438" stroke-width="1" opacity=".4"><animate attributeName="r" values="14;30;14" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.5s" repeatCount="indefinite"/></circle><path d="M60 50 L120 50 L120 80 L160 80 L160 110 L200 110" fill="none" stroke="#F4D438" stroke-width="2" stroke-dasharray="4 5"><animate attributeName="stroke-dashoffset" values="0;-36" dur="4s" repeatCount="indefinite"/></path></svg>
+  </section>
+  ${svc.map((x,i)=>`<section class="ap-sec" id="ap-s${i}"><div class="ap-sec-h"><span class="ap-sec-n">${fa(i+1).padStart(2,'۰')}</span><div><h2>${x[1]}</h2><small>${x[0]}</small></div><a href="/services" class="ap-more">همه ←</a></div>
+  <div class="ap-mod">${items[x[1]].map(m=>`<a class="ap-mi" href="${m[2]}"><div class="ap-mi-h"><b>${m[0]}</b><span class="ap-dot ${m[3]==='فعال'?'on':''}"></span></div><p>${m[1]}</p></a>`).join('')}</div></section>`).join('')}
+  <section class="ap-sec" id="ap-cat"><div class="ap-sec-h"><span class="ap-sec-n">۰۵</span><div><h2>کاتالوگ</h2><small>محصولات و دسته‌بندی‌ها</small></div><a href="/c" class="ap-more">همه ←</a></div>
+  <div class="ap-cats">${cats.map(c=>`<a class="ap-cat" href="/c/${esc(c.id)}" style="--c:${esc(c.color)}"><i>${esc(c.icon)}</i><b>${esc(c.title)}</b><span>${fa(live.filter(p=>p.cat===c.id).length)} محصول</span></a>`).join('')}</div>
+  <div class="ap-prows">${show.map(p=>`<a class="ap-prow" href="/p/${esc(p.id)}"><span class="ap-kind" style="--c:var(--cy)">${esc(p.kind)}</span><b>${esc(p.title)}</b><span class="dim ap-prow-d">${esc(p.meta?.subject||p.summary||'')}</span><span class="ap-price">${p.price?p.price.toLocaleString('fa-IR')+' تومان':'رایگان'}</span></a>`).join('')}</div></section>
+  <section class="ap-sec" id="ap-paths"><div class="ap-sec-h"><span class="ap-sec-n">۰۶</span><div><h2>مسیرهای یادگیری</h2><small>از ابتدا تا تسلط</small></div></div>
+  <div class="ap-paths">${(st.paths||[]).map(pa=>`<a class="ap-path" href="/p/${esc(pa.steps[0].id)}"><i>${esc(pa.icon||'🧭')}</i><div><b>${esc(pa.title)}</b><p>${esc(pa.desc||'')}</p><span class="ap-pathsteps">${fa(pa.steps.length)} گام · ${esc(pa.audience||'')}</span></div><span class="ap-pathgo">←</span></a>`).join('')}</div></section>
+  <section class="ap-sec" id="ap-price"><div class="ap-sec-h"><span class="ap-sec-n">۰۷</span><div><h2>تعرفه</h2><small>هستهٔ رایگان، محتوای ویژه قیمت‌دار</small></div><a href="/pricing" class="ap-more">جزئیات ←</a></div>
+  <div class="ap-tiers">${[['رایگان','برنامه‌ریز، کلاس دوم، آزمونک و پیش‌نمایش همهٔ درس‌ها'],['محتوای ویژه','جزوه‌ها، کارنامهٔ روایی و گزارش‌ها با پرداخت امن زرین‌پال'],['سازندگان','فروش جزوه و گزارش در بازار با پیش‌نمایش زنده']].map((t,i)=>`<a class="ap-tier" href="/pricing"><i>${fa(i+1)}</i><b>${t[0]}</b><p>${t[1]}</p></a>`).join('')}</div></section>
+  <section class="ap-cta"><div><h2>اولین گام را همین حالا بردارید</h2><p>ثبت‌نام رایگان — کمتر از یک دقیقه</p></div><div class="row"><a class="btn y" href="/c">کاتالوگ</a><a class="btn ghost ap-ghost" href="/quiz">آزمون آنلاین</a><a class="btn ghost ap-ghost" href="/planner/">برنامه‌ریز</a></div></section>
+  </div></div>`;
+  const hf=$('#hss');if(hf)hf.onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/search?q='+encodeURIComponent(q))};
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
-  journeyRail();
+  const nis=$$('.ap-ni'),secs=$$('.ap-sec,.ap-hero,.ap-cta');
+  const spy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const id=e.target.id||'hero';nis.forEach(n=>n.classList.toggle('on',n.getAttribute('href')==='#'+id))}})},{rootMargin:'-30% 0px -60% 0px'});
+  secs.forEach((el,i)=>{el.id=el.id||'ap-hero'+i;spy.observe(el)});
 }
 function journeyRail(){const rn=$('#jrn');if(!rn)return;
   const sts=[...$$('[data-st]')];
