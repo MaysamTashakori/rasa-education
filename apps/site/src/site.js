@@ -141,13 +141,16 @@ function home(){
       <div class="hl-roles"><span class="hl-rl">من…</span>${[['📚 دانش‌آموز','/c'],['👪 والد','/me'],['🛠️ سازنده','/creators'],['🏫 مدرسه','/pricing']].map(r=>`<a class="st-tag" href="${r[1]}">${r[0]}</a>`).join('')}</div>
       <div class="hl-live"><span class="st-live"></span><span><b data-cu="${live.length}">۰</b> محصول زنده · <b data-cu="${lv.attempts||0}">۰</b> آزمونک امروز · <b data-cu="${lv.families||0}">۰</b> خانواده</span></div>
     </div>
-    <div class="ph st-reveal" id="ph">
-      <div class="ph-notch"></div>
-      <div class="ph-float f1 st-reveal" style="--i:0"><i>🔥</i><div><b>۷ روز پیاپی</b><span>مطالعهٔ امیر</span></div></div>
-      <div class="ph-float f2 st-reveal" style="--i:1"><i>📊</i><div><b>۹۰٪</b><span>دقت در آزمونک</span></div></div>
-      <div class="ph-float f3 st-reveal" style="--i:2"><i>🧭</i><div><b>گام بعدی</b><span>کسرها · ۱۲ دقیقه</span></div></div>
-      <div class="ph-screen">
-        <div class="ph-view on" data-v="lesson">
+    <div class="scr st-reveal" id="scr">
+      <div class="scr-chrome">
+        <span class="scr-dot r"></span><span class="scr-dot y"></span><span class="scr-dot g"></span>
+        <span class="scr-url" dir="ltr">rasa-prompt.ir/app</span>
+      </div>
+      <div class="scr-tabs" role="tablist">
+        ${[['lesson','📖','درس تعاملی'],['cal','🗓️','تقویم'],['rc','📊','کارنامه'],['pl','🧭','برنامه‌ریز']].map((d,i)=>`<button class="scr-tab ${i===0?'on':''}" data-app="${d[0]}" role="tab"><i>${d[1]}</i>${d[2]}</button>`).join('')}
+      </div>
+      <div class="scr-body">
+        <div class="scr-view on" data-v="lesson">
           <div class="br-lesson" id="lesson">
             <div class="br-top"><span class="st-eyebrow" dir="ltr">TRY IT · درس زنده</span><span class="br-stars" id="br-stars">☆☆☆</span></div>
             <div class="br-stage" id="br-stage"></div>
@@ -159,22 +162,19 @@ function home(){
             <div class="br-msg me">ممنون! 🌟</div>
           </div>
         </div>
-        <div class="ph-view" data-v="cal">
+        <div class="scr-view" data-v="cal">
           <div class="ph-cal" id="ph-cal"></div>
           <div class="ph-calnote"><i>🟡</i> امروز: ریاضی ۴۰د · <i class="ph-cd study" style="display:inline-grid;place-items:center;width:14px;height:14px;border-radius:4px;font-size:8px"></i> روزهای مطالعه</div>
         </div>
-        <div class="ph-view" data-v="rc">
+        <div class="scr-view" data-v="rc">
           <div class="ph-rc" id="ph-rc"></div>
         </div>
-        <div class="ph-view" data-v="pl">
+        <div class="scr-view" data-v="pl">
           <div class="ph-planner">
             <div class="br-rh"><span class="st-eyebrow" dir="ltr">RASA PLANNER</span><span class="dim" style="font-size:10px">برنامه‌ریز واقعی</span></div>
             <iframe id="ph-pl" src="about:blank" title="برنامه‌ریز رسا آموزش" loading="lazy" tabindex="-1"></iframe>
           </div>
         </div>
-      </div>
-      <div class="ph-dock" role="tablist">
-        ${[['lesson','📖','درس'],['cal','🗓️','تقویم'],['rc','📊','کارنامه'],['pl','🧭','پلنر']].map((d,i)=>`<button class="ph-app ${i===0?'on':''}" data-app="${d[0]}" role="tab"><i>${d[1]}</i><span>${d[2]}</span></button>`).join('')}
       </div>
     </div>
   </div></section>
@@ -328,8 +328,8 @@ const _jNow=_d2j(_g2d(_now.getFullYear(),_now.getMonth()+1,_now.getDate()));
 const _jFirst=_j2d(_jNow.jy,_jNow.jm,1),_jWdi=(_jFirst+2)%7;
 const _studyDays=new Set([3,7,12,15,19,22,26,29]); // sample study days this month
 function bindPhone(){
- const ph=$('#ph');
- $$('.ph-app').forEach(b=>b.onclick=()=>{const v=b.dataset.app;$$('.ph-app').forEach(x=>x.classList.toggle('on',x===b));$$('.ph-view').forEach(x=>x.classList.toggle('on',x.dataset.v===v));if(v==='pl'&&!$('#ph-pl').src.includes('planner'))$('#ph-pl').src='/planner/'});
+ const ph=$('#scr');
+ $$('.scr-tab').forEach(b=>b.onclick=()=>{const v=b.dataset.app;$$('.scr-tab').forEach(x=>x.classList.toggle('on',x===b));$$('.scr-view').forEach(x=>x.classList.toggle('on',x.dataset.v===v));if(v==='pl'&&!$('#ph-pl').src.includes('planner'))$('#ph-pl').src='/planner/'});
  if(ph&&matchMedia('(pointer:fine)').matches){ph.addEventListener('pointermove',e=>{const r=ph.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;ph.style.transform=`perspective(900px) rotateY(${x*7}deg) rotateX(${-y*7}deg)`});ph.addEventListener('pointerleave',()=>ph.style.transform='')}
  const cal=$('#ph-cal');if(cal){const cells=[];for(let i=0;i<_jWdi;i++)cells.push('<i class="ph-cd off"></i>');for(let d=1;d<=_jLen(_jNow.jy,_jNow.jm);d++){const iso=_d2g(_j2d(_jNow.jy,_jNow.jm,d));const g=_d2g(iso);const isToday=d===_jNow.jd;cells.push(`<i class="ph-cd ${isToday?'today':''} ${_studyDays.has(d)?'study':''}">${fa(d)}</i>`)}
   cal.innerHTML=`<div class="br-rh"><span class="st-eyebrow" dir="ltr">CALENDAR</span><b style="font-size:12px">${_JMON[_jNow.jm-1]} ${fa(_jNow.jy)}</b></div><div class="ph-calw">${_JWDS.map(w=>`<span>${w}</span>`).join('')}</div><div class="ph-calgrid">${cells.join('')}</div><div class="ph-call"><i>🟡</i> امروز · <i class="ph-cd study" style="display:inline-grid;place-items:center;width:14px;height:14px;border-radius:4px;font-size:8px"></i> روز مطالعه</div>`}

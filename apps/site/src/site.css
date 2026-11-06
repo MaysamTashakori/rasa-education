@@ -797,3 +797,24 @@ a.st-tag:hover{color:var(--ink);border-color:var(--line2)}
 @media(max-width:1100px){.ph-float{display:none}}
 @media(max-width:560px){.ph-planner iframe{height:380px}}
 @media(prefers-reduced-motion:reduce){.ph-float{animation:none}}
+/* cinematic screen: browser-chrome window with live app tabs */
+.scr{max-width:640px;margin-inline-start:auto;border-radius:20px;border:1px solid var(--line);background:var(--card);box-shadow:0 50px 100px -40px rgba(0,0,0,.7),0 0 0 1px color-mix(in srgb,var(--y) 8%,transparent);overflow:hidden;transition:transform .3s ease-out}
+.scr-chrome{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--card) 70%,#000)}
+.scr-dot{width:11px;height:11px;border-radius:99px}
+.scr-dot.r{background:#ff5f57}.scr-dot.y{background:#febc2e}.scr-dot.g{background:#28c840}
+.scr-url{margin-inline-start:12px;font-size:11px;color:var(--dim);background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px 14px;font-family:ui-monospace,monospace}
+.scr-tabs{display:flex;gap:4px;padding:8px 12px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.scr-tabs::-webkit-scrollbar{display:none}
+.scr-tab{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:10px;border:0;background:transparent;color:var(--dim);font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s}
+.scr-tab i{font-style:normal;font-size:14px}
+.scr-tab.on{background:color-mix(in srgb,var(--y) 14%,transparent);color:var(--y)}
+.scr-body{padding:18px;max-height:600px;overflow:auto;scrollbar-width:thin}
+.scr-view{display:none;flex-direction:column;gap:14px}
+.scr-view.on{display:flex}
+.scr-view[data-v="lesson"]{display:none}
+.scr-view[data-v="lesson"].on{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:start}
+.scr-view[data-v="cal"].on,.scr-view[data-v="rc"].on,.scr-view[data-v="pl"].on{display:flex}
+.scr-view[data-v="pl"] .ph-planner{padding:0;border:0;background:none}
+.scr-view[data-v="pl"] .ph-planner iframe{height:480px}
+@media(max-width:900px){.scr{max-width:none}.scr-view[data-v="lesson"].on{grid-template-columns:1fr}}
+@media(max-width:560px){.scr-view[data-v="pl"] .ph-planner iframe{height:400px}}
