@@ -220,6 +220,33 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
  .mmenu a:hover{background:var(--card2);color:var(--ink)}
 }
 @media(prefers-reduced-motion:reduce){.hp-mq{animation:none!important;transform:none}.tkt,.tkt-a,.tkt-stub{transition:none!important}}
+/* ===== v5.1: notebook craft layer ===== */
+.nt-heroin{position:relative}
+.nt-margin{position:absolute;top:0;bottom:0;inset-inline-start:36px;width:0;border-inline-start:1.5px solid rgba(255,107,107,.28);pointer-events:none}
+.nt-margin i{position:absolute;width:16px;height:16px;border-radius:50%;background:var(--bg);border:1.5px solid var(--line2);inset-inline-start:-9px}
+.nt-margin i:nth-child(1){top:14%}.nt-margin i:nth-child(2){top:48%}.nt-margin i:nth-child(3){top:82%}
+.nt-doodle{position:absolute;pointer-events:none}
+.nt-doodle.d1{width:74px;top:10%;inset-inline-end:6%;transform:rotate(12deg)}
+.nt-doodle.d2{width:96px;bottom:24%;inset-inline-end:14%}
+.nt-doodle.d3{width:52px;top:38%;inset-inline-end:4%;transform:rotate(-8deg)}
+.nt-doodle path{stroke-dasharray:420;stroke-dashoffset:420;animation:draw 1.4s .4s cubic-bezier(.4,0,.2,1) forwards}
+.nt-circ{position:absolute;inset:-30% -14% -26% -14%;width:128%;height:156%;pointer-events:none}
+.nt-circ path{stroke-dasharray:820;stroke-dashoffset:820;animation:draw 1.3s .9s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.nt-note{margin-top:14px;display:inline-block;font-size:13px;font-weight:800;color:var(--dim);transform:rotate(-1.4deg)}
+.nt-tear{max-width:1240px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:12px;color:var(--dim)}
+.nt-tear:before{content:"✂";font-size:16px;transform:scaleX(-1)}
+.nt-tear:after{content:"";flex:1;border-top:2px dashed var(--line2)}
+.tkt{transform:rotate(var(--rot,0))}
+.tkt:hover{transform:rotate(0) translateX(-6px)}
+.tkt-bc{width:48px;height:24px;margin-top:4px;color:var(--ink);background:repeating-linear-gradient(90deg,currentColor 0 2px,transparent 2px 4px,currentColor 4px 5px,transparent 5px 8px)}
+.tkt:hover .tkt-bc{color:#0A0A0A}
+.exam{position:relative}
+.exam:before,.exam:after{content:"";position:absolute;top:-11px;width:76px;height:22px;background:rgba(244,212,56,.4);border-inline:1px dashed rgba(0,0,0,.15)}
+.exam:before{inset-inline-start:36px;transform:rotate(-4deg)}
+.exam:after{inset-inline-end:36px;transform:rotate(5deg)}
+@media(max-width:900px){.nt-margin{inset-inline-start:14px}.nt-doodle.d1{width:52px;top:4%}.nt-doodle.d2,.nt-doodle.d3{display:none}}
+@media(prefers-reduced-motion:reduce){.nt-doodle path,.nt-circ path{animation:none;stroke-dashoffset:0}}
 </style></head><body><header class="nav" id="nav"></header><main id="main"></main><footer class="foot" id="foot"></footer><script>'use strict';
 // رسا آموزش — storefront + profile + command center (vanilla SPA, history routing)
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -336,16 +363,21 @@ const SERVICES=[
 function home(){
   const st=S.store,live=st.products.filter(p=>p.status==='live'),lv=st.live||{};
   setMeta('رسا آموزش · گام‌به‌گام، تا رسیدن','رسا آموزش: درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیرهای یادگیری، برنامه‌ریز هوشمند و کارنامهٔ روایی برای دانش‌آموزان، خانواده‌ها و مدارس ایران.');
-  main().innerHTML=`<section class="nt-hero"><div class="wrap">
+  main().innerHTML=`<section class="nt-hero"><div class="nt-margin" aria-hidden="true"><i></i><i></i><i></i></div><div class="wrap nt-heroin">
   <div class="nt-stamp"><span class="live-dot"></span>پلتفرم یادگیری فارسی · ${fa(lv.attempts||0)} آزمونک امروز</div>
-  <h1 class="nt-title"><span>گام‌به‌گام،</span><span class="nt-hl">تا رسیدن.</span></h1>
+  <svg class="nt-doodle d1" viewBox="0 0 120 120" aria-hidden="true"><path d="M60 8 L67 40 L98 40 L72 58 L82 90 L60 70 L38 90 L48 58 L22 40 L53 40 Z" fill="none" stroke="#F4D438" stroke-width="3" stroke-linejoin="round"/></svg>
+  <svg class="nt-doodle d2" viewBox="0 0 100 60" aria-hidden="true"><path d="M4 50 C30 10, 70 10, 94 44 M80 40 L94 44 L84 54" fill="none" stroke="#4BE8E2" stroke-width="3" stroke-linecap="round"/></svg>
+  <svg class="nt-doodle d3" viewBox="0 0 60 60" aria-hidden="true"><path d="M8 30 a22 22 0 1 1 44 0 a22 22 0 1 1 -44 0 M30 18 l0 24 M18 30 l24 0" fill="none" stroke="#FF6B6B" stroke-width="3" stroke-linecap="round"/></svg>
+  <h1 class="nt-title"><span>گام‌به‌گام،</span><span class="nt-hl">تا رسیدن.<svg class="nt-circ" viewBox="0 0 300 90" aria-hidden="true"><path d="M20 45 C50 10, 250 8, 285 40 C295 55, 270 78, 150 82 C60 85, 10 70, 22 42" fill="none" stroke="#FF6B6B" stroke-width="4" stroke-linecap="round"/></svg></span></h1>
   <p class="nt-lead">درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیر مرتب تا تسلط و کارنامه‌ای که به‌جای نمره می‌گوید فرزندتان چه بلد است و گام بعدی چیست.</p>
   <form class="search nt-search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
+  <div class="nt-note">پیش‌نمایشٔ همهٔ درس‌ها رایگان است ↓</div>
   <div class="nt-stats">${[['محصول زنده',live.length],['گام تعاملی',live.reduce((s,p)=>s+(p.meta?.steps||0),0)],['آزمونک امروز',lv.attempts||0],['خانوادهٔ فعال',lv.families||0]].map(x=>`<div><b data-cu="${x[1]}">۰</b><span>${x[0]}</span></div>`).join('')}</div>
   </div></section>
+  <div class="nt-tear" aria-hidden="true"></div>
   <div class="hp-marquee" aria-hidden="true"><div class="hp-mq">${Array(2).fill(['ریاضی','علوم','فارسی','عربی','فیزیک','شیمی','برنامه‌ریزی','کارنامهٔ روایی','کلاس دوم','کنکور','درس تعاملی','مسیر یادگیری'].map(t=>`<span>${t}</span><i>✦</i>`).join('')).join('')}</div></div>
   <section class="nt-sec" id="services"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۱</span><h2>فهرست خدمات</h2><span class="nt-rule"></span></div>
-  <div class="tkts">${SERVICES.map(s=>`<a class="tkt" style="--c:${s[4]}" href="${s[5]}"><span class="tkt-stub"><b>${s[0]}</b><i>${s[3]}</i></span><span class="tkt-body"><strong>${s[1]}</strong><em>${s[2]}</em></span><span class="tkt-a">←</span></a>`).join('')}</div></div></section>
+  <div class="tkts">${SERVICES.map((s,si)=>`<a class="tkt" style="--c:${s[4]};--rot:${si%2?'.4deg':'-.4deg'}" href="${s[5]}"><span class="tkt-stub"><b>${s[0]}</b><i>${s[3]}</i><span class="tkt-bc"></span></span><span class="tkt-body"><strong>${s[1]}</strong><em>${s[2]}</em></span><span class="tkt-a">←</span></a>`).join('')}</div></div></section>
   <section class="nt-sec"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۲</span><h2>رسا چطور کار می‌کند؟</h2><span class="nt-rule"></span></div>
   <div class="route">${[['شما','دانش‌آموز · والد · معلم و مدرسه · سازنده'],['کانال‌ها','وب‌اپ موبایل (PWA) · ربات بله · ربات تلگرام'],['موتور رسا','درس و آزمونک · مسیر · کارنامه · برنامه‌ریز · ۱۹ ایجنت'],['نتیجه','یادگیری گام‌به‌گام با گزارش روشن و دادهٔ کودک امن']].map((f,i)=>`<div class="rt ${i===2?'hot':''}"><i>${fa(i+1)}</i><b>${f[0]}</b><span>${f[1]}</span></div>`).join('')}</div>
   <p class="dim" style="font-size:12.5px;margin-top:14px">بدون نصب، روی هر دستگاه و با اینترنت ضعیف هم کار می‌کند.</p></div></section>
@@ -364,7 +396,8 @@ function home(){
   ${[['🧒','دانش‌آموز','درس‌هایی که با انجام‌دادن یاد گرفته می‌شوند.'],['👨‍👩‍👧','والد','گزارش روشن، یادآوری در بله و تلگرام، جایزه.'],['🧑‍🏫','معلم و مدرسه','کلاس، تکلیف، گزارش مدیریتی.'],['✍️','سازنده','موتور ساخت جزوه و گزارش تعاملی؛ انتشار در بازار.']].map(a=>`<div class="card"><div style="font-size:30px">${a[0]}</div><h3>${a[1]}</h3><p class="mute" style="margin:6px 0 0;font-size:14px">${a[2]}</p></div>`).join('')}</div></div></section>
   <section class="nt-sec"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۸</span><h2>پرسش‌های پرتکرار</h2><span class="nt-rule"></span></div>
   <div class="faq">${[['رسا آموزش چیست؟','پلتفرم یادگیری گام‌به‌گام فارسی است: درس و آزمون تعاملی، جزوه‌های گام‌به‌گام، مسیرهای یادگیری مرتب، برنامه‌ریز هوشمند و کارنامه‌ای روایی که به‌جای نمره، می‌گوید فرزندتان چه بلد است و گام بعدی چیست.'],['آیا رایگان است؟','ابزارهای پایه — برنامه‌ریز، سامانهٔ کلاس دوم و پیش‌نمایش درس‌ها — رایگان‌اند. جزوه‌ها و درس‌های ویژه قیمت دارند و با پرداخت امن زرین‌پال دریافت می‌شوند؛ اشتراک خانواده هم در راه است.'],['محتوا برای چه پایه‌هایی داریم؟','فعلاً کانون ما کلاس دوم ابتدایی و ریاضی هشتم است و به‌تدریج به همهٔ مقاطع گسترش می‌یابد؛ مسیرها و کاتالوگ همین‌جا به‌روز می‌شوند.'],['روی گوشی من کار می‌کند؟','بله؛ همه‌چیز موبایل‌محور و راست‌به‌چپ است و به‌صورت وب‌اپ نصب‌شدنی (PWA) روی گوشی و رایانه کار می‌کند.'],['دادهٔ کودک من کجا می‌رود؟','داده‌های کلاس دوم فقط برای همان خانواده و معلمش استفاده می‌شود، رمزگذاری می‌شود و هرگز فروخته یا برای آموزش مدل به کار نمی‌رود.'],['می‌خواهم سازنده باشم','در صفحهٔ «سازندگان» درخواست همکاری ثبت کنید؛ موتور ما پیش‌نمایش زنده، صفحهٔ محصول، کارنامهٔ روایی و آمار را برای شما می‌سازد.']].map(f=>`<details><summary>${esc(f[0])}</summary><p class="mute">${esc(f[1])}</p></details>`).join('')}</div></div></section>
-  <section class="nt-sec"><div class="wrap"><div class="cta"><div><h2 class="h2" style="font-size:clamp(24px,3.4vw,38px)">اولین گام را همین حالا بردارید</h2><p class="mute" style="margin:8px 0 0">ثبت‌نام رایگان است و در کمتر از یک دقیقه انجام می‌شود.</p></div><div class="row wrapr"><a class="btn y" href="/c">دیدن کاتالوگ</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/kids/">سامانهٔ کلاس دوم</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/planner/">برنامه‌ریز هوشمند</a></div></div></div></section>`;
+  <div class="nt-tear" aria-hidden="true"></div>
+  <section class="nt-sec"><div class="wrap"><div class="cta nt-cta"><div><h2 class="h2" style="font-size:clamp(24px,3.4vw,38px)">اولین گام را همین حالا بردارید</h2><p class="mute" style="margin:8px 0 0">ثبت‌نام رایگان است و در کمتر از یک دقیقه انجام می‌شود.</p></div><div class="row wrapr"><a class="btn y" href="/c">دیدن کاتالوگ</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/kids/">سامانهٔ کلاس دوم</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/planner/">برنامه‌ریز هوشمند</a></div></div></div></section>`;
   $('#hs').onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/c?q='+encodeURIComponent(q))};
   if(innerWidth<900)$('#rcs').style.gridTemplateColumns='1fr';
   // count-up stats

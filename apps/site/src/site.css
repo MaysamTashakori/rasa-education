@@ -208,3 +208,30 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
  .mmenu a:hover{background:var(--card2);color:var(--ink)}
 }
 @media(prefers-reduced-motion:reduce){.hp-mq{animation:none!important;transform:none}.tkt,.tkt-a,.tkt-stub{transition:none!important}}
+/* ===== v5.1: notebook craft layer ===== */
+.nt-heroin{position:relative}
+.nt-margin{position:absolute;top:0;bottom:0;inset-inline-start:36px;width:0;border-inline-start:1.5px solid rgba(255,107,107,.28);pointer-events:none}
+.nt-margin i{position:absolute;width:16px;height:16px;border-radius:50%;background:var(--bg);border:1.5px solid var(--line2);inset-inline-start:-9px}
+.nt-margin i:nth-child(1){top:14%}.nt-margin i:nth-child(2){top:48%}.nt-margin i:nth-child(3){top:82%}
+.nt-doodle{position:absolute;pointer-events:none}
+.nt-doodle.d1{width:74px;top:10%;inset-inline-end:6%;transform:rotate(12deg)}
+.nt-doodle.d2{width:96px;bottom:24%;inset-inline-end:14%}
+.nt-doodle.d3{width:52px;top:38%;inset-inline-end:4%;transform:rotate(-8deg)}
+.nt-doodle path{stroke-dasharray:420;stroke-dashoffset:420;animation:draw 1.4s .4s cubic-bezier(.4,0,.2,1) forwards}
+.nt-circ{position:absolute;inset:-30% -14% -26% -14%;width:128%;height:156%;pointer-events:none}
+.nt-circ path{stroke-dasharray:820;stroke-dashoffset:820;animation:draw 1.3s .9s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.nt-note{margin-top:14px;display:inline-block;font-size:13px;font-weight:800;color:var(--dim);transform:rotate(-1.4deg)}
+.nt-tear{max-width:1240px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:12px;color:var(--dim)}
+.nt-tear:before{content:"✂";font-size:16px;transform:scaleX(-1)}
+.nt-tear:after{content:"";flex:1;border-top:2px dashed var(--line2)}
+.tkt{transform:rotate(var(--rot,0))}
+.tkt:hover{transform:rotate(0) translateX(-6px)}
+.tkt-bc{width:48px;height:24px;margin-top:4px;color:var(--ink);background:repeating-linear-gradient(90deg,currentColor 0 2px,transparent 2px 4px,currentColor 4px 5px,transparent 5px 8px)}
+.tkt:hover .tkt-bc{color:#0A0A0A}
+.exam{position:relative}
+.exam:before,.exam:after{content:"";position:absolute;top:-11px;width:76px;height:22px;background:rgba(244,212,56,.4);border-inline:1px dashed rgba(0,0,0,.15)}
+.exam:before{inset-inline-start:36px;transform:rotate(-4deg)}
+.exam:after{inset-inline-end:36px;transform:rotate(5deg)}
+@media(max-width:900px){.nt-margin{inset-inline-start:14px}.nt-doodle.d1{width:52px;top:4%}.nt-doodle.d2,.nt-doodle.d3{display:none}}
+@media(prefers-reduced-motion:reduce){.nt-doodle path,.nt-circ path{animation:none;stroke-dashoffset:0}}
