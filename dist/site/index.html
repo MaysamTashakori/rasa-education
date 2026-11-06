@@ -113,6 +113,44 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
 .faq details[open]{border-color:color-mix(in srgb,var(--y) 45%,var(--line))}
 .pstep{transition:border-color .18s,transform .18s}
 @media (prefers-reduced-motion:reduce){.hero:before,.hero:after,.grid3 .pc,.cats .cat,.paths .path,.aud .card,.how .card,.live-dot{animation:none!important}.grid3 .pc,.cats .cat,.paths .path,.aud .card,.how .card{opacity:1!important;transform:none!important}}
+/* ===== homepage v2 ===== */
+.hp-hero{position:relative;padding:56px 0 40px;overflow:hidden}
+.hp-hero:before{content:"";position:absolute;inset-inline-start:50%;top:-20%;width:900px;height:700px;transform:translateX(50%);background:radial-gradient(closest-side,rgba(244,212,56,.10),transparent 70%);pointer-events:none}
+.hp-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.hp-title{font-size:clamp(44px,7.2vw,88px);font-weight:900;line-height:1.15;letter-spacing:-.03em;margin:16px 0 20px}
+.hp-out{color:transparent;-webkit-text-stroke:2.5px var(--y)}
+.hp-copy .lead{font-size:17px}
+.hp-cta{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.hp-stats{margin-top:34px}
+.hp-stats b{font-variant-numeric:tabular-nums}
+.hp-scene{position:relative;aspect-ratio:1/1;max-width:520px;margin-inline:auto;width:100%}
+.hp-stairs{position:absolute;inset:0;width:100%;height:100%}
+.hp-ring{position:absolute;inset:8%;border:1px dashed color-mix(in srgb,var(--y) 30%,transparent);border-radius:50%;animation:spin 30s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hp-chip{position:absolute;background:var(--card2);border:1px solid var(--line2);border-radius:14px;padding:8px 14px;font-size:12.5px;font-weight:700;box-shadow:var(--sh);animation:bob 4s ease-in-out infinite;white-space:nowrap}
+.hp-chip.c1{top:12%;inset-inline-start:2%}.hp-chip.c2{top:30%;inset-inline-end:0%;animation-delay:.8s}.hp-chip.c3{bottom:14%;inset-inline-start:8%;animation-delay:1.6s}
+.hp-chip b{color:var(--y)}
+/* marquee */
+.hp-marquee{border-block:1px solid var(--line);padding:14px 0;overflow:hidden;background:color-mix(in srgb,var(--card) 55%,transparent)}
+.hp-mq{display:flex;gap:34px;width:max-content;animation:mq 36s linear infinite;font-weight:900;font-size:17px;color:var(--mute)}
+.hp-mq span{white-space:nowrap}.hp-mq i{color:var(--y);font-style:normal}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* quiz */
+.hp-pips{display:flex;gap:8px;justify-content:center;margin-bottom:18px}
+.hp-pips i{width:34px;height:6px;border-radius:3px;background:var(--line2);transition:.3s}
+.hp-pips i.done{background:var(--ok)}.hp-pips i.now{background:var(--y)}
+.hp-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.hp-opt{height:58px;border-radius:16px;border:1px solid var(--line2);background:var(--card2);font-size:20px;font-weight:900;cursor:pointer;transition:.15s}
+.hp-opt:hover:not(:disabled){border-color:var(--y);transform:translateY(-2px)}
+.hp-opt:disabled{cursor:default}.hp-opt.ok{background:color-mix(in srgb,var(--ok) 18%,var(--card2));border-color:var(--ok)}.hp-opt.no{background:color-mix(in srgb,var(--bad) 15%,var(--card2));border-color:var(--bad)}
+.hp-qmsg{min-height:26px;margin-top:14px;text-align:center;font-weight:700;font-size:14px;color:var(--mute)}
+/* paths horizontal */
+.hp-paths{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 4px 14px;scrollbar-width:thin}
+.hp-path{min-width:300px;max-width:340px;scroll-snap-align:start;position:relative}
+.hp-pnum{position:absolute;top:14px;inset-inline-end:16px;font-size:30px;font-weight:900;color:transparent;-webkit-text-stroke:1.5px var(--c);opacity:.8}
+@media(max-width:900px){.hp-grid{grid-template-columns:1fr;gap:20px}.hp-scene{max-width:380px}.hp-title{font-size:clamp(38px,10vw,56px)}}
+@media(max-width:520px){.hp-opts{grid-template-columns:1fr}.hp-chip{display:none}}
+@media(prefers-reduced-motion:reduce){.hp-mq,.hp-ring,.hp-chip,.hp-stairs circle{animation:none!important}.hp-mq{transform:none}}
 </style></head><body><header class="nav" id="nav"></header><main id="main"></main><footer class="foot" id="foot"></footer><script>'use strict';
 // رسا آموزش — storefront + profile + command center (vanilla SPA, history routing)
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -214,19 +252,31 @@ const main=()=>$('#main');
 function home(){
   const st=S.store,live=st.products.filter(p=>p.status==='live'),tops=st.categories.filter(c=>!c.parent),lv=st.live||{};
   setMeta('رسا آموزش · گام‌به‌گام، تا رسیدن','رسا آموزش: درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیرهای یادگیری، برنامه‌ریز هوشمند و کارنامهٔ روایی برای دانش‌آموزان، خانواده‌ها و مدارس ایران. فعلاً همه‌چیز رایگان است.');
-  main().innerHTML=`<section class="hero"><div class="wrap grid"><div><div class="eyebrow"><span class="live-dot"></span>پلتفرم یادگیری گام‌به‌گام · زنده</div><h1 class="h1" style="margin-top:14px">گام‌به‌گام،<br><span class="y">تا رسیدن.</span></h1>
-  <p class="lead">درس‌ها و آزمون‌های تعاملی، جزوه‌های گام‌به‌گام، برنامه‌ریز هوشمند و کارنامه‌هایی که می‌گویند فرزندتان چه بلد است و گام بعدی چیست.</p>
+  main().innerHTML=`<section class="hp-hero"><div class="wrap hp-grid"><div class="hp-copy">
+  <div class="eyebrow"><span class="live-dot"></span>زنده · ${fa(lv.attempts||0)} آزمونک امروز حل شد</div>
+  <h1 class="hp-title">گام‌به‌گام،<br><span class="hp-out">تا رسیدن.</span></h1>
+  <p class="lead">درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیر یادگیری مرتب و کارنامه‌ای که می‌گوید فرزندتان چه بلد است — و گام بعدی چیست.</p>
   <form class="search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
-  <div class="stats"><div><b>${num(live.length)}</b><span>محصول در کاتالوگ</span></div><div><b>${num(live.reduce((s,p)=>s+(p.meta?.steps||0),0))}</b><span>گام تعاملی</span></div><div><b>${num(lv.attempts||0)}</b><span>آزمونک امروز</span></div><div><b>${num(lv.families||0)}</b><span>خانوادهٔ فعال</span></div></div></div>
-  <div class="stage" aria-hidden="true"><div class="dot"></div><div class="st" style="top:40%;width:34%;background:#FAFAFA"></div><div class="st" style="top:58%;width:52%;background:var(--y);animation-delay:.15s"></div><div class="st" style="top:76%;width:70%;background:#FAFAFA;animation-delay:.3s"></div>
-  <div class="float" style="top:10%;inset-inline-end:8%">✓ بلد است: <b>جمع دورقمی</b></div><div class="float" style="top:26%;inset-inline-end:16%;animation-delay:1s">↻ در حال تمرین: <b>عدد گویا</b></div><div class="float" style="bottom:6%;inset-inline-end:6%;animation-delay:2s">← گام بعدی: <b>فصل ۲</b></div></div></div></section>
+  <div class="hp-cta"><a class="btn y" href="/c">شروع یادگیری</a><a class="btn ghost" href="/kids/">🦁 کلاس دوم</a><a class="btn ghost" href="/planner/">🗓️ برنامه‌ریز</a></div>
+  <div class="stats hp-stats"><div><b data-cu="${live.length}">۰</b><span>محصول در کاتالوگ</span></div><div><b data-cu="${live.reduce((s,p)=>s+(p.meta?.steps||0),0)}">۰</b><span>گام تعاملی</span></div><div><b data-cu="${lv.attempts||0}">۰</b><span>آزمونک امروز</span></div><div><b data-cu="${lv.families||0}">۰</b><span>خانوادهٔ فعال</span></div></div></div>
+  <div class="hp-scene" aria-hidden="true">
+    <div class="hp-chip c1">✓ بلد است: جمع دورقمی</div><div class="hp-chip c2">↻ در حال تمرین: عدد گویا</div><div class="hp-chip c3">← گام بعدی: فصل ۲</div>
+    <svg class="hp-stairs" viewBox="0 0 420 420"><defs><linearGradient id="stg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#F4D438" stop-opacity=".15"/><stop offset="1" stop-color="#F4D438" stop-opacity=".55"/></linearGradient></defs>
+    <path d="M370 370 L370 305 L305 305 L305 240 L240 240 L240 175 L175 175 L175 110 L110 110 L110 55" fill="none" stroke="url(#stg)" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round"/>
+    <g fill="#1C1C1C" stroke="#2A2A2A"><rect x="300" y="330" width="80" height="16" rx="8"/><rect x="240" y="270" width="80" height="16" rx="8"/><rect x="180" y="205" width="80" height="16" rx="8"/><rect x="120" y="140" width="80" height="16" rx="8"/><rect x="60" y="80" width="80" height="16" rx="8" fill="#F4D438" stroke="none"/></g>
+    <circle r="11" fill="#F4D438"><animateMotion dur="7s" repeatCount="indefinite" rotate="0"><mpath href="#hpPath" xlink:href="#hpPath"/></animateMotion></circle>
+    <path id="hpPath" d="M370 370 L370 305 L305 305 L305 240 L240 240 L240 175 L175 175 L175 110 L110 110 L110 55" fill="none"/></svg>
+    <div class="hp-ring"></div></div></div></section>
+  <div class="hp-marquee" aria-hidden="true"><div class="hp-mq">${Array(2).fill(['ریاضی','علوم','فارسی','عربی','فیزیک','شیمی','برنامه‌ریزی','کارنامهٔ روایی','کلاس دوم','کنکور','درس تعاملی','مسیر یادگیری'].map(t=>`<span>${t}</span><i>✦</i>`).join('')).join('')}</div></div>
+  <section class="sec" style="padding-top:30px"><div class="wrap"><div class="sech"><div><div class="eyebrow">بدون ثبت‌نام</div><h2 class="h2">یک گام را همین‌جا امتحان کن</h2></div><span class="tag" style="--c:var(--ok)">۳ سؤال · ۳۰ ثانیه</span></div>
+  <div class="card hp-quiz" id="quiz" style="max-width:680px;margin:0 auto"></div></div></section>
   <section class="sec" style="padding-top:20px"><div class="wrap"><div class="sech"><h2 class="h2">از کجا شروع کنیم؟</h2><a class="btn sm ghost" href="/c">همهٔ دسته‌ها ←</a></div>
   <div class="cats">${tops.map(c=>`<div class="cat" style="--c:${esc(c.color)}" data-go="/c/${esc(c.id)}"><i>${esc(c.icon)}</i><h3>${esc(c.title)}</h3><div class="dim" style="font-size:13px">${esc(c.info||'')}</div></div>`).join('')}</div></div></section>
   ${(st.paths||[]).length?`<section class="sec" style="padding-top:20px"><div class="wrap"><div class="sech"><div><div class="eyebrow">مسیرهای یادگیری</div><h2 class="h2">به‌جای تک‌تک درس، یک مسیر کامل</h2></div></div>
-  <div class="paths">${st.paths.map(pa=>`<div class="path" style="--c:${esc(pa.color||'#F4D438')}"><div class="row"><span style="font-size:26px">${esc(pa.icon||'🧭')}</span><div style="flex:1"><h3 style="font-size:17px">${esc(pa.title)}</h3><div class="dim" style="font-size:12.5px">${esc(pa.audience||'')}</div></div><span class="tag" style="--c:var(--mute)">${fa(pa.steps.length)} گام</span></div>
+  <div class="hp-paths">${st.paths.map((pa,pi)=>`<div class="path hp-path" style="--c:${esc(pa.color||'#F4D438')}"><div class="hp-pnum">${fa(pi+1).padStart(2,'۰')}</div><div class="row"><span style="font-size:26px">${esc(pa.icon||'🧭')}</span><div style="flex:1"><h3 style="font-size:17px">${esc(pa.title)}</h3><div class="dim" style="font-size:12.5px">${esc(pa.audience||'')}</div></div><span class="tag" style="--c:var(--mute)">${fa(pa.steps.length)} گام</span></div>
   <p class="mute" style="font-size:13.5px;margin:10px 0 14px">${esc(pa.desc)}</p>
   <div class="psteps">${pa.steps.map((s,i)=>`<a class="pstep ${s.status==='soon'?'soon':''}" href="/p/${esc(s.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(s.title)}</span></a>`).join('')}</div>
-  <a class="btn sm ghost mt" href="/p/${esc(pa.steps[0].id)}" style="margin-top:14px">شروع مسیر ←</a></div>`).join('')}</div></div></section>`:''}
+  <a class="btn sm ghost mt" href="/p/${esc(pa.steps[0].id)}" style="margin-top:14px">شروع مسیر ←</a></div>`).join('')}</div><div class="dim" style="font-size:12px;margin-top:10px">→ برای دیدن همه بکشید</div></div></section>`:''}
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="sech"><div><div class="eyebrow">ویترین</div><h2 class="h2">تازه و محبوب</h2></div><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div><div class="grid3">${st.products.slice(0,8).map(pcard).join('')}</div></div></section>
   <section class="sec"><div class="wrap"><div class="sech"><h2 class="h2">در سه گام</h2></div><div class="how">
   <div class="card"><b>۱</b><h3>پیش‌نمایش زنده</h3><p class="mute">پیش از دریافت، خود درس را همین‌جا امتحان کنید؛ نه فقط عکس و توضیح.</p></div>
@@ -241,7 +291,17 @@ function home(){
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="cta"><div><h2 class="h2" style="font-size:clamp(24px,3.4vw,38px)">اولین گام را همین حالا بردارید</h2><p class="mute" style="margin:8px 0 0">ثبت‌نام رایگان است و در کمتر از یک دقیقه انجام می‌شود.</p></div><div class="row wrapr"><a class="btn y" href="/c">دیدن کاتالوگ</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/kids/">سامانهٔ کلاس دوم</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/planner/">برنامه‌ریز هوشمند</a></div></div></div></section>`;
   $('#hs').onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/c?q='+encodeURIComponent(q))};
   if(innerWidth<900)$('#rcs').style.gridTemplateColumns='1fr';
+  // count-up stats
+  $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
+  bindQuiz();
 }
+const QUIZ=[{q:'۸ + ۷ = ؟',o:['۱۴','۱۵','۱۶'],a:1,m:'آفرین! جمع درست حساب شد.'},{q:' نصف ۲۰ چند است؟',o:['۵','۱۰','۴۰'],a:1,m:'بله؛ نصف یعنی تقسیم بر ۲.'},{q:'۳ × ۴ = ؟',o:['۷','۱۰','۱۲'],a:2,m:'عالی! ضرب را هم بلدی.'}];
+function bindQuiz(){const el=$('#quiz');if(!el)return;let i=0,score=0;
+  const draw=()=>{const pips=`<div class="hp-pips">${QUIZ.map((_,x)=>`<i class="${x<i?'done':x===i?'now':''}"></i>`).join('')}</div>`;
+    if(i>=QUIZ.length){el.innerHTML=`<div style="text-align:center;padding:14px 0">${pips}<div style="font-size:44px">${score===3?'🏆':'🌟'}</div><h3 style="font-size:20px">${score===3?'عالی! هر سه گام را درست رفتی.':'خوب بود!'} ${score} از ۳</h3><p class="mute">درس‌های رسا همین‌طور گام‌به‌گام پیش می‌روند؛ با بازخورد فوری و کارنامهٔ روایی.</p><div class="row" style="justify-content:center;margin-top:14px"><a class="btn y" href="/c/riazi8">دیدن درس‌های ریاضی ←</a><button class="btn ghost" id="qz">دوباره</button></div></div>`;$('#qz').onclick=()=>{i=0;score=0;draw()};return}
+    const q=QUIZ[i];el.innerHTML=`${pips}<div class="dim" style="font-size:12px">گام ${fa(i+1)} از ${fa(QUIZ.length)}</div><h3 style="font-size:21px;margin:10px 0 18px">${esc(q.q)}</h3><div class="hp-opts">${q.o.map((o,x)=>`<button class="hp-opt" data-x="${x}">${esc(o)}</button>`).join('')}</div><div class="hp-qmsg" id="qm"></div>`;
+    el.querySelectorAll('.hp-opt').forEach(b=>b.onclick=()=>{const ok=+b.dataset.x===q.a;score+=ok?1:0;b.classList.add(ok?'ok':'no');el.querySelectorAll('.hp-opt').forEach(x=>{x.disabled=true;if(+x.dataset.x===q.a)x.classList.add('ok')});$('#qm').textContent=ok?q.m:'پاسخ درست: '+q.o[q.a];setTimeout(()=>{i++;draw()},1100)})};
+  draw()}
 
 function catalog(cat){
   const st=S.store,q=new URLSearchParams(location.search),c=catOf(cat);let kind=q.get('kind')||'',text=q.get('q')||'';
