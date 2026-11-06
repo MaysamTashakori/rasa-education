@@ -473,6 +473,56 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
  .dl-stats{flex-wrap:wrap}
  .dl-stats>div{min-width:46%;padding:14px}
 }
+/* lower sections v10 */
+.dl-lvls{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+.dl-lvl{display:flex;flex-direction:column;gap:8px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--card);text-decoration:none;transition:border-color .15s,transform .15s;position:relative}
+.dl-lvl:hover{border-color:var(--cy);transform:translateY(-2px)}
+.dl-lvl i{font-style:normal;font-size:12px;font-weight:900;color:var(--dim)}
+.dl-lvl b{font-size:16px}
+.dl-lvl span{font-size:11.5px;color:var(--mute)}
+.dl-lvl em{font-style:normal;font-size:11px;color:var(--cy);font-weight:800;margin-top:4px}
+.dl-lvlgo{position:absolute;top:18px;inset-inline-end:18px;color:var(--dim);font-weight:900}
+.dl-prods{border-top:1px solid var(--line)}
+.dl-prow{display:grid;grid-template-columns:36px 1fr auto auto auto;gap:14px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line);text-decoration:none;transition:background .12s}
+.dl-prow:hover{background:var(--card)}
+.dl-prow i{font-style:normal;font-size:12px;font-weight:900;color:var(--dim)}
+.dl-prow b{font-size:14px}
+.dl-kind{font-size:10px;font-weight:800;color:var(--cy);border:1px solid color-mix(in srgb,var(--cy) 40%,transparent);border-radius:6px;padding:3px 8px;text-align:center}
+.dl-prow-d{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
+.dl-price{font-size:12.5px;font-weight:800;white-space:nowrap}
+.dl-chains{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.dl-chain{border:1px solid var(--line);border-radius:18px;padding:22px;background:var(--card)}
+.dl-chainh{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.dl-chainh i{font-style:normal;font-size:26px}
+.dl-chainh b{font-size:16px}
+.dl-chainh p{margin:3px 0 0;font-size:11.5px;color:var(--dim)}
+.dl-steps{display:flex;flex-wrap:wrap;gap:8px}
+.dl-stp{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;text-decoration:none;color:var(--mute);transition:border-color .15s,color .15s}
+.dl-stp i{font-style:normal;font-size:10.5px;color:var(--y);font-weight:900}
+.dl-stp:hover{border-color:var(--c);color:var(--ink)}
+.dl-stp.soon{opacity:.55;border-style:dashed}
+.dl-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.dl-tier{border:1px solid var(--line);border-radius:16px;padding:22px;text-decoration:none;background:var(--card);transition:border-color .15s}
+.dl-tier:hover{border-color:var(--cy)}
+.dl-tier i{font-style:normal;display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--y);color:#0A0A0A;font-weight:900;font-size:13px;margin-bottom:14px}
+.dl-tier b{display:block;font-size:16px;margin-bottom:8px}
+.dl-tier p{margin:0;font-size:12.5px;color:var(--mute);line-height:1.7}
+.dl-last{padding:88px 0;text-align:center;background:radial-gradient(ellipse at 50% 120%,color-mix(in srgb,var(--y) 12%,transparent),transparent 60%)}
+.dl-lastin{display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap}
+.dl-lastin h2{font-size:clamp(26px,4vw,44px);font-weight:900;line-height:1.5}
+.dl-lastin .mn-k{display:inline-block;margin-bottom:14px}
+.dl-lastin .row{justify-content:flex-end}
+@media(max-width:900px){
+ .dl-lvls{grid-template-columns:1fr 1fr}
+ .dl-chains{grid-template-columns:1fr}
+ .dl-tiers{grid-template-columns:1fr}
+ .dl-lastin{flex-direction:column;text-align:center}
+ .dl-lastin .row{justify-content:center}
+ .dl-prow{grid-template-columns:30px 1fr;grid-template-rows:auto auto;gap:6px 10px}
+ .dl-prow b{grid-column:2}
+ .dl-kind,.dl-price{grid-column:2;justify-self:start}
+ .dl-prow-d{display:none}
+}
 </style></head><body><header class="nav" id="nav"></header><main id="main"></main><footer class="foot" id="foot"></footer><script>'use strict';
 // رسا آموزش — storefront + profile + command center (vanilla SPA, history routing)
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -612,14 +662,15 @@ function home(){
     <div class="dl-time"><i>${d[1]}</i><b>${d[0]}</b><span>${d[2]}</span></div>
     <div class="dl-card"><h3>${d[3]}</h3><div class="dl-links">${d[4].map(l=>`<a href="${l[2]}"><b>${l[0]}</b><span>${l[1]}</span></a>`).join('')}</div></div>
   </div>`).join('')}</div></div></section>
-  <section class="dl-sec" data-st="۰۵" data-sn="ویترین"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">ویترین</span><h2>تازه و محبوب</h2></div><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div>
-  <div class="grid3">${st.products.slice(0,8).map(pcard).join('')}</div></div></section>
-  ${st.paths?.length?`<section class="dl-sec" id="paths" data-st="۰۶" data-sn="مسیرها"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">مسیرها</span><h2>از ابتدا تا تسلط</h2></div></div>
-  <div class="hp-paths">${st.paths.map((pa,pi)=>`<div class="path hp-path" style="--c:${esc(pa.color||'#F4D438')}"><div class="hp-pnum">${fa(pi+1).padStart(2,'۰')}</div><div class="row"><span style="font-size:26px">${esc(pa.icon||'🧭')}</span><div style="flex:1"><h3 style="font-size:17px">${esc(pa.title)}</h3><div class="dim" style="font-size:12.5px">${esc(pa.audience||'')}</div></div><span class="tag" style="--c:var(--mute)">${fa(pa.steps.length)} گام</span></div>
-  <p class="mute" style="font-size:13.5px;margin:10px 0 14px">${esc(pa.desc)}</p>
-  <div class="psteps">${pa.steps.map((s,i)=>`<a class="pstep ${s.status==='soon'?'soon':''}" href="/p/${esc(s.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(s.title)}</span></a>`).join('')}</div>
-  <a class="btn sm ghost mt" href="/p/${esc(pa.steps[0].id)}" style="margin-top:14px">شروع مسیر ←</a></div>`).join('')}</div></div></section>`:''}
-  <section class="dl-sec"><div class="wrap"><div class="cta"><div><h2 class="h2" style="font-size:clamp(24px,3.4vw,38px)">امروز، اولین گام را بردارید</h2><p class="mute" style="margin:8px 0 0">ثبت‌نام رایگان — خانواده‌ات هم می‌بیند.</p></div><div class="row wrapr"><a class="btn y" href="/c">دیدن کاتالوگ</a><a class="btn ghost" href="/quiz">آزمون آنلاین</a><a class="btn ghost" href="/planner/">برنامه‌ریز</a></div></div></div></section>`;
+  <section class="dl-sec" data-st="۰۵" data-sn="مقاطع"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">کاتالوگ</span><h2>بر اساس مقطع تحصیلی</h2></div><a class="btn sm ghost" href="/c">همهٔ محصولات ←</a></div>
+  <div class="dl-lvls">${[['دبستان','کلاس اول تا ششم','/c'],['متوسطهٔ اول','هفتم تا نهم','/c'],['متوسطهٔ دوم','دهم تا دوازدهم','/c'],['کنکور','ریاضی، تجربی، انسانی','/c']].map((l,i)=>`<a class="dl-lvl" href="${l[2]}"><i>${fa(i+1).padStart(2,'۰')}</i><div><b>${l[0]}</b><span>${l[1]}</span></div><em>${fa(live.filter(p=>(p.meta?.level||'').includes(l[0].slice(0,4))||p.cat==='konkur'&&l[0]==='کنکور').length||'—')} محصول</em><span class="dl-lvlgo">←</span></a>`).join('')}</div>
+  <div class="dl-prods">${live.map((p,i)=>`<a class="dl-prow" href="/p/${esc(p.id)}"><i>${fa(i+1).padStart(2,'۰')}</i><b>${esc(p.title)}</b><span class="dl-kind">${esc(p.kind)}</span><span class="dim dl-prow-d">${esc(p.meta?.subject||p.summary||'')}</span><span class="dl-price">${p.price?p.price.toLocaleString('fa-IR'):'رایگان'}</span></a>`).join('')}</div></div></section>
+  ${st.paths?.length?`<section class="dl-sec" data-st="۰۶" data-sn="مسیرها"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">مسیرها</span><h2>هر مسیر، یک زنجیرهٔ گام</h2></div></div>
+  <div class="dl-chains">${st.paths.map(pa=>`<div class="dl-chain" style="--c:${esc(pa.color||'#F4D438')}"><div class="dl-chainh"><i>${esc(pa.icon||'🧭')}</i><div><b>${esc(pa.title)}</b><p>${esc(pa.audience||'')} · ${fa(pa.steps.length)} گام</p></div></div>
+  <div class="dl-steps">${pa.steps.map((st2,i)=>`<a class="dl-stp ${st2.status==='soon'?'soon':''}" href="/p/${esc(st2.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(st2.title)}</span></a>`).join('')}</div></div>`).join('')}</div></div></section>`:''}
+  <section class="dl-sec" data-st="۰۷" data-sn="تعرفه"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">تعرفه</span><h2>هسته رایگان، ارزش واقعی قیمت‌دار</h2></div><a class="btn sm ghost" href="/pricing">جزئیات کامل ←</a></div>
+  <div class="dl-tiers">${[['رایگان','برنامه‌ریز، کلاس دوم، آزمونک و پیش‌نمایش همهٔ درس‌ها'],['محتوای ویژه','جزوه‌ها، کارنامهٔ روایی و گزارش‌ها با پرداخت امن زرین‌پال'],['سازندگان','فروش جزوه و گزارش در بازار با پیش‌نمایش زنده']].map((t,i)=>`<a class="dl-tier" href="/pricing"><i>${fa(i+1)}</i><b>${t[0]}</b><p>${t[1]}</p></a>`).join('')}</div></div></section>
+  <section class="dl-last" data-st="۰۸" data-sn="شروع"><div class="wrap dl-lastin"><div><span class="mn-k">گام آخر، همین است</span><h2>امروز شروع کنید —<br>خانواده‌ات می‌بیند.</h2></div><div class="row wrapr"><a class="btn y lg" href="/c">دیدن کاتالوگ</a><a class="btn lg ap-ghost" href="/quiz">آزمون آنلاین</a><a class="btn lg ap-ghost" href="/planner/">برنامه‌ریز</a></div></div></section>`;
   const hf=$('#hs')||$('#hss');if(hf)hf.onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/search?q='+encodeURIComponent(q))};
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
   journeyRail();
