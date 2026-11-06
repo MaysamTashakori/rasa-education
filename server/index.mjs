@@ -155,17 +155,18 @@ const routes = {
   },
   'GET /api/content': () => content(),
   'GET /api/quiz': () => {
+    const LEVELS = {ebt: 'دبستان', m1: 'متوسطهٔ اول', m2: 'متوسطهٔ دوم', konkur: 'کنکور'};
     const bank = [];
     for (const l of content().lessons.lessons || []) {
       const subj = (content().lessons.subjects || []).find(s => s.id === l.subj);
-      for (const a of l.acts || []) if (a.o && a.o.length) bank.push({s: subj?.name || 'کلاس دوم', g: 'کلاس دوم', q: a.q, m: a.m, o: a.o, a: a.a});
+      for (const a of l.acts || []) if (a.o && a.o.length) bank.push({lv: 'ebt', lvn: 'دبستان', s: subj?.name || 'کلاس دوم', g: 'کلاس دوم', q: a.q, m: a.m, o: a.o, a: a.a});
     }
     try {
       const cat = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'catalog.json'), 'utf8'));
-      const lv = Object.fromEntries((cat.levels || []).map(x => [x.id, x.name]));
-      for (const it of cat.items || []) for (const q of it.quiz || []) if (q.o && q.o.length) bank.push({s: it.subject, g: lv[it.level] || '', q: q.q, o: q.o, a: q.a, ex: q.ex});
+      for (const it of cat.items || []) for (const q of it.quiz || []) if (q.o && q.o.length) bank.push({lv: it.level, lvn: LEVELS[it.level] || it.level, s: it.subject, q: q.q, o: q.o, a: q.a, ex: q.ex});
     } catch {}
-    return {items: bank};
+    const levels = [...new Set(bank.map(x => x.lvn))].map(n => ({name: n, n: bank.filter(x => x.lvn === n).length}));
+    return {items: bank, levels};
   },
   'GET /api/library': req => ({items: db.prepare('SELECT pid FROM library WHERE uid=?').all(auth(req).id).map(r => r.pid)}),
   'POST /api/market/claim': (req, res, b) => {

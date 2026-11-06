@@ -238,3 +238,6 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
 .qz-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:14px 22px 0}
 .qz-tabs .chip{height:30px;font-size:12px}
 .qz-m{text-align:center;font-size:24px;font-weight:900;color:var(--y);margin:4px 0 10px;direction:ltr}
+.qz-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.qz-row:first-child{margin-top:0}
+.qz-row:last-child .chip{opacity:.8}
