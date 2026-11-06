@@ -140,10 +140,22 @@ function home(){
       <div class="hl-chips">${[['درس تعاملی','/c?kind=lesson'],['آزمون آنلاین','/quiz'],['کارنامه','/me#report'],['برنامه‌ریز','/planner/']].map(c=>`<a class="st-tag" href="${c[1]}">${c[0]}</a>`).join('')}</div>
       <div class="hl-live"><span class="st-live"></span><span><b data-cu="${live.length}">۰</b> محصول زنده · <b data-cu="${lv.attempts||0}">۰</b> آزمونک امروز · <b data-cu="${lv.families||0}">۰</b> خانواده</span></div>
     </div>
-    <div class="br-lesson st-reveal" id="lesson">
+    <div class="hl-side st-reveal">
+    <div class="br-lesson" id="lesson">
       <div class="br-top"><span class="st-eyebrow" dir="ltr">TRY IT · درس زنده</span><span class="br-stars" id="br-stars">☆☆☆</span></div>
       <div class="br-stage" id="br-stage"></div>
       <div class="br-bar"><i id="br-p"></i></div>
+    </div>
+    <div class="br-report">
+      <div class="br-rh"><span class="st-eyebrow" dir="ltr">SMART REPORT</span><span class="dim" style="font-size:11px">کارنامهٔ هوشمند — نمونه</span></div>
+      <div class="br-rbars">
+        <div class="br-rb"><span class="br-rl">بلد است</span><div class="br-rtrack"><i style="width:72%;background:var(--ok)"></i></div><b>۷۲٪</b></div>
+        <div class="br-rb"><span class="br-rl">در حال تمرین</span><div class="br-rtrack"><i style="width:18%;background:var(--y)"></i></div><b>۱۸٪</b></div>
+        <div class="br-rb"><span class="br-rl">گام بعدی</span><div class="br-rtrack"><i style="width:10%;background:var(--cy)"></i></div><b>۱۰٪</b></div>
+      </div>
+      <p class="br-rf">«مبحث «عددهای صحیح» را یک گام دیگر تمرین کن؛ فردا مرور کوتاهش در برنامه‌ست.»</p>
+    </div>
+    </div>
     </div>
   </div></section>
   <div class="hl-band" aria-hidden="true"><div class="hl-band-in">${[0,1].map(k=>`<div class="hl-band-r" ${k?'aria-hidden="true"':''}>${band.map(b=>`<span>${b}<i>✦</i></span>`).join('')}</div>`).join('')}</div></div>
@@ -174,14 +186,14 @@ const BR_PIES=[
  'background:conic-gradient(#F4D438 0 75%,#2A2A2A 75% 100%)',
  'background:conic-gradient(#F4D438 0 100%,#2A2A2A 100% 100%)'];
 const BR_STEPS=[
- {t:'کدام شکل «نصف» دایره را نشان می‌دهد؟',type:'pie',opts:[0,1,2,3],a:0,fb:'نصف یعنی دایره به دو قسمت مساوی تقسیم شده باشد؛ فقط شکل اول.'},
- {t:'عدد قبل از ۸ کدام است؟',type:'num',opts:['۶','۷','۹','۱۰'],a:1,fb:'۷ عدد قبل از ۸ است — مثل پله‌های پشت‌سرهم.'},
- {t:'۷ + ۵ = ؟',type:'num',opts:['۱۱','۱۲','۱۳','۱۰'],a:1,fb:'۵ تا به ۷ اضافه کن: ۸، ۹، ۱۰، ۱۱، ۱۲.'},
- {t:'کدام‌یک «بیشتر از نصف» است؟',type:'pie',opts:[0,1,2,3],a:2,fb:'بیشتر از نصف یعنی بیشتر از نیمی از دایره رنگی باشد — شکل سوم.'}];
+ {t:'اگر x + ۵ = ۱۲ باشد، x برابر است با:',type:'num',opts:['۵','۶','۷','۸'],a:2,fb:'دو طرف تساوی را ۵ تا کم کن: x = ۱۲ − ۵ = ۷.'},
+ {t:'حاصل ۲/۳ + ۱/۶ کدام است؟',type:'num',opts:['۳/۹','۵/۶','۲/۳','۱'],a:1,fb:'مخرج مشترک ۶ است: ۴/۶ + ۱/۶ = ۵/۶.'},
+ {t:'متمم زاویهٔ ۳۵ درجه چند درجه است؟',type:'num',opts:['۵۵','۱۴۵','۱۲۵','۳۵'],a:1,fb:'متمم هر زاویه برابر ۱۸۰ منهای آن زاویه است: ۱۸۰ − ۳۵ = ۱۴۵.'},
+ {t:'اگر y = 2x و x = 4 باشد، y برابر است با:',type:'num',opts:['۶','۸','۱۰','۱۲'],a:1,fb:'مقدار y دو برابر x است: y = 2 × 4 = 8.'}];
 function bindLesson(){const stage=$('#br-stage');if(!stage)return;let i=0,stars=0,lock=false;
  const paint=()=>{const s=BR_STEPS[i];$('#br-p').style.width=((i)/BR_STEPS.length*100)+'%';
-  if(s.type==='pie'){stage.innerHTML=`<div class="br-q">${s.t}</div><div class="br-opts br-pies">${s.opts.map((o,x)=>`<button class="br-opt br-pie" data-x="${x}" aria-label="شکل ${fa(x+1)}"><i style="${BR_PIES[o]}"></i></button>`).join('')}</div><div class="br-fb" id="br-fb"></div>`}
-  else{stage.innerHTML=`<div class="br-q">${s.t}</div><div class="br-opts">${s.opts.map((o,x)=>`<button class="br-opt" data-x="${x}">${o}</button>`).join('')}</div><div class="br-fb" id="br-fb"></div>`}
+  if(s.type==='pie'){stage.innerHTML=`<div class="br-lh"><span class="st-tag">گام ${fa(i+1)} از ${fa(BR_STEPS.length)}</span><span class="dim" style="font-size:11px">ریاضی · متوسطه</span></div><div class="br-q">${s.t}</div><div class="br-opts br-pies">${s.opts.map((o,x)=>`<button class="br-opt br-pie" data-x="${x}" aria-label="شکل ${fa(x+1)}"><i style="${BR_PIES[o]}"></i></button>`).join('')}</div><div class="br-fb" id="br-fb"></div>`}
+  else{stage.innerHTML=`<div class="br-lh"><span class="st-tag">گام ${fa(i+1)} از ${fa(BR_STEPS.length)}</span><span class="dim" style="font-size:11px">ریاضی · متوسطه</span></div><div class="br-q">${s.t}</div><div class="br-opts">${s.opts.map((o,x)=>`<button class="br-opt" data-x="${x}">${o}</button>`).join('')}</div><div class="br-fb" id="br-fb"></div>`}
   $$('#br-stage .br-opt').forEach(b=>b.onclick=()=>{if(lock)return;const ok=+b.dataset.x===s.a;$$('#br-stage .br-opt').forEach(x=>{x.disabled=true;if(+x.dataset.x===s.a)x.classList.add('ok');else if(x===b)x.classList.add('no')});
    const fb=$('#br-fb');if(ok){stars++;$('#br-stars').textContent='★'.repeat(stars)+'☆'.repeat(BR_STEPS.length-stars);fb.innerHTML=`<b class="br-ok">آفرین!</b> ${s.fb}`;lock=true;setTimeout(next,1400)}
    else{fb.innerHTML=`<b class="br-no">نه — دوباره nhìn کن.</b> <button class="br-re" id="br-re">تلاش مجدد</button>`;$('#br-re').onclick=()=>{lock=false;paint()}}})};

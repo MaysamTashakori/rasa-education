@@ -668,3 +668,17 @@ a.st-tag:hover{color:var(--ink);border-color:var(--line2)}
 .br-pie.ok i{border-color:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 30%,transparent)}
 .br-pie.no i{border-color:var(--bad)}
 @media(max-width:560px){.br-pies{grid-template-columns:repeat(2,1fr)}}
+/* lesson column + smart report card */
+.hl-side{display:flex;flex-direction:column;gap:14px}
+.br-report{border:1px solid var(--line);border-radius:20px;background:var(--card);padding:18px 20px}
+.br-rh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.br-rbars{display:grid;gap:10px}
+.br-rb{display:grid;grid-template-columns:74px 1fr 38px;align-items:center;gap:10px;font-size:12px}
+.br-rl{color:var(--mute);font-weight:700;white-space:nowrap}
+.br-rtrack{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.br-rtrack i{display:block;height:100%;border-radius:99px;transition:width 1s cubic-bezier(.23,1,.32,1)}
+.br-rb b{font-size:12px;text-align:left;font-variant-numeric:tabular-nums}
+.br-rf{margin:14px 0 0;font-size:12.5px;line-height:1.9;color:var(--mute);border-top:1px dashed var(--line2);padding-top:12px}
+.br-lh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+@media(max-width:960px){.hl-side{order:-1}.br-rb{grid-template-columns:64px 1fr 34px}}
+@media(max-width:420px){.br-rb{grid-template-columns:1fr;gap:4px}.br-rtrack{grid-column:1/-1;order:3}}
