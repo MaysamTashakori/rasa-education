@@ -13,7 +13,7 @@ const out = root + 'dist/kids/';
 mkdirSync(out, {recursive: true});
 w(out + 'index.html', html);
 w(out + 'icon.svg', r(root + 'brand/logo.svg', 'utf8'));
-w(out + 'manifest.webmanifest', JSON.stringify({name: 'رسا اجوکیشن — کلاس دوم', short_name: 'رسا · کلاس دوم', lang: 'fa', dir: 'rtl', start_url: './', scope: './', display: 'standalone', background_color: '#F7F7F7', theme_color: '#F7F7F7', icons: [{src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable'}]}, null, 2));
+w(out + 'manifest.webmanifest', JSON.stringify({name: 'رسا آموزش — کلاس دوم', short_name: 'رسا · کلاس دوم', lang: 'fa', dir: 'rtl', start_url: './', scope: './', display: 'standalone', background_color: '#F7F7F7', theme_color: '#F7F7F7', icons: [{src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable'}]}, null, 2));
 const ver = Date.now().toString(36);
 w(out + 'sw.js', `const C='rasa-kids-${ver}',A=['./','index.html','manifest.webmanifest','icon.svg'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(A)));self.skipWaiting()});

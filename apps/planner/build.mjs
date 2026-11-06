@@ -11,7 +11,7 @@ const logo = r(root + 'brand/logo.svg', 'utf8').trim();
 const catalog = JSON.stringify(JSON.parse(r(root + 'content/catalog.json', 'utf8')));
 const js = ['core.js', 'app.js', 'views.js'].map(src).join('\n').replace(/<\/script/gi, '<\\/script');
 const css = src('style.css') + '\n' + src('rasa.css');
-const manifest = {name: 'رسا اجوکیشن — برنامه‌ریز هوشمند', short_name: 'رسا اجوکیشن', lang: 'fa', dir: 'rtl', start_url: './', scope: './', display: 'standalone', background_color: '#050505', theme_color: '#050505', icons: [{src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable'}]};
+const manifest = {name: 'رسا آموزش — برنامه‌ریز هوشمند', short_name: 'رسا آموزش', lang: 'fa', dir: 'rtl', start_url: './', scope: './', display: 'standalone', background_color: '#050505', theme_color: '#050505', icons: [{src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable'}]};
 const page = (iconHref, manifestHref) => src('index.html')
   .replace('<!--ICON-->', `<link rel="icon" type="image/svg+xml" href="${iconHref}"><link rel="apple-touch-icon" href="${iconHref}">`)
   .replace('<!--MANIFEST-->', manifestHref ? `<link rel="manifest" href="${manifestHref}">` : '')

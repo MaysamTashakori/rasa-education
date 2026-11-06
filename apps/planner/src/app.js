@@ -93,7 +93,7 @@ function ask({title,msg,input,ok='تأیید',value=''}){return new Promise(res=
 function gate(mode){const us=users();if(!us.length)mode='reg';const g=$('#gate');g.hidden=false;$('#app').hidden=true;$('#nav').hidden=true;
  const last=localStorage.getItem('mst.last')||us[0]?.u||'';
  const logo=`<div class="logo">${LOGO_SVG}</div>`;
- g.innerHTML=`<div class="box">${logo}<h1>رسا اجوکیشن</h1><p class="c">برنامه‌ریز هوشمند درسی · ردیاب مطالعه · تحلیل آزمون</p>${mode==='reg'?`
+ g.innerHTML=`<div class="box">${logo}<h1>رسا آموزش</h1><p class="c">برنامه‌ریز هوشمند درسی · ردیاب مطالعه · تحلیل آزمون</p>${mode==='reg'?`
  <form class="form" id="gReg" autocomplete="off"><label class="fld"><span>نام و نام خانوادگی دانش‌آموز / دانشجو</span><input class="in" id="rName" required maxlength="60"></label>
  <div class="row"><label class="fld"><span>نام کاربری (لاتین)</span><input class="in" id="rUser" required pattern="[A-Za-z0-9_.\\-]{3,24}" dir="ltr" autocapitalize="off"></label><label class="fld"><span>پایه / رشته</span><input class="in" id="rGrade" placeholder="مثلاً دوازدهم تجربی"></label></div>
  <div class="row"><label class="fld"><span>رمز عبور</span><input class="in" id="rPass" type="password" required minlength="4" dir="ltr"></label><label class="fld"><span>تکرار رمز</span><input class="in" id="rPass2" type="password" required dir="ltr"></label></div>
@@ -136,7 +136,7 @@ async function notify(title,body){toast('🔔 '+title+(body?' — '+body:''),600
  try{const r=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(r){r.showNotification(title,{body,tag:title,icon:ICON_URL});return}new Notification(title,{body,icon:ICON_URL})}catch(e){}}
 function tickReminders(){if(!S)return;const now=new Date(),d=today(),hmNow=p2(now.getHours())+':'+p2(now.getMinutes()),wi=wdi(d),F=S.fired;let ch=false;
  const fire=(k,t,b)=>{if(F[k])return;F[k]=d;ch=true;notify(t,b)};
- S.reminders.forEach(r=>{if(r.on&&r.days[wi]&&r.time===hmNow)fire(r.id+'|'+d,r.title,'رسا اجوکیشن')});
+ S.reminders.forEach(r=>{if(r.on&&r.days[wi]&&r.time===hmNow)fire(r.id+'|'+d,r.title,'رسا آموزش')});
  S.events.forEach(e=>{if(e.rem==null||e.rem<0||!e.time)return;const [h,m]=e.time.split(':').map(Number);const at=new Date(...e.date.split('-').map((x,i)=>i===1?x-1:+x),h,m).getTime()-e.rem*60000;if(now>=at&&now-at<180000)fire('ev'+e.id,`${EV_TYPES[e.type]?.[1]||''} ${e.title}`,`${jW(e.date)} ساعت ${faD(e.time)}`)});
  if(S.settings.smartRem){const st=streak();if(hmNow>='21:00'&&hmNow<'21:03'&&st.cur>0&&!st.todayOk)fire('streak|'+d,'استریک در خطر است 🔥',`برای حفظ ${faD(st.cur)} روز پیاپی، امروز ${faD(S.settings.streakMin)} دقیقه مطالعه کن.`);
   const dr=dueReviews().length;if(hmNow==='18:00'&&dr)fire('rev|'+d,'مرورهای امروز',`${faD(dr)} مبحث برای مرور فاصله‌دار موعد دارد.`)}

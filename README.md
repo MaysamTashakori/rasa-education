@@ -1,4 +1,6 @@
-# رسا اجوکیشن · Rasa Education
+# رسا آموزش · Rasa Amozesh
+
+> **گام‌به‌گام، تا رسیدن.** پلتفرم یادگیری گام‌به‌گام فارسی که یک بنیان‌گذار و تیمی از ایجنت‌ها اداره می‌کنند — [فلسفه](docs/10-philosophy.md) · [برندبوک](docs/01-brand-book.md) · [سیستم‌عامل شرکت](docs/11-company-os.md) · [سکوی داده](docs/12-data-platform.md) · [SaaS/AIaaS](docs/13-saas-aiaas.md)
 
 **تمرکز فعلی: سامانهٔ رایگان کلاس دوم ابتدایی** (`apps/kids` + `server/`) — روال روزانه و ستاره، دفتر مشق، کیف فردا، کتاب‌خوانی، جایزهٔ والد، درس‌های تعاملی و بازار کاربرگ‌های چاپی. اجرا: `node apps/kids/build.mjs && node server/index.mjs` (Node 22.5+).
 

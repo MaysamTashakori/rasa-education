@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#050505">
-<meta name="description" content="رسا اجوکیشن — برنامه‌ریز هوشمند درسی، ردیاب مطالعه و تحلیل آزمون؛ آفلاین و رمزگذاری‌شده روی دستگاه.">
+<meta name="description" content="رسا آموزش — برنامه‌ریز هوشمند درسی، ردیاب مطالعه و تحلیل آزمون؛ آفلاین و رمزگذاری‌شده روی دستگاه.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="رسا اجوکیشن">
-<title>رسا اجوکیشن | برنامه‌ریز هوشمند درسی</title>
+<meta name="apple-mobile-web-app-title" content="رسا آموزش">
+<title>رسا آموزش | برنامه‌ریز هوشمند درسی</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg"><link rel="apple-touch-icon" href="icon.svg">
 <link rel="manifest" href="manifest.webmanifest">
 <style>
@@ -277,7 +277,7 @@ svg.c .hc:hover{transform:scale(1.35);stroke:var(--ink);stroke-width:1}
   #printArea{display:block!important}
 }
 
-/* Rasa Education brand layer — tokens from docs/01-brand-book.md */
+/* Rasa Amozesh brand layer — tokens from docs/01-brand-book.md */
 [hidden]{display:none!important}
 :root[data-theme=rasa]{--r:18px;--bg:#050505;--ink:#FAFAFA;--ink2:#D9D9D9;--mute:#BCBCBC;--line:#262626;--line2:#414141;
 --card:#121212;--card2:#1C1C1C;--glow:#F4D438;--live:linear-gradient(120deg,#FFE66A 0%,#F4D438 60%,#E9C21C 100%);
@@ -631,7 +631,7 @@ function ask({title,msg,input,ok='تأیید',value=''}){return new Promise(res=
 function gate(mode){const us=users();if(!us.length)mode='reg';const g=$('#gate');g.hidden=false;$('#app').hidden=true;$('#nav').hidden=true;
  const last=localStorage.getItem('mst.last')||us[0]?.u||'';
  const logo=`<div class="logo">${LOGO_SVG}</div>`;
- g.innerHTML=`<div class="box">${logo}<h1>رسا اجوکیشن</h1><p class="c">برنامه‌ریز هوشمند درسی · ردیاب مطالعه · تحلیل آزمون</p>${mode==='reg'?`
+ g.innerHTML=`<div class="box">${logo}<h1>رسا آموزش</h1><p class="c">برنامه‌ریز هوشمند درسی · ردیاب مطالعه · تحلیل آزمون</p>${mode==='reg'?`
  <form class="form" id="gReg" autocomplete="off"><label class="fld"><span>نام و نام خانوادگی دانش‌آموز / دانشجو</span><input class="in" id="rName" required maxlength="60"></label>
  <div class="row"><label class="fld"><span>نام کاربری (لاتین)</span><input class="in" id="rUser" required pattern="[A-Za-z0-9_.\\-]{3,24}" dir="ltr" autocapitalize="off"></label><label class="fld"><span>پایه / رشته</span><input class="in" id="rGrade" placeholder="مثلاً دوازدهم تجربی"></label></div>
  <div class="row"><label class="fld"><span>رمز عبور</span><input class="in" id="rPass" type="password" required minlength="4" dir="ltr"></label><label class="fld"><span>تکرار رمز</span><input class="in" id="rPass2" type="password" required dir="ltr"></label></div>
@@ -674,7 +674,7 @@ async function notify(title,body){toast('🔔 '+title+(body?' — '+body:''),600
  try{const r=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(r){r.showNotification(title,{body,tag:title,icon:ICON_URL});return}new Notification(title,{body,icon:ICON_URL})}catch(e){}}
 function tickReminders(){if(!S)return;const now=new Date(),d=today(),hmNow=p2(now.getHours())+':'+p2(now.getMinutes()),wi=wdi(d),F=S.fired;let ch=false;
  const fire=(k,t,b)=>{if(F[k])return;F[k]=d;ch=true;notify(t,b)};
- S.reminders.forEach(r=>{if(r.on&&r.days[wi]&&r.time===hmNow)fire(r.id+'|'+d,r.title,'رسا اجوکیشن')});
+ S.reminders.forEach(r=>{if(r.on&&r.days[wi]&&r.time===hmNow)fire(r.id+'|'+d,r.title,'رسا آموزش')});
  S.events.forEach(e=>{if(e.rem==null||e.rem<0||!e.time)return;const [h,m]=e.time.split(':').map(Number);const at=new Date(...e.date.split('-').map((x,i)=>i===1?x-1:+x),h,m).getTime()-e.rem*60000;if(now>=at&&now-at<180000)fire('ev'+e.id,`${EV_TYPES[e.type]?.[1]||''} ${e.title}`,`${jW(e.date)} ساعت ${faD(e.time)}`)});
  if(S.settings.smartRem){const st=streak();if(hmNow>='21:00'&&hmNow<'21:03'&&st.cur>0&&!st.todayOk)fire('streak|'+d,'استریک در خطر است 🔥',`برای حفظ ${faD(st.cur)} روز پیاپی، امروز ${faD(S.settings.streakMin)} دقیقه مطالعه کن.`);
   const dr=dueReviews().length;if(hmNow==='18:00'&&dr)fire('rev|'+d,'مرورهای امروز',`${faD(dr)} مبحث برای مرور فاصله‌دار موعد دارد.`)}
@@ -693,7 +693,7 @@ function applyTheme(){document.documentElement.dataset.theme=S?S.settings.theme:
 function cycleTheme(){const i=THEMES.findIndex(t=>t[0]===S.settings.theme);S.settings.theme=THEMES[(i+1)%THEMES.length][0];applyTheme();save();render();toast('تم: '+THEMES.find(t=>t[0]===S.settings.theme)[1])}
 
 /* ===== brand ===== */
-const LOGO_SVG='<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="رسا اجوکیشن"><rect width="256" height="256" rx="56" fill="#080808"/><path d="M60 64H132Q156 64 164 86L168 100H92Q72 100 64 84Z" fill="#FAFAFA"/><path d="M48 112H164Q190 112 202 132L210 148H92Q66 148 54 130Z" fill="#F4D438"/><path d="M40 160H180Q206 160 216 180L222 196H84Q58 196 46 178Z" fill="#FAFAFA"/><circle cx="198" cy="74" r="14" fill="#F4D438"/></svg>';
+const LOGO_SVG='<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="رسا آموزش"><rect width="256" height="256" rx="56" fill="#080808"/><rect x="44" y="92" width="84" height="34" rx="17" fill="#FAFAFA"/><rect x="44" y="140" width="128" height="34" rx="17" fill="#F4D438"/><rect x="44" y="188" width="172" height="34" rx="17" fill="#FAFAFA"/><circle cx="72" cy="56" r="20" fill="#F4D438"/></svg>';
 const ICON_URL='data:image/svg+xml,'+encodeURIComponent(LOGO_SVG);
 const CATALOG=window.RASA_CATALOG||{items:[],levels:[]};
 const EV_C={exam:'#F4D438',class:'#70DFCC',due:'#FF7E5F',consult:'#B9A0FF',other:'#9AA0A6'};
@@ -712,7 +712,7 @@ const card=(n,title,body,extra='')=>`<div class="card"><div class="eyb">${n}</di
 function topbar(){const st=streak();return `<div class="top"><div class="brand">${LOGO_SVG}</div><div class="hello"><small><span class="clock" id="clk"></span></small><b>${esc(S.profile.name||USER.u)}</b></div>
  <button class="btn sm flame ${st.todayOk?'on':'off'}" data-a="go" data-v="more" data-tip="استریک: ${faD(st.cur)} روز پیاپی"><span class="fi">🔥</span>${faD(st.cur)}</button>
  <button class="ib btn sm" data-a="theme" data-tip="تغییر تم">◐</button><button class="ib btn sm" data-a="lock" data-tip="قفل حساب">🔒</button></div>`}
-function render(){if(!S)return;const el=$('#app'),V=VIEWS[VIEW];el.innerHTML=topbar()+`<section class="view on" id="v-${VIEW}">${V.html()}</section><div class="credit2">رسا اجوکیشن · داده‌ها رمزگذاری‌شده روی همین دستگاه · Prepared by Maysam Tashakori</div>`;V.after&&V.after();countUp(el);tickClock()}
+function render(){if(!S)return;const el=$('#app'),V=VIEWS[VIEW];el.innerHTML=topbar()+`<section class="view on" id="v-${VIEW}">${V.html()}</section><div class="credit2">رسا آموزش · داده‌ها رمزگذاری‌شده روی همین دستگاه · Prepared by Maysam Tashakori</div>`;V.after&&V.after();countUp(el);tickClock()}
 function tickClock(){const c=$('#clk');if(c){const n=new Date();c.textContent=`${jW(today())} · ${faD(p2(n.getHours())+':'+p2(n.getMinutes())+':'+p2(n.getSeconds()))}`}}
 /* ===== plan helpers ===== */
 const planDay=d=>S.plans[weekStart(d)]?.days[d]||null;
@@ -795,7 +795,7 @@ mot:{html(){const st=streak(),x=xpInfo(),b=badges();return `<div class="grid"><d
  ${card('۰۳ · نقشهٔ پایداری','یک سال مطالعه، روز به روز','<div class="heat-box" id="hmY"></div><div class="hl">کمتر <i style="background:var(--h0)"></i><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i> بیشتر</div>')}
  ${card('۰۴ · نشان‌ها',`${faD(b.filter(x=>x[3]).length)} از ${faD(b.length)} نشان`,`<div class="badges">${b.map(x=>`<div class="bdg ${x[3]?'':'lock'}"><div class="bi">${x[0]}</div><b>${x[1]}</b><span>${x[2]}</span></div>`).join('')}</div>`)}
  <div class="card"><div class="quote">${QUOTES[J(today()).jd%QUOTES.length]}</div></div></div>`},after(){$('#hmY').innerHTML=chartHeat({end:today(),weeks:53,data:byDay(),level:heatLv},900);const h=$('#hmY');h.scrollLeft=-h.scrollWidth}},
-lib:{html(){const L=CATALOG.levels,items=CATALOG.items.filter(i=>LIB_L==='all'||i.level===LIB_L);return `<div class="grid"><div class="card"><div class="eyb">رسا اجوکیشن · کتابخانه</div><div class="hero-r"><div><h2>جزوه‌های تعاملی،<br>برای هر پایه.</h2><p>نقشه‌های ذهنی، آزمونک‌های هوشمند و قالب‌های برنامه که مستقیم به برنامه‌ریز و مرور فاصله‌دار تو وصل می‌شوند. نمونه‌ها رایگان‌اند؛ خرید در نسخهٔ سامانه فعال می‌شود.</p></div></div>
+lib:{html(){const L=CATALOG.levels,items=CATALOG.items.filter(i=>LIB_L==='all'||i.level===LIB_L);return `<div class="grid"><div class="card"><div class="eyb">رسا آموزش · کتابخانه</div><div class="hero-r"><div><h2>جزوه‌های تعاملی،<br>برای هر پایه.</h2><p>نقشه‌های ذهنی، آزمونک‌های هوشمند و قالب‌های برنامه که مستقیم به برنامه‌ریز و مرور فاصله‌دار تو وصل می‌شوند. نمونه‌ها رایگان‌اند؛ خرید در نسخهٔ سامانه فعال می‌شود.</p></div></div>
  <div class="chips" style="margin-top:12px"><button class="chip ${LIB_L==='all'?'on':''}" data-a="ll" data-l="all">همه</button>${L.map(l=>`<button class="chip ${LIB_L===l.id?'on':''}" data-a="ll" data-l="${l.id}">${esc(l.name)}</button>`).join('')}</div></div>
  <div class="prod">${items.map((it,i)=>`<div class="card"><span class="num-i">${faD(p2(i+1))}</span><div class="art">${esc(it.glyph)}</div><h3>${esc(it.title)}</h3><p>${esc(it.desc)}</p><div class="chips">${[L.find(l=>l.id===it.level)?.name,it.subject,it.kind].filter(Boolean).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div>
  <div class="row" style="justify-content:space-between"><span class="price">${esc(it.price)}</span><span class="muted small">${esc(it.status)}</span></div><div class="acts">${it.quiz?`<button class="btn sm p" data-a="quiz" data-id="${it.id}">نمونهٔ تعاملی ↗</button>`:''}${it.template?`<button class="btn sm p" data-a="tpl" data-id="${it.id}">اعمال قالب</button>`:''}<button class="btn sm" data-a="buy" data-id="${it.id}">خرید / دانلود</button></div></div>`).join('')}</div>
@@ -821,7 +821,7 @@ function reportHtml(){const n=REP_N,t=today(),a=addD(t,-(n-1)),m=minsIn(a,t),st=
  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0">${[['مطالعهٔ کل',hm(m)||'۰'],['میانگین روزانه',hm(Math.round(m/n))||'۰'],['استریک فعلی / بهترین',`${faD(st.cur)} / ${faD(st.best)} روز`],['آزمون‌ها در بازه',faD(ex.length)]].map(k=>`<div style="border:1px solid #ddd;border-radius:10px;padding:8px"><div style="color:#555;font-size:12px">${k[0]}</div><b style="font-size:17px">${k[1]}</b></div>`).join('')}</div>
  <h3>مطالعهٔ روزانه (دقیقه)</h3>${bar}${line?`<h3>روند تراز</h3>${line}`:''}
  <h3>درس‌ها</h3><table class="rt"><tr><th>درس</th><th>مطالعه در بازه</th><th>میانگین ۳ آزمون اخیر</th></tr>${rows.map(r=>`<tr><td>${esc(r[0].name)}</td><td>${r[1]>0?hm(r[1]):'—'}</td><td>${r[2]!=null?fa(r[2],1)+'٪':'—'}</td></tr>`).join('')}</table>
- <h3>تحلیل هوشمند</h3><ul>${insights().map(x=>`<li>${esc(x.t)}</li>`).join('')}</ul><div style="color:#777;font-size:11px;margin-top:14px;text-align:center">رسا اجوکیشن · برنامه‌ریز هوشمند درسی · Prepared by Maysam Tashakori</div></div>`}
+ <h3>تحلیل هوشمند</h3><ul>${insights().map(x=>`<li>${esc(x.t)}</li>`).join('')}</ul><div style="color:#777;font-size:11px;margin-top:14px;text-align:center">رسا آموزش · برنامه‌ریز هوشمند درسی · Prepared by Maysam Tashakori</div></div>`}
 const REP_CSS='.rp{font-family:Vazirmatn,Tahoma,sans-serif;color:#111;direction:rtl}.rp h3{font-size:15px;margin:14px 0 6px}.rp svg{max-width:100%;height:auto}.rp .ax{font-size:11px;fill:#555}.rp .vl{font-size:11px;font-weight:800;fill:#111}.rp .gridm{stroke:#e3e3e3;stroke-dasharray:2 4}.rp .goal{stroke:#795B00;stroke-dasharray:6 5;stroke-width:1.6}.rp .comet{display:none}.rt{width:100%;border-collapse:collapse;font-size:13px}.rt th,.rt td{border:1px solid #ddd;padding:5px 8px;text-align:right}.rt th{background:#f4f4f4}';
 /* ===== timer ===== */
 function openTimer(){TCFG=TCFG||{mode:'pomo',target:+S.settings.block||45,subj:planDay(today())?.find(b=>!b.done)?.subj||S.subjects[0]?.id};openOv('ovTimer');renderTimer()}
@@ -853,7 +853,7 @@ const ACT={go:d=>go(d.v),timer:()=>openTimer(),theme:()=>cycleTheme(),lock:()=>l
  mt:d=>{MORE_T=d.t;render()},ll:d=>{LIB_L=d.l;render()},rn:d=>{REP_N=+d.n;render()},
  quiz:d=>runQuiz(findIt(d.id)),tpl:async d=>{const it=findIt(d.id);if(!await ask({title:it.title,msg:'درس‌ها و ضریب‌ها با این قالب جایگزین می‌شوند (داده‌های قبلی درس‌ها حفظ می‌شود). ادامه؟',ok:'اعمال'}))return;
   it.template.forEach(([n,w],i)=>{const s=S.subjects.find(x=>x.name===n);if(s)s.w=w;else S.subjects.push({id:'s'+uid(),name:n,w,color:PAL[(S.subjects.length+i)%PAL.length]})});commit();toast('قالب اعمال شد؛ برنامهٔ هوشمند را بازسازی کن')},
- buy:async d=>{const it=findIt(d.id);if(await ask({title:'خرید و دانلود «'+it.title+'»',msg:'فروشگاه و پرداخت در نسخهٔ سامانهٔ رسا اجوکیشن فعال می‌شود. برای اطلاع از انتشار، سایت رسا را ببین.',ok:'رفتن به سایت رسا'}))open('https://rasa-prompt.ir/','_blank','noopener')},
+ buy:async d=>{const it=findIt(d.id);if(await ask({title:'خرید و دانلود «'+it.title+'»',msg:'فروشگاه و پرداخت در نسخهٔ سامانهٔ رسا آموزش فعال می‌شود. برای اطلاع از انتشار، سایت رسا را ببین.',ok:'رفتن به سایت رسا'}))open('https://rasa-prompt.ir/','_blank','noopener')},
  print:()=>{$('#printArea').innerHTML=`<style>${REP_CSS}</style>`+reportHtml();setTimeout(()=>print(),60)},
  share:async()=>{const doc=`<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>گزارش پیشرفت ${esc(S.profile.name)}</title><style>body{margin:0;padding:18px;background:#fff}${REP_CSS}</style></head><body>${reportHtml()}</body></html>`;
   const r=await shareOrDownload(`rasa-report-${USER.u}-${tsFile(Date.now())}.html`,doc,'text/html','گزارش پیشرفت تحصیلی');if(r!=='abort')toast('گزارش آماده شد')},

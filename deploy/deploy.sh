@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploys/updates Rasa Education (Node API + static apps) on a Docker host.
+# Deploys/updates Rasa Amozesh (Node API + static apps) on a Docker host.
 #   RASA_PORT=8740 ./deploy/deploy.sh        data persists in $RASA_DATA (default /opt/rasa-education-data)
 set -euo pipefail
 PORT="${RASA_PORT:-8740}"

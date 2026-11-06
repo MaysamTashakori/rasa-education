@@ -1,9 +1,10 @@
-// Rasa Education API + static server. Zero dependencies (Node >= 22.5, node:sqlite).
+// Rasa Amozesh API + static server. Zero dependencies (Node >= 22.5, node:sqlite).
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
+import {initBots} from './bots.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const PORT = +(process.env.PORT || 8080);
@@ -162,6 +163,7 @@ const routes = {
     return {ok: true};
   },
 };
+Object.assign(routes, initBots(db, {auth, fail, PD}).routes);
 const compiled = Object.entries(routes).map(([k, fn]) => {
   const [method, pattern] = k.split(' '), keys = [];
   const re = new RegExp('^' + pattern.replace(/:(\w+)/g, (_, n) => {keys.push(n); return '([^/]+)'}) + '$');
