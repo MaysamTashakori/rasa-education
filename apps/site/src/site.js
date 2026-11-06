@@ -116,27 +116,27 @@ const SERVICES=[
   ['۱۱','تعرفه و اشتراک','ابزارهای پایه رایگان؛ محتواهای ویژه با پرداخت امن زرین‌پال.','مالی','#8A8A8A','/pricing']
 ];
 function head(n,en,title,line){return `<div class="hl-head"><b class="st-index" aria-hidden="true">${n}</b><p class="st-eyebrow" dir="ltr">${n} / ${en}</p><h2>${title}</h2>${line?`<p class="hl-line">${line}</p>`:''}</div>`}
+function head(n,en,title,line){return `<div class="hl-head"><b class="st-index" aria-hidden="true">${n}</b><p class="st-eyebrow" dir="ltr">${n} / ${en}</p><h2>${title}</h2>${line?`<p class="hl-line">${line}</p>`:''}</div>`}
 function home(){
-  const st=S.store,live=st.products.filter(p=>p.status==='live'),lv=st.live||{};
+  const st=S.store,live=st.products.filter(p=>p.status==='live'),lv=st.live||{},cats=st.categories.filter(c=>!c.parent);
   setMeta('رسا آموزش · هر روز یک گام روشن','رسا آموزش: پلتفرم یادگیری گام‌به‌گام — درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی برای دانش‌آموزان، والدین و معلمان.');
-  const day=[
-   ['صبح','🌅','برنامه‌ریز بیدارت می‌کند','برنامهٔ امروز و یادآور کیف فردا در رباتت می‌نشیند.',[['برنامه‌ریز درسی','/planner/'],['یادآوری در بله','/me#notice']]],
-   ['روز','📖','درس، قدم‌به‌قدم','هر مفهوم به گام‌های کوچک شکسته می‌شود؛ انجام می‌دهی، نه فقط می‌خوانی.',[['درس‌های تعاملی','/c?kind=lesson'],['جزوهٔ گام‌به‌گام','/c?kind=booklet']]],
-   ['شب','🌙','کارنامه، روایت می‌شود','چه بلدی، کجا گیر کردی و گام بعدی چیست — برای والد می‌رود.',[['کارنامهٔ هوشمند','/me#report'],['ارسال به والد','/me#report']]],
-   ['هفته','📊','گزارش هفتگی','مرور فاصله‌دار برنامه‌ریزی می‌کند و خلاصهٔ پیشرفت برای خانواده می‌رود.',[['مرور فاصله‌دار','/planner/'],['گزارش هفتگی','/me#report']]]
-  ];
-  const svcs=[['درس تعاملی','گام‌های کوچک با بازخورد فوری','/c?kind=lesson','📘'],['جزوهٔ گام‌به‌گام','تمرین مرحله‌به‌مرحله','/c?kind=booklet','📝'],['مسیر یادگیری','از ابتدا تا تسلط','/#paths','🧭'],['آزمون آنلاین','سؤال واقعی بر اساس مقطع','/quiz','✏️'],['کارنامهٔ هوشمند','روایت پیشرفت برای والد','/me#report','📊'],['برنامه‌ریز درسی','برنامه و مرور فاصله‌دار','/planner/','🗓️'],['کلاس دوم','سامانهٔ روزانهٔ کودک','/kids/','🎒'],['بازار سازندگان','محتوای سازندگان مستقل','/creators','🏪']];
+  const roles=[
+   ['دانش‌آموز','📚',[['درس را گام‌به‌گام بخوان','هر مفهوم به گام‌های کوچک با بازخورد فوری','/c?kind=lesson'],['آزمونک بزن','بانک سؤال واقعی بر اساس مقطع و درس','/quiz'],['کارنامه‌ات را ببین','بلد است، در حال تمرین، گام بعدی','/me#report'],['برنامهٔ هفته‌ات را بچین','برنامه‌ریز با مرور فاصله‌دار','/planner/']],'/c'],
+   ['والد','👪',[['کارنامهٔ روایی بگیر','روایت پیشرفت فرزند، نه فقط نمره','/me#report'],['به ربات وصل شو','یادآوری و گزارش در بله یا تلگرام','/me#notice'],['پیشرفت را دنبال کن','آزمونک‌ها و تلاش‌ها در یک نگاه','/me'],['به مدیر مدرسه وصل شو','گزارش سازمانی برای معلم و مدرسه','/services']],'/me'],
+   ['معلم و سازنده','🛠️',[['جزوه بساز','موتور جزوهٔ تعاملی برای سازنده‌ها','/creators'],['در بازار بفروش','پیش‌نمایش زنده و صفحهٔ محصول','/c'],['آمار ببین','بازدید، فروش و نظرها در پنل','/admin'],['با مشتری در تماس باش','تیکت و پشتیبانی داخلی','/support']],'/creators'],
+   ['مدرسه و آموزشگاه','🏫',[['کلاس بساز','سامانهٔ روزانه برای دانش‌آموزان','/kids/'],['گزارش بگیر','کارنامهٔ روایی برای هر دانش‌آموز','/services'],['تعرفهٔ سازمانی','نسخهٔ SaaS برای مدرسه','/pricing'],['پشتیبانی اولویت‌دار','تیم اختصاصی','/support']],'/pricing']];
+  const pipe=[['سؤال درس','درس تعاملی باز می‌شود'],['تلاش ثبت می‌شود','نتیجه در کارنامه ذخیره می‌شود'],['کارنامه به‌روز می‌شود','سه سبد: بلد است / تمرین / گام بعدی'],['پیام به والد','روایت کارنامه در ربات بله یا تلگرام'],['یادآوری فردا','برنامه‌ریز را در پیام صبح می‌فرستد'],['گزارش هفتگی','خلاصهٔ پیشرفت برای خانواده']];
   const band=['دبستان','متوسطهٔ اول','متوسطهٔ دوم','کنکور','ریاضی','فارسی','علوم','عربی','قرآن','معارف'];
+  const steps=[['۱۰ دقیقه ریاضی — صفحهٔ ۴۲'],['۵ واژهٔ جدید فارسی'],['آزمونک علوم — ۵ سؤال']];
   main().innerHTML=`<section class="hl-hero">
   <div class="st-mesh" aria-hidden="true"><i></i><i></i></div><div class="st-grid" aria-hidden="true"></div>
   <div class="wrap hl-grid">
     <div class="hl-copy">
       <p class="st-eyebrow" dir="ltr">LEARNING × FAMILY</p>
       <h1 class="hl-h1">هر روز یک گام،<br><span class="st-grad">خانواده می‌بیند.</span></h1>
-      <svg class="st-steps" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="var(--line2)" stroke-width="1.5"><path d="M470 58 H428 V44 H386 V30 H344 V16 H302"/><path d="M470 52 H434 V40 H398 V28 H362 V18" opacity=".5"/></g><path id="stPath" d="M470 58 H428 V44 H386 V30 H344 V16 H302" fill="none" stroke="var(--y)" stroke-width="2.5" stroke-dasharray="4 6"/><circle r="6" fill="var(--y)"><animateMotion dur="7s" repeatCount="indefinite" rotate="0"><mpath href="#stPath"/></animateMotion></circle><path d="M302 8 l4.5 9 10 .8 -7.4 6.8 2.1 9.8 -9.2-5.4 -9.2 5.4 2.1-9.8 -7.4-6.8 10-.8z" fill="var(--y)"><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.8;1" dur="7s" repeatCount="indefinite"/></path></svg>
+      <svg class="st-steps" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="var(--line2)" stroke-width="1.5"><path d="M470 58 H428 V44 H386 V30 H344 V16 H302"/><path d="M470 52 H434 V40 H398 V28 H362 V18" opacity=".5"/></g><path id="stPath" d="M470 58 H428 V44 H386 V30 H344 V16 H302" fill="none" stroke="var(--y)" stroke-width="2.5" stroke-dasharray="4 6"/><circle r="6" fill="var(--y)"><animateMotion dur="7s" repeatCount="indefinite" rotate="0"><mpath href="#stPath" xlink:href="#stPath"/></animateMotion></circle><path d="M302 8 l4.5 9 10 .8 -7.4 6.8 2.1 9.8 -9.2-5.4 -9.2 5.4 2.1-9.8 -7.4-6.8 10-.8z" fill="var(--y)"><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.8;1" dur="7s" repeatCount="indefinite"/></path></svg>
       <p class="hl-sub">رسا آموزش پلتفرم یادگیری گام‌به‌گام است: درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — برای دانش‌آموزان، والدین و معلمان.</p>
       <form class="search hl-search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
-      <div class="hl-cta"><a class="btn y lg" href="/c">دیدن کاتالوگ</a><a class="btn ghost lg hl-ghost" href="/quiz">آزمون رایگان</a></div>
       <div class="hl-chips">${[['درس تعاملی','/c?kind=lesson'],['آزمون آنلاین','/quiz'],['کارنامه','/me#report'],['برنامه‌ریز','/planner/']].map(c=>`<a class="st-tag" href="${c[1]}">${c[0]}</a>`).join('')}</div>
       <div class="hl-live"><span class="st-live"></span><span><b data-cu="${live.length}">۰</b> محصول زنده · <b data-cu="${lv.attempts||0}">۰</b> آزمونک امروز · <b data-cu="${lv.families||0}">۰</b> خانواده</span></div>
     </div>
@@ -156,26 +156,31 @@ function home(){
       <p class="br-rf">«مبحث «عددهای صحیح» را یک گام دیگر تمرین کن؛ فردا مرور کوتاهش در برنامه‌ست.»</p>
     </div>
     </div>
-    </div>
   </div></section>
   <div class="hl-band" aria-hidden="true"><div class="hl-band-in">${[0,1].map(k=>`<div class="hl-band-r" ${k?'aria-hidden="true"':''}>${band.map(b=>`<span>${b}<i>✦</i></span>`).join('')}</div>`).join('')}</div></div>
-  <section class="hl-sec"><div class="wrap">${head('۰۱','A DAY','از صبح تا جمعه، چه اتفاقی می‌افتد؟','برنامه‌ریز، درس، آزمون و کارنامه در یک روزِ واقعی کنار هم کار می‌کنند.')}
-  <div class="hl-cards">${day.map((d,i)=>`<div class="hl-card st-spot st-reveal" style="--i:${i}"><div class="hl-card-h"><i>${d[1]}</i><b>${d[0]}</b></div><h3>${d[2]}</h3><p>${d[3]}</p><div class="hl-card-l">${d[4].map(l=>`<a href="${l[1]}">${l[0]} ←</a>`).join('')}</div></div>`).join('')}</div></div></section>
-  <section class="hl-sec"><div class="wrap">${head('۰۲','SERVICES','همهٔ خدمات در یک جا','ده خدمت اصلی؛ هرکدام به مقصد واقعی خودش لینک می‌شود.')}
-  <div class="hl-cards hl-cards-4">${svcs.map((v,i)=>`<a class="hl-card st-spot st-reveal" style="--i:${i}" href="${v[2]}"><div class="hl-card-h"><i>${v[3]}</i></div><h3>${v[0]}</h3><p>${v[1]}</p><span class="hl-go">مشاهده ←</span></a>`).join('')}<a class="hl-card hl-more st-reveal" style="--i:8" href="/services"><div class="hl-card-h"><i>＋</i></div><h3>همهٔ خدمات</h3><p>۱۵ خدمت در چهار لایه: دسترسی، یادگیری، ردیابی، بازار.</p><span class="hl-go">مشاهده ←</span></a></div></div></section>
-  <section class="hl-sec" id="paths"><div class="wrap">${head('۰۳','CATALOG','بر اساس مقطع تحصیلی','کاتالوگ بر اساس پایه؛ هر ردیف به محصول‌های همان مقطع می‌رسد.')}
+  <section class="hl-sec"><div class="wrap">${head('۰۱','ROLES','هر نقش، میز کار خودش','دانش‌آموز، والد، معلم و مدرسه — هرکدام ابزار خودشان را دارند.')}
+  <div class="rl-tabs">${roles.map((r,i)=>`<button class="rl-tab ${i===0?'on':''}" data-r="${i}">${r[0]}</button>`).join('')}</div>
+  <div class="rl-panels">${roles.map((r,i)=>`<div class="rl-panel ${i===0?'on':''}" data-p="${i}"><div class="rl-num">${r[1]}</div><div class="rl-list">${r[2].map((f,j)=>`<div class="rl-item"><i>${fa(j+1)}</i><div><b>${f[0]}</b><p>${f[1]}</p></div></div>`).join('')}</div><a class="btn sm y mt" href="${r[3]}">شروع کنید ←</a></div>`).join('')}</div></div></section>
+  <section class="hl-sec"><div class="wrap">${head('۰۲','AUTOMATION','یک درس، مرحله به مرحله','از لحظه‌ای که سؤال باز می‌شود تا گزارش هفتگی برای والد — خودکار و قابل‌ردیابی.')}
+  <div class="pp-flow">${pipe.map((p,i)=>`<div class="pp-node st-reveal" style="--i:${i}"><i>${fa(i+1)}</i><b>${p[0]}</b><span>${p[1]}</span></div>${i<pipe.length-1?'<div class="pp-arrow">←</div>':''}`).join('')}</div>
+  <div class="pp-ch">${['وب‌اپ','بله','تلگرام','مرکز فرمان'].map(c=>`<span class="st-tag">${c}</span>`).join('')}</div></div></section>
+  <section class="hl-sec"><div class="wrap">${head('۰۳','DAY','از صبح تا جمعه، چه اتفاقی می‌افتد؟','برنامه‌ریز، درس، آزمون و کارنامه در یک روزِ واقعی کنار هم کار می‌کنند.')}
+  <div class="hl-cards">${[['صبح','🌅','برنامه‌ریز بیدارت می‌کند','برنامهٔ امروز و یادآور کیف فردا در رباتت می‌نشیند.',[['برنامه‌ریز درسی','/planner/'],['یادآوری در بله','/me#notice']]],['روز','📖','درس، قدم‌به‌قدم','هر مفهوم به گام‌های کوچک شکسته می‌شود؛ انجام می‌دهی، نه فقط می‌خوانی.',[['درس‌های تعاملی','/c?kind=lesson'],['جزوهٔ گام‌به‌گام','/c?kind=booklet']]],['شب','🌙','کارنامه، روایت می‌شود','چه بلدی، کجا گیر کردی و گام بعدی چیست — برای والد می‌رود.',[['کارنامهٔ هوشمند','/me#report'],['ارسال به والد','/me#report']]],['هفته','📊','گزارش هفتگی','مرور فاصله‌دار برنامه‌ریزی می‌کند و خلاصهٔ پیشرفت برای خانواده می‌رود.',[['مرور فاصله‌دار','/planner/'],['گزارش هفتگی','/me#report']]]].map((d,i)=>`<div class="hl-card st-spot st-reveal" style="--i:${i}"><div class="hl-card-h"><i>${d[1]}</i><b>${d[0]}</b></div><h3>${d[2]}</h3><p>${d[3]}</p><div class="hl-card-l">${d[4].map(l=>`<a href="${l[1]}">${l[0]} ←</a>`).join('')}</div></div>`).join('')}</div></div></section>
+  <section class="hl-sec"><div class="wrap">${head('۰۴','SERVICES','همهٔ خدمات در یک جا','ده خدمت اصلی؛ هرکدام به مقصد واقعی خودش لینک می‌شود.')}
+  <div class="hl-cards hl-cards-4">${[['درس تعاملی','گام‌های کوچک با بازخورد فوری','/c?kind=lesson','📘'],['جزوهٔ گام‌به‌گام','تمرین مرحله‌به‌مرحله','/c?kind=booklet','📝'],['مسیر یادگیری','از ابتدا تا تسلط','/#paths','🧭'],['آزمون آنلاین','سؤال واقعی بر اساس مقطع','/quiz','✏️'],['کارنامهٔ هوشمند','روایت پیشرفت برای والد','/me#report','📊'],['برنامه‌ریز درسی','برنامه و مرور فاصله‌دار','/planner/','🗓️'],['کلاس دوم','سامانهٔ روزانهٔ کودک','/kids/','🎒'],['بازار سازندگان','محتوای سازندگان مستقل','/creators','🏪']].map((v,i)=>`<a class="hl-card st-spot st-reveal" style="--i:${i}" href="${v[2]}"><div class="hl-card-h"><i>${v[3]}</i></div><h3>${v[0]}</h3><p>${v[1]}</p><span class="hl-go">مشاهده ←</span></a>`).join('')}<a class="hl-card hl-more st-reveal" style="--i:8" href="/services"><div class="hl-card-h"><i>＋</i></div><h3>همهٔ خدمات</h3><p>۱۵ خدمت در چهار لایه: دسترسی، یادگیری، ردیابی، بازار.</p><span class="hl-go">مشاهده ←</span></a></div></div></section>
+  <section class="hl-sec" id="paths"><div class="wrap">${head('۰۵','CATALOG','بر اساس مقطع تحصیلی','کاتالوگ بر اساس پایه  شده؛ هر ردیف به محصول‌های همان مقطع می‌رسد.')}
   <div class="dl-lvls">${[['دبستان','کلاس اول تا ششم'],['متوسطهٔ اول','هفتم تا نهم'],['متوسطهٔ دوم','دهم تا دوازدهم'],['کنکور','ریاضی، تجربی، انسانی']].map((l,i)=>`<a class="dl-lvl st-spot st-reveal" style="--i:${i}" href="/c"><i>${fa(i+1).padStart(2,'۰')}</i><div><b>${l[0]}</b><span>${l[1]}</span></div><em>${fa(live.filter(p=>(p.meta?.level||'').includes(l[0].slice(0,4))||p.cat==='konkur'&&l[0]==='کنکور').length||'—')} محصول</em><span class="dl-lvlgo">←</span></a>`).join('')}</div>
   <div class="dl-prods">${live.map((p,i)=>`<a class="dl-prow" href="/p/${esc(p.id)}"><i>${fa(i+1).padStart(2,'۰')}</i><b>${esc(p.title)}</b><span class="dl-kind">${esc(p.kind)}</span><span class="dim dl-prow-d">${esc(p.meta?.subject||p.summary||'')}</span><span class="dl-price">${p.price?p.price.toLocaleString('fa-IR'):'رایگان'}</span></a>`).join('')}</div></div></section>
-  ${st.paths?.length?`<section class="hl-sec"><div class="wrap">${head('۰۴','PATHS','هر مسیر، یک زنجیرهٔ گام','مسیرها دانش‌آموز را از ابتدا تا تسلط، مرحله‌به‌مرحله جلو می‌برند.')}
+  ${st.paths?.length?`<section class="hl-sec"><div class="wrap">${head('۰۶','PATHS','هر مسیر، یک زنجیرهٔ گام','مسیرها دانش‌آموز را از ابتدا تا تسلط، مرحله‌به‌مرحله جلو می‌برند.')}
   <div class="dl-chains">${st.paths.map(pa=>`<div class="dl-chain st-spot st-reveal" style="--c:${esc(pa.color||'#F4D438')}"><div class="dl-chainh"><i>${esc(pa.icon||'🧭')}</i><div><b>${esc(pa.title)}</b><p>${esc(pa.audience||'')} · ${fa(pa.steps.length)} گام</p></div></div>
   <div class="dl-steps">${pa.steps.map((st2,i)=>`<a class="dl-stp ${st2.status==='soon'?'soon':''}" href="/p/${esc(st2.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(st2.title)}</span></a>`).join('')}</div></div>`).join('')}</div></div></section>`:''}
-  <section class="hl-sec"><div class="wrap">${head('۰۵','PRICING','هسته رایگان، ارزش واقعی قیمت‌دار','پایه همیشه رایگان می‌ماند؛ پول از محتوای ویژه و خدمات می‌آید، نه از قفل‌کردن.')}
+  <section class="hl-sec"><div class="wrap">${head('۰۷','PRICING','هسته رایگان، ارزش واقعی قیمت‌دار','پایه همیشه رایگان می‌ماند؛ پول از محتوای ویژه و خدمات می‌آید، نه از قفل‌کردن.')}
   <div class="dl-tiers">${[['رایگان','برنامه‌ریز، کلاس دوم، آزمونک و پیش‌نمایش همهٔ درس‌ها'],['محتوای ویژه','جزوه‌ها، کارنامهٔ روایی و گزارش‌ها با پرداخت امن زرین‌پال'],['سازندگان','فروش جزوه و گزارش در بازار با پیش‌نمایش زنده']].map((t,i)=>`<a class="dl-tier st-spot st-reveal" style="--i:${i}" href="/pricing"><i>${fa(i+1)}</i><b>${t[0]}</b><p>${t[1]}</p></a>`).join('')}</div></div></section>
   <section class="dl-last" data-st="شروع"><div class="wrap dl-lastin st-ring st-reveal"><div><span class="mn-k">گام آخر، همین است</span><h2>امروز شروع کنید —<br>خانواده‌ات می‌بیند.</h2></div><div class="row wrapr"><a class="btn y lg" href="/c">دیدن کاتالوگ</a><a class="btn lg hl-ghost" href="/quiz">آزمون آنلاین</a><a class="btn lg hl-ghost" href="/planner/">برنامه‌ریز</a></div></div></section>`;
 
   const hf=$('#hs')||$('#hss');if(hf)hf.onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/search?q='+encodeURIComponent(q))};
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
-  journeyRail();bindLesson();
+  journeyRail();bindLesson();bindTabs();
   const rv=$$('.st-reveal'),io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.dataset.in='true';io2.unobserve(e.target)}}),{threshold:.1});
   rv.forEach((el,i)=>{el.style.setProperty('--i',i%6);io2.observe(el)});
   $$('.st-spot').forEach(el=>el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true}));
@@ -199,6 +204,7 @@ function bindLesson(){const stage=$('#br-stage');if(!stage)return;let i=0,stars=
    else{fb.innerHTML=`<b class="br-no">نه — دوباره nhìn کن.</b> <button class="br-re" id="br-re">تلاش مجدد</button>`;$('#br-re').onclick=()=>{lock=false;paint()}}})};
  const next=()=>{i++;if(i>=BR_STEPS.length){stage.innerHTML=`<div class="br-done"><div class="br-trophy">🏆</div><h3>هر ${fa(BR_STEPS.length)} گام را درست رفتي!</h3><p class="dim">این همان حسی است که هر درس رسا دارد — گام‌به‌گام، با بازخورد فوری.</p><div class="br-done-a"><a class="btn y" href="/c?kind=lesson">درس کامل را ببین</a><a class="btn ghost br-ghost" href="/quiz">آزمون بزن</a></div></div>`;$('#br-p').style.width='100%'}else{lock=false;paint()}};
  paint()}
+function bindTabs(){const tabs=$$('.rl-tab');if(!tabs.length)return;tabs.forEach(t=>t.onclick=()=>{tabs.forEach(x=>x.classList.toggle('on',x===t));$$('.rl-panel').forEach(p=>p.classList.toggle('on',p.dataset.p===t.dataset.r))})}
 function journeyRail(){const rn=$('#jrn');if(!rn)return;
   const sts=[...$$('[data-st]')];
   rn.innerHTML=sts.map((s,i)=>`<button class="jr-node ${i===0?'on':''}" data-i="${i}" data-n="${s.dataset.sn}" aria-label="${s.dataset.sn}">${s.dataset.st}</button>`).join('');
