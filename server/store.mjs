@@ -36,11 +36,11 @@ export function initStore(db, {auth, fail, DATA, ROOT}) {
   const owns = (u, pid) => !!(u && db.prepare('SELECT 1 FROM owned WHERE uid=? AND pid=?').get(u.id, pid));
   const track = (name, uid, pid, src) => db.prepare('INSERT INTO events(name, uid, pid, src, at) VALUES(?,?,?,?,?)').run(name, uid || null, pid || null, src || null, now());
 
-  // first registered user, or anyone listed in FOUNDER_LOGINS, becomes founder
+  // FOUNDER_LOGINS become founder; the first user only when FIRST_USER_FOUNDER=1 (local dev)
   const ensureFounder = () => {
     const list = (process.env.FOUNDER_LOGINS || '').split(',').map(s => s.trim()).filter(Boolean);
     for (const l of list) {const u = db.prepare('SELECT id FROM users WHERE login=?').get(l); if (u) db.prepare('INSERT OR IGNORE INTO roles VALUES(?,?)').run(u.id, 'founder')}
-    if (!db.prepare("SELECT 1 FROM roles WHERE role='founder'").get()) {
+    if (process.env.FIRST_USER_FOUNDER === '1' && !db.prepare("SELECT 1 FROM roles WHERE role='founder'").get()) {
       const u = db.prepare('SELECT id FROM users ORDER BY id LIMIT 1').get(); if (u) db.prepare('INSERT OR IGNORE INTO roles VALUES(?,?)').run(u.id, 'founder');
     }
   };
