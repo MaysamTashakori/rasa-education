@@ -154,6 +154,19 @@ const routes = {
     return {ver: c.ver + 1};
   },
   'GET /api/content': () => content(),
+  'GET /api/quiz': () => {
+    const bank = [];
+    for (const l of content().lessons.lessons || []) {
+      const subj = (content().lessons.subjects || []).find(s => s.id === l.subj);
+      for (const a of l.acts || []) if (a.o && a.o.length) bank.push({s: subj?.name || 'کلاس دوم', g: 'کلاس دوم', q: a.q, m: a.m, o: a.o, a: a.a});
+    }
+    try {
+      const cat = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'catalog.json'), 'utf8'));
+      const lv = Object.fromEntries((cat.levels || []).map(x => [x.id, x.name]));
+      for (const it of cat.items || []) for (const q of it.quiz || []) if (q.o && q.o.length) bank.push({s: it.subject, g: lv[it.level] || '', q: q.q, o: q.o, a: q.a, ex: q.ex});
+    } catch {}
+    return {items: bank};
+  },
   'GET /api/library': req => ({items: db.prepare('SELECT pid FROM library WHERE uid=?').all(auth(req).id).map(r => r.pid)}),
   'POST /api/market/claim': (req, res, b) => {
     const u = auth(req), p = content().market.products.find(x => x.id === b.pid);
@@ -170,8 +183,9 @@ const routes = {
     return {ok: true};
   },
 };
-Object.assign(routes, initBots(db, {auth, fail, PD}).routes);
-const store = initStore(db, {auth, fail, DATA, ROOT}), admin = initAdmin(db, {auth, fail, ROOT, store});
+const botsMod = initBots(db, {auth, fail, PD});
+Object.assign(routes, botsMod.routes);
+const store = initStore(db, {auth, fail, DATA, ROOT, notify: botsMod.enqueue}), admin = initAdmin(db, {auth, fail, ROOT, store});
 Object.assign(routes, store.routes, admin.routes, initPay(db, {auth, fail}).routes);
 const compiled = Object.entries(routes).map(([k, fn]) => {
   const [method, pattern] = k.split(' '), keys = [];

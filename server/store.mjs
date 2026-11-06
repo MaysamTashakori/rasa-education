@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 export const ROLES = ['founder', 'admin', 'editor', 'support', 'marketer', 'creator', 'customer'];
 const STAFF = new Set(['founder', 'admin', 'editor', 'support', 'marketer']);
 
-export function initStore(db, {auth, fail, DATA, ROOT}) {
+export function initStore(db, {auth, fail, DATA, ROOT, notify}) {
   db.exec(`
   CREATE TABLE IF NOT EXISTS roles(uid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, role TEXT NOT NULL, PRIMARY KEY(uid, role));
   CREATE TABLE IF NOT EXISTS categories(id TEXT PRIMARY KEY, parent TEXT, title TEXT NOT NULL, icon TEXT, color TEXT, sort INTEGER DEFAULT 0, info TEXT);
@@ -24,7 +24,8 @@ export function initStore(db, {auth, fail, DATA, ROOT}) {
   CREATE TABLE IF NOT EXISTS attempts(id INTEGER PRIMARY KEY, uid INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, pid TEXT NOT NULL,
     learner TEXT, score REAL, total REAL, topics TEXT, secs INTEGER, at INTEGER NOT NULL);
   CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY, name TEXT NOT NULL, uid INTEGER, pid TEXT, src TEXT, at INTEGER NOT NULL);
-  CREATE INDEX IF NOT EXISTS ev_at ON events(at);`);
+  CREATE INDEX IF NOT EXISTS ev_at ON events(at);
+  CREATE TABLE IF NOT EXISTS planner(uid INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, blob TEXT, at INTEGER NOT NULL);`);
 
   const FILES = path.join(DATA, 'files'); fs.mkdirSync(FILES, {recursive: true});
   const now = () => Date.now();
@@ -201,6 +202,40 @@ export function initStore(db, {auth, fail, DATA, ROOT}) {
       const id = db.prepare('INSERT INTO attempts(uid, pid, learner, score, total, topics, secs, at) VALUES(?,?,?,?,?,?,?,?)')
         .run(u.id, pid, String(b.learner || '').slice(0, 40), +b.score || 0, +b.total || 0, JSON.stringify(topics), Math.min(+b.secs || 0, 864e2), now()).lastInsertRowid;
       track('attempt', u.id, pid); return {id};
+    },
+    'POST /api/quiz/attempt': (req, res, b) => {
+      const u = auth(req), s = String(b.s || 'عمومی').slice(0, 40), pid = 'quiz:' + s;
+      const topics = (Array.isArray(b.topics) ? b.topics : []).slice(0, 30).map(t => ({name: String(t.name || '').slice(0, 60), score: +t.score || 0, total: +t.total || 0}));
+      const score = +b.score || 0, total = +b.total || 0;
+      const id = db.prepare('INSERT INTO attempts(uid, pid, learner, score, total, topics, secs, at) VALUES(?,?,?,?,?,?,?,?)')
+        .run(u.id, pid, String(b.learner || '').slice(0, 40), score, total, JSON.stringify(topics), Math.min(+b.secs || 0, 864e2), now()).lastInsertRowid;
+      track('attempt', u.id, pid);
+      if (notify) notify(u.id, `📝 آزمونک «${s}» ثبت شد — امتیاز ${score} از ${total}. کارنامهٔ روایی‌ات در سایت به‌روز شد.`, 'qz|' + id);
+      return {id};
+    },
+    'GET /api/report': req => {
+      const u = auth(req);
+      const rows = db.prepare('SELECT a.*, COALESCE(p.title, a.pid) title FROM attempts a LEFT JOIN products p ON p.id=a.pid WHERE uid=? ORDER BY at DESC LIMIT 300').all(u.id);
+      const topics = {};
+      for (const a of rows) for (const t of J(a.topics, [])) {
+        const g = topics[t.name] || (topics[t.name] = {s: 0, t: 0, where: a.title}); g.s += t.score; g.t += t.total;
+      }
+      const knows = [], practice = [], next = [];
+      for (const [name, v] of Object.entries(topics)) {
+        const ratio = v.t ? Math.round(v.s / v.t * 100) : 0, item = {name, ratio, where: v.where};
+        (ratio >= 80 ? knows : ratio >= 40 ? practice : next).push(item);
+      }
+      next.sort((a, b) => a.ratio - b.ratio);
+      const week = now() - 7 * 864e5;
+      return {attempts: rows.length, recent: rows.filter(r => r.at > week).length,
+        knows: knows.slice(0, 12), practice: practice.slice(0, 12), next: next.slice(0, 8)};
+    },
+    'GET /api/planner': req => {const u = auth(req); const r = db.prepare('SELECT blob, at FROM planner WHERE uid=?').get(u.id); return {blob: r ? r.blob : null, at: r ? r.at : 0}},
+    'PUT /api/planner': (req, res, b) => {
+      const u = auth(req), blob = String(b.blob || '');
+      if (blob.length > 500e3) fail(413, 'حجم نسخهٔ پشتیبان بیش از حد است');
+      db.prepare('INSERT OR REPLACE INTO planner(uid, blob, at) VALUES(?,?,?)').run(u.id, blob, now());
+      return {ok: true};
     },
     'POST /api/ev': (req, res, b) => {
       const ok = ['home', 'catalog', 'share', 'preview_open', 'cart_add', 'search', 'ref_visit'];

@@ -235,3 +235,6 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
 .exam:after{inset-inline-end:36px;transform:rotate(5deg)}
 @media(max-width:900px){.nt-margin{inset-inline-start:14px}.nt-doodle.d1{width:52px;top:4%}.nt-doodle.d2,.nt-doodle.d3{display:none}}
 @media(prefers-reduced-motion:reduce){.nt-doodle path,.nt-circ path{animation:none;stroke-dashoffset:0}}
+.qz-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:14px 22px 0}
+.qz-tabs .chip{height:30px;font-size:12px}
+.qz-m{text-align:center;font-size:24px;font-weight:900;color:var(--y);margin:4px 0 10px;direction:ltr}

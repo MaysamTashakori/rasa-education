@@ -32,6 +32,10 @@ export function initBots(db, {auth, fail, PD}) {
   function reminders() {
     const h = tehranHour(), t = isoTehran(), tm = addDays(t, 1);
     const kids = db.prepare('SELECT c.*, u.id uid FROM children c JOIN users u ON u.id=c.uid WHERE c.uid IN (SELECT uid FROM links)').all();
+    if (h === 8) try {
+      for (const r of db.prepare('SELECT uid FROM planner').all())
+        enqueue(r.uid, '🗓️ صبح بخیر! برنامهٔ امروزت را در «برنامه‌ریز رسا» باز کن و گام‌های امروز را بگذار.', `pl|${r.uid}|${t}`);
+    } catch {}
     for (const c of kids) {
       const s = c.state ? JSON.parse(c.state) : null; if (!s) continue;
       if (h === 7) {const n = (s.routine || []).filter(r => r.days?.[wdi(t)]).length; enqueue(c.uid, `☀️ صبح بخیر! امروز ${fa(n)} کار در روال ${c.name} است. با هر کار ستاره بگیرد ⭐`, `am|${c.id}|${t}`)}

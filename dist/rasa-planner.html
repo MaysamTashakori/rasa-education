@@ -551,7 +551,7 @@ function norm(s){const f=fresh();s=Object.assign(f,s||{});s.settings=Object.assi
 const sub=id=>S.subjects.find(s=>s.id===id)||{id,name:'سایر',color:'#8892b0',w:1};
 const users=()=>{try{return JSON.parse(localStorage.getItem('mst.users'))||[]}catch(e){return[]}};
 const setUsers=a=>localStorage.setItem('mst.users',JSON.stringify(a));
-function save(now){if(!S||!KEY)return;clearTimeout(saveT);const run=async()=>{try{await KV.set('vault:'+USER.u,await enc(KEY,S))}catch(e){toast('خطا در ذخیره‌سازی: '+e.message)}};if(now)return run();saveT=setTimeout(run,350)}
+function save(now){if(!S||!KEY)return;clearTimeout(saveT);const run=async()=>{try{const v=await enc(KEY,S);await KV.set('vault:'+USER.u,v);fetch('/api/planner',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({blob:JSON.stringify(v)})}).catch(()=>{})}catch(e){toast('خطا در ذخیره‌سازی: '+e.message)}};if(now)return run();saveT=setTimeout(run,350)}
 function commit(){save();render()}
 /* ===== aggregates ===== */
 function byDay(subj){const m={};S.sessions.forEach(s=>{if(!subj||s.subj===subj)m[s.date]=(m[s.date]||0)+s.min});return m}

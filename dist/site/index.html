@@ -247,6 +247,9 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
 .exam:after{inset-inline-end:36px;transform:rotate(5deg)}
 @media(max-width:900px){.nt-margin{inset-inline-start:14px}.nt-doodle.d1{width:52px;top:4%}.nt-doodle.d2,.nt-doodle.d3{display:none}}
 @media(prefers-reduced-motion:reduce){.nt-doodle path,.nt-circ path{animation:none;stroke-dashoffset:0}}
+.qz-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:14px 22px 0}
+.qz-tabs .chip{height:30px;font-size:12px}
+.qz-m{text-align:center;font-size:24px;font-weight:900;color:var(--y);margin:4px 0 10px;direction:ltr}
 </style></head><body><header class="nav" id="nav"></header><main id="main"></main><footer class="foot" id="foot"></footer><script>'use strict';
 // رسا آموزش — storefront + profile + command center (vanilla SPA, history routing)
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -382,7 +385,7 @@ function home(){
   <div class="route">${[['شما','دانش‌آموز · والد · معلم و مدرسه · سازنده'],['کانال‌ها','وب‌اپ موبایل (PWA) · ربات بله · ربات تلگرام'],['موتور رسا','درس و آزمونک · مسیر · کارنامه · برنامه‌ریز · ۱۹ ایجنت'],['نتیجه','یادگیری گام‌به‌گام با گزارش روشن و دادهٔ کودک امن']].map((f,i)=>`<div class="rt ${i===2?'hot':''}"><i>${fa(i+1)}</i><b>${f[0]}</b><span>${f[1]}</span></div>`).join('')}</div>
   <p class="dim" style="font-size:12.5px;margin-top:14px">بدون نصب، روی هر دستگاه و با اینترنت ضعیف هم کار می‌کند.</p></div></section>
   <section class="nt-sec"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۳</span><h2>یک گام را همین‌جا امتحان کن</h2><span class="nt-rule"></span></div>
-  <div class="exam"><div class="exam-head"><b>برگهٔ آزمونک</b><span>۳ سؤال · بدون ثبت‌نام</span></div><div id="quiz"></div></div></div></section>
+  <div class="exam"><div class="exam-head"><b>برگهٔ آزمونک</b><span>از بانک سؤال‌های واقعی درس‌های رسا · بدون ثبت‌نام</span></div><div class="qz-tabs" id="qzTabs"></div><div id="quiz"></div></div></div></section>
   <section class="nt-sec" id="paths"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۴</span><h2>مسیرهای یادگیری — یک مسیر کامل، نه تک‌تک درس</h2><span class="nt-rule"></span></div>
   <div class="hp-paths">${st.paths.map((pa,pi)=>`<div class="path hp-path" style="--c:${esc(pa.color||'#F4D438')}"><div class="hp-pnum">${fa(pi+1).padStart(2,'۰')}</div><div class="row"><span style="font-size:26px">${esc(pa.icon||'🧭')}</span><div style="flex:1"><h3 style="font-size:17px">${esc(pa.title)}</h3><div class="dim" style="font-size:12.5px">${esc(pa.audience||'')}</div></div><span class="tag" style="--c:var(--mute)">${fa(pa.steps.length)} گام</span></div>
   <p class="mute" style="font-size:13.5px;margin:10px 0 14px">${esc(pa.desc)}</p>
@@ -407,13 +410,23 @@ function home(){
 function startTicker(){const t=$('#tickTxt');if(!t)return;const st=S.store,lv=st.live||{};
   const facts=[`${fa(st.products.filter(p=>p.status==='live').length)} محصول زنده در کاتالوگ`,`امروز ${fa(lv.attemptsToday||0)} آزمونک حل شد`,`${fa(lv.families||0)} خانواده فعال`,`${fa((st.paths||[]).length)} مسیر یادگیری`,`۱۹ ایجنت داخلی در مرکز فرمان`,`پرداخت امن زرین‌پال فعال`];
   let i=0;t.textContent=facts[0];setInterval(()=>{i=(i+1)%facts.length;t.style.opacity=0;setTimeout(()=>{t.textContent=facts[i];t.style.opacity=1},300)},4200)}
-const QUIZ=[{q:'۸ + ۷ = ؟',o:['۱۴','۱۵','۱۶'],a:1,m:'آفرین! جمع درست حساب شد.'},{q:' نصف ۲۰ چند است؟',o:['۵','۱۰','۴۰'],a:1,m:'بله؛ نصف یعنی تقسیم بر ۲.'},{q:'۳ × ۴ = ؟',o:['۷','۱۰','۱۲'],a:2,m:'عالی! ضرب را هم بلدی.'}];
-function bindQuiz(){const el=$('#quiz');if(!el)return;let i=0,score=0;
-  const draw=()=>{const pips=`<div class="hp-pips">${QUIZ.map((_,x)=>`<i class="${x<i?'done':x===i?'now':''}"></i>`).join('')}</div>`;
-    if(i>=QUIZ.length){el.innerHTML=`<div style="text-align:center;padding:14px 0">${pips}<div style="font-size:44px">${score===3?'🏆':'🌟'}</div><h3 style="font-size:20px">${score===3?'عالی! هر سه گام را درست رفتی.':'خوب بود!'} ${score} از ۳</h3><p class="mute">درس‌های رسا همین‌طور گام‌به‌گام پیش می‌روند؛ با بازخورد فوری و کارنامهٔ روایی.</p><div class="row" style="justify-content:center;margin-top:14px"><a class="btn y" href="/c/riazi8">دیدن درس‌های ریاضی ←</a><button class="btn ghost" id="qz">دوباره</button></div></div>`;$('#qz').onclick=()=>{i=0;score=0;draw()};return}
-    const q=QUIZ[i];el.innerHTML=`${pips}<div class="dim" style="font-size:12px">گام ${fa(i+1)} از ${fa(QUIZ.length)}</div><h3 style="font-size:21px;margin:10px 0 18px">${esc(q.q)}</h3><div class="hp-opts">${q.o.map((o,x)=>`<button class="hp-opt" data-x="${x}">${esc(o)}</button>`).join('')}</div><div class="hp-qmsg" id="qm"></div>`;
-    el.querySelectorAll('.hp-opt').forEach(b=>b.onclick=()=>{const ok=+b.dataset.x===q.a;score+=ok?1:0;b.classList.add(ok?'ok':'no');el.querySelectorAll('.hp-opt').forEach(x=>{x.disabled=true;if(+x.dataset.x===q.a)x.classList.add('ok')});$('#qm').textContent=ok?q.m:'پاسخ درست: '+q.o[q.a];setTimeout(()=>{i++;draw()},1100)})};
-  draw()}
+function bindQuiz(){const el=$('#quiz'),tabs=$('#qzTabs');if(!el)return;
+  if(!S.qbank){el.innerHTML='<div class="empty" style="padding:30px">در حال آماده‌سازی سؤال‌ها…</div>';
+    api('quiz').then(r=>{S.qbank=r.items||[];bindQuiz()}).catch(()=>{el.innerHTML='<div class="empty">سؤال‌ها بارگذاری نشد</div>'});return}
+  const subs=[...new Set(S.qbank.map(q=>q.s))];
+  const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+  let i=0,score=0,qs;
+  const pool=()=>S.qsub?S.qbank.filter(q=>q.s===S.qsub):S.qbank;
+  const pick=()=>{qs=shuffle([...pool()]).slice(0,5)};
+  const drawTabs=()=>{tabs.innerHTML=[`<button class="chip ${!S.qsub?'on':''}" data-s="">همهٔ درس‌ها (${fa(S.qbank.length)})</button>`,...subs.map(s=>`<button class="chip ${s===S.qsub?'on':''}" data-s="${esc(s)}">${esc(s)}</button>`)].join('');
+    tabs.querySelectorAll('button').forEach(b=>b.onclick=()=>{S.qsub=b.dataset.s||null;i=0;score=0;pick();drawTabs();draw()})};
+  const draw=()=>{const pips=`<div class="hp-pips">${qs.map((_,x)=>`<i class="${x<i?'done':x===i?'now':''}"></i>`).join('')}</div>`;
+    if(i>=qs.length){el.innerHTML=`<div style="text-align:center;padding:14px 0">${pips}<div style="font-size:44px">${score===qs.length?'🏆':'🌟'}</div><h3 style="font-size:20px">${score===qs.length?'عالی! همه را درست رفتی.':'خوب بود!'} ${fa(score)} از ${fa(qs.length)}</h3><p class="mute">این سؤال‌ها از بانک واقعی درس‌های رسا بود — در کاتالوگ هر درس چند برابر این دارد.${S.me?' نتیجه در کارنامهٔ هوشمندت ثبت شد.':''}</p><div class="row" style="justify-content:center;margin-top:14px"><a class="btn y" href="/c">دیدن کاتالوگ ←</a><button class="btn ghost" id="qz">دوباره</button></div></div>`;$('#qz').onclick=()=>{i=0;score=0;pick();draw()};
+      if(S.me)api('quiz/attempt',{body:{s:S.qsub||'همهٔ درس‌ها',score,total:qs.length,topics:[{name:S.qsub||'عمومی',score,total:qs.length}]}}).catch(()=>{});
+      return}
+    const q=qs[i];el.innerHTML=`${pips}<div class="row" style="justify-content:space-between"><span class="dim" style="font-size:12px">سؤال ${fa(i+1)} از ${fa(qs.length)}</span><span class="tag" style="--c:var(--cy);font-size:11px">${esc(q.s)}${q.g?' · '+esc(q.g):''}</span></div><h3 style="font-size:21px;margin:10px 0 6px">${esc(q.q)}</h3>${q.m?`<div class="qz-m">${esc(q.m)}</div>`:''}<div class="hp-opts">${q.o.map((o,x)=>`<button class="hp-opt" data-x="${x}">${esc(o)}</button>`).join('')}</div><div class="hp-qmsg" id="qm"></div>`;
+    el.querySelectorAll('.hp-opt').forEach(b=>b.onclick=()=>{const ok=+b.dataset.x===q.a;score+=ok?1:0;b.classList.add(ok?'ok':'no');el.querySelectorAll('.hp-opt').forEach(x=>{x.disabled=true;if(+x.dataset.x===q.a)x.classList.add('ok')});$('#qm').textContent=ok?(q.ex||'آفرین! درست بود.'):'پاسخ درست: '+q.o[q.a];ev('quiz_'+q.s,null);setTimeout(()=>{i++;draw()},1100)})};
+  drawTabs();pick();draw()}
 
 function catalog(cat){
   const st=S.store,q=new URLSearchParams(location.search),c=catOf(cat);let kind=q.get('kind')||'',text=q.get('q')||'';
@@ -490,7 +503,10 @@ async function profile(){
   const draw=()=>{const pb=$('#pb');
     if(tab==='lib')pb.innerHTML=L.items.length?`<div class="grid3">${L.items.map(p=>`<div class="pc">${cover(p)}<div class="bd"><h3 style="font-size:15px">${esc(p.title)}</h3><div class="dim" style="font-size:12px">دریافت: ${jd(p.ownedAt)}</div><div class="row mt">${p.hasFile?`<a class="btn sm y" href="/p/${esc(p.id)}/open" target="_blank">باز کردن</a><a class="btn sm" href="/p/${esc(p.id)}/download" download>دانلود</a>`:p.meta?.app?`<a class="btn sm y" href="${esc(p.meta.app)}">ورود</a>`:''}<a class="btn sm ghost" href="/p/${esc(p.id)}">صفحه</a></div></div></div>`).join('')}</div>`:'<div class="empty"><i>📚</i>کتابخانه خالی است.<br><a class="btn y mt" href="/c">دیدن کاتالوگ</a></div>';
     if(tab==='report'){const by={};L.attempts.forEach(a=>(by[a.pid]=by[a.pid]||{title:a.title,att:[]}).att.unshift(a));const ks=Object.keys(by);
-      pb.innerHTML=ks.length?ks.map(k=>`<div class="card mb" data-rc="${esc(k)}"></div>`).join(''):'<div class="empty"><i>📊</i>هنوز آزمونکی ثبت نشده است.<br>پس از حل آزمونک هر درس، کارنامهٔ روایی اینجا ساخته می‌شود.</div>';
+      pb.innerHTML=`<div class="card mb" id="smrc"><div class="eyebrow">کارنامهٔ هوشمند</div><p class="dim" style="font-size:13px">در حال تحلیل تلاش‌های تو…</p></div>`+(ks.length?ks.map(k=>`<div class="card mb" data-rc="${esc(k)}"></div>`).join(''):'<div class="empty"><i>📊</i>هنوز آزمونکی ثبت نشده است.<br>پس از حل آزمونک هر درس، کارنامهٔ روایی اینجا ساخته می‌شود.</div>');
+      api('report').then(r=>{const c=$('#smrc');if(!c)return;const row=(items,none)=>items.length?items.map(t=>`<div class="row" style="justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)"><span>${esc(t.name)}<span class="dim" style="font-size:11px"> · ${esc(t.where||'')}</span></span><b>${fa(t.ratio)}٪</b></div>`).join(''):`<p class="dim" style="font-size:13px">${none}</p>`;
+        c.innerHTML=`<div class="eyebrow">کارنامهٔ هوشمند</div><div class="row gap" style="margin:10px 0 14px"><span class="tag" style="--c:var(--cy)">${fa(r.attempts)} آزمونک</span><span class="tag" style="--c:var(--ok)">${fa(r.recent)} در ۷ روز اخیر</span></div>
+        <div class="rc"><div class="a"><div class="k">✓ بلد است</div>${row(r.knows,'هنوز مبحثی به تسلط نرسیده.')}</div><div class="b"><div class="k">↻ در حال تمرین</div>${row(r.practice,'—')}</div><div class="c"><div class="k">← گام بعدی</div>${row(r.next,'—')}</div></div>`}).catch(()=>{const c=$('#smrc');if(c)c.innerHTML=''});
       ks.forEach(k=>{const g=by[k],last=g.att.at(-1);reportCard($(`[data-rc="${k}"]`),{learner:last.learner,title:g.title,attempts:g.att,topics:last.topics.length?last.topics:[{name:'کل آزمون',score:last.score,total:last.total}]})})}
     if(tab==='fav'){const ps=S.store.products.filter(p=>L.favorites.includes(p.id));pb.innerHTML=ps.length?`<div class="grid3">${ps.map(pcard).join('')}</div>`:'<div class="empty"><i>♡</i>چیزی ذخیره نکرده‌اید.</div>'}
     if(tab==='orders'){const OST={paid:'تکمیل شد','paid-free':'رایگان',pending:'در انتظار پرداخت',failed:'ناموفق'};pb.innerHTML=L.orders.length?`<div class="card"><table class="tbl"><thead><tr><th>شماره</th><th>تاریخ</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody>${L.orders.map(o=>`<tr><td>${fa(o.id)}</td><td>${jd(o.at)}</td><td>${fa(o.n)}</td><td>${o.total?num(o.total)+' تومان':'رایگان'}</td><td><span class="tag" style="--c:${o.status==='paid'||o.status==='paid-free'?'var(--ok)':'var(--y)'}">${OST[o.status]||o.status}</span></td><td>${o.status==='pending'?`<button class="btn sm y" data-pay="${o.id}">پرداخت</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty"><i>🧾</i>سفارشی ندارید.</div>';
