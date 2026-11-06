@@ -672,6 +672,14 @@ a.st-tag:hover{color:var(--ink);border-color:var(--line2)}
 .br-done-a{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 @media(max-width:960px){.br-shapes{grid-template-columns:repeat(2,1fr)}}
 @media(prefers-reduced-motion:reduce){.br-trophy{animation:none}}
+/* pie options (replaces broken svg shapes) */
+.br-pies{grid-template-columns:repeat(4,1fr);gap:12px}
+.br-pie{display:grid;place-items:center;padding:14px 6px}
+.br-pie i{width:54px;height:54px;border-radius:50%;border:2px solid var(--line2);display:block;transition:transform .15s}
+.br-pie:hover:not(:disabled) i{transform:scale(1.08)}
+.br-pie.ok i{border-color:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 30%,transparent)}
+.br-pie.no i{border-color:var(--bad)}
+@media(max-width:560px){.br-pies{grid-template-columns:repeat(2,1fr)}}
 </style></head><body><header class="nav" id="nav"></header><main id="main"></main><footer class="foot" id="foot"></footer><script>'use strict';
 // رسا آموزش — storefront + profile + command center (vanilla SPA, history routing)
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -842,19 +850,19 @@ function home(){
   rv.forEach((el,i)=>{el.style.setProperty('--i',i%6);io2.observe(el)});
   $$('.st-spot').forEach(el=>el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true}));
 }
-const BR_SHAPES=[
- '<svg viewBox="0 0 64 64" width="56" height="56"><circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="3"/><path d="M32 4 A28 28 0 0 1 32 60 Z" fill="currentColor" opacity=".85"/></svg>',
- '<svg viewBox="0 0 64 64" width="56" height="56"><circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="3"/><path d="M32 4 A28 28 0 0 0 32 60 Z M32 4 A28 28 0 0 1 60 32 L32 32 Z" fill="currentColor" opacity=".85"/></svg>',
- '<svg viewBox="0 0 64 64" width="56" height="56"><circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="3"/><path d="M32 4 A28 28 0 1 1 4 32 L32 32 Z" fill="currentColor" opacity=".85"/></svg>',
- '<svg viewBox="0 0 64 64" width="56" height="56"><circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="32" cy="32" r="20" fill="currentColor" opacity=".85"/></svg>'];
+const BR_PIES=[
+ 'background:conic-gradient(#F4D438 0 50%,#2A2A2A 50% 100%)',
+ 'background:conic-gradient(#F4D438 0 25%,#2A2A2A 25% 100%)',
+ 'background:conic-gradient(#F4D438 0 75%,#2A2A2A 75% 100%)',
+ 'background:conic-gradient(#F4D438 0 100%,#2A2A2A 100% 100%)'];
 const BR_STEPS=[
- {t:'کدام شکل «نصف» دایره را نشان می‌دهد؟',type:'shape',opts:[0,1,2,3],a:0,fb:'نصف یعنی دایره به دو قسمت مساوی تقسیم شده باشد؛ فقط شکل اول.'},
+ {t:'کدام شکل «نصف» دایره را نشان می‌دهد؟',type:'pie',opts:[0,1,2,3],a:0,fb:'نصف یعنی دایره به دو قسمت مساوی تقسیم شده باشد؛ فقط شکل اول.'},
  {t:'عدد قبل از ۸ کدام است؟',type:'num',opts:['۶','۷','۹','۱۰'],a:1,fb:'۷ عدد قبل از ۸ است — مثل پله‌های پشت‌سرهم.'},
  {t:'۷ + ۵ = ؟',type:'num',opts:['۱۱','۱۲','۱۳','۱۰'],a:1,fb:'۵ تا به ۷ اضافه کن: ۸، ۹، ۱۰، ۱۱، ۱۲.'},
- {t:'کدام‌یک «بیشتر از نصف» است؟',type:'shape2',opts:[1,2,3,0],a:0,fb:'بیشتر از نصف یعنی بیشتر از نیمی از دایره رنگی باشد.'}];
+ {t:'کدام‌یک «بیشتر از نصف» است؟',type:'pie',opts:[0,1,2,3],a:2,fb:'بیشتر از نصف یعنی بیشتر از نیمی از دایره رنگی باشد — شکل سوم.'}];
 function bindLesson(){const stage=$('#br-stage');if(!stage)return;let i=0,stars=0,lock=false;
  const paint=()=>{const s=BR_STEPS[i];$('#br-p').style.width=((i)/BR_STEPS.length*100)+'%';
-  if(s.type==='shape'||s.type==='shape2'){stage.innerHTML=`<div class="br-q">${s.t}</div><div class="br-opts br-shapes">${s.opts.map((o,x)=>`<button class="br-opt br-shape" data-x="${x}" aria-label="شکل ${fa(x+1)}">${s.type==='shape'?BR_SHAPES[o]:BR_SHAPES[[3,0,1,2][o]]}</button>`).join('')}</div><div class="br-fb" id="br-fb"></div>`}
+  if(s.type==='pie'){stage.innerHTML=`<div class="br-q">${s.t}</div><div class="br-opts br-pies">${s.opts.map((o,x)=>`<button class="br-opt br-pie" data-x="${x}" aria-label="شکل ${fa(x+1)}"><i style="${BR_PIES[o]}"></i></button>`).join('')}</div><div class="br-fb" id="br-fb"></div>`}
   else{stage.innerHTML=`<div class="br-q">${s.t}</div><div class="br-opts">${s.opts.map((o,x)=>`<button class="br-opt" data-x="${x}">${o}</button>`).join('')}</div><div class="br-fb" id="br-fb"></div>`}
   $$('#br-stage .br-opt').forEach(b=>b.onclick=()=>{if(lock)return;const ok=+b.dataset.x===s.a;$$('#br-stage .br-opt').forEach(x=>{x.disabled=true;if(+x.dataset.x===s.a)x.classList.add('ok');else if(x===b)x.classList.add('no')});
    const fb=$('#br-fb');if(ok){stars++;$('#br-stars').textContent='★'.repeat(stars)+'☆'.repeat(BR_STEPS.length-stars);fb.innerHTML=`<b class="br-ok">آفرین!</b> ${s.fb}`;lock=true;setTimeout(next,1400)}

@@ -660,3 +660,11 @@ a.st-tag:hover{color:var(--ink);border-color:var(--line2)}
 .br-done-a{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 @media(max-width:960px){.br-shapes{grid-template-columns:repeat(2,1fr)}}
 @media(prefers-reduced-motion:reduce){.br-trophy{animation:none}}
+/* pie options (replaces broken svg shapes) */
+.br-pies{grid-template-columns:repeat(4,1fr);gap:12px}
+.br-pie{display:grid;place-items:center;padding:14px 6px}
+.br-pie i{width:54px;height:54px;border-radius:50%;border:2px solid var(--line2);display:block;transition:transform .15s}
+.br-pie:hover:not(:disabled) i{transform:scale(1.08)}
+.br-pie.ok i{border-color:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 30%,transparent)}
+.br-pie.no i{border-color:var(--bad)}
+@media(max-width:560px){.br-pies{grid-template-columns:repeat(2,1fr)}}
