@@ -5,11 +5,14 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import {initBots} from './bots.mjs';
+import {initStore} from './store.mjs';
+import {initAdmin} from './admin.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const PORT = +(process.env.PORT || 8080);
 const DATA = process.env.DATA_DIR || path.join(ROOT, 'data');
-const WEB = process.env.WEB_DIR || path.join(ROOT, 'dist', 'kids');
+const WEB = process.env.WEB_DIR || path.join(ROOT, 'dist', 'site');
+const KIDS = path.join(ROOT, 'dist', 'kids');
 const PLANNER = path.join(ROOT, 'dist', 'web');
 const CONTENT = process.env.CONTENT_DIR || path.join(ROOT, 'content', 'grade2');
 const MAX_BODY = 512 * 1024, MAX_STATE = 300 * 1024, SESSION_DAYS = 60;
@@ -94,11 +97,13 @@ const routes = {
     if (limited('reg:' + ip, 8)) fail(429, 'تعداد تلاش زیاد است؛ کمی بعد دوباره امتحان کنید');
     const login = normLogin(b.login), name = cleanName(b.name), kid = cleanName(b.child?.name);
     if (!login) fail(400, 'شمارهٔ موبایل یا ایمیل معتبر وارد کنید');
-    if (!name || !kid) fail(400, 'نام والد و نام فرزند لازم است');
+    if (!name) fail(400, 'نام لازم است');
     if (String(b.password || '').length < 6) fail(400, 'رمز عبور دست‌کم ۶ نویسه باشد');
     if (db.prepare('SELECT 1 FROM users WHERE login=?').get(login)) fail(409, 'این شماره یا ایمیل قبلاً ثبت شده است');
     const uid = db.prepare('INSERT INTO users(login, name, pass, created) VALUES(?,?,?,?)').run(login, name, hashPw(String(b.password)), Date.now()).lastInsertRowid;
-    db.prepare('INSERT INTO children(uid, name, grade, avatar, updated) VALUES(?,?,?,?,?)').run(uid, kid, 2, cleanName(b.child?.avatar, 8) || '🦁', Date.now());
+    if (kid) db.prepare('INSERT INTO children(uid, name, grade, avatar, updated) VALUES(?,?,?,?,?)').run(uid, kid, 2, cleanName(b.child?.avatar, 8) || '🦁', Date.now());
+    const src = String(b.ref || '').replace(/[^\w:-]/g, '').slice(0, 40);
+    store.track('signup', uid, null, src || null); store.ensureFounder();
     return [me(db.prepare('SELECT * FROM users WHERE id=?').get(uid)), {'set-cookie': startSession(req, uid)}];
   },
   'POST /api/login': async (req, res, b) => {
@@ -164,6 +169,8 @@ const routes = {
   },
 };
 Object.assign(routes, initBots(db, {auth, fail, PD}).routes);
+const store = initStore(db, {auth, fail, DATA, ROOT}), admin = initAdmin(db, {auth, fail, ROOT, store});
+Object.assign(routes, store.routes, admin.routes);
 const compiled = Object.entries(routes).map(([k, fn]) => {
   const [method, pattern] = k.split(' '), keys = [];
   const re = new RegExp('^' + pattern.replace(/:(\w+)/g, (_, n) => {keys.push(n); return '([^/]+)'}) + '$');
@@ -175,6 +182,8 @@ function serveStatic(req, res, url) {
   let base = WEB, rel = url.pathname;
   if (rel === '/planner') {res.writeHead(301, {location: 'planner/'}); return res.end()}
   if (rel.startsWith('/planner/')) {base = PLANNER; rel = rel.slice(8)}
+  if (rel === '/kids') {res.writeHead(301, {location: 'kids/'}); return res.end()}
+  if (rel.startsWith('/kids/')) {base = KIDS; rel = rel.slice(5)}
   if (rel === '/rasa-planner.html') base = path.join(ROOT, 'dist');
   let file = path.normalize(path.join(base, decodeURIComponent(rel)));
   if (!file.startsWith(base)) {res.writeHead(403); return res.end()}
@@ -186,6 +195,7 @@ function serveStatic(req, res, url) {
 
 http.createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
+  try {if (await store.raw(req, res, url)) return} catch (e) {console.error(e); if (!res.headersSent) send(res, 500, {error: 'خطای سرور'}); return}
   if (!url.pathname.startsWith('/api/')) return serveStatic(req, res, url);
   try {
     const r = compiled.find(r => r.method === req.method && r.re.test(url.pathname));
@@ -193,7 +203,7 @@ http.createServer(async (req, res) => {
     if (req.method !== 'GET' && req.headers['content-type'] && !req.headers['content-type'].includes('application/json')) fail(415, 'نوع محتوا نامعتبر');
     const m = url.pathname.match(r.re), params = Object.fromEntries(r.keys.map((k, i) => [k, m[i + 1]]));
     const body = req.method === 'GET' ? {} : await readBody(req);
-    const out = await r.fn(req, res, body, params);
+    const out = await r.fn(req, res, body, params, url);
     if (Array.isArray(out)) send(res, out[2] || 200, out[0], out[1]); else send(res, 200, out);
   } catch (e) {
     if (!(e instanceof HttpError)) console.error(e);

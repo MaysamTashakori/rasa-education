@@ -28,4 +28,6 @@
 | [11-company-os.md](11-company-os.md) | سیستم‌عامل شرکت یک‌نفره: ۱۹ ایجنت، سطح اختیار، charter، چرخهٔ کار، مرکز فرمان |
 | [12-data-platform.md](12-data-platform.md) | PostgreSQL + pgvector + MinIO، چندمستأجری، بکاپ، مسیر مهاجرت |
 | [13-saas-aiaas.md](13-saas-aiaas.md) | بسته‌های SaaS و API هوش آموزشی (AIaaS) |
+| [14-writing-style.md](14-writing-style.md) | قواعد نگارش رسمی، لحن مخاطبان و المان‌های بصری |
+| [15-storefront-command-center.md](15-storefront-command-center.md) | فروشگاه، پروفایل، CRM، بازاریابی، ایجنت‌ها و API آن‌ها |
 | [CHANGELOG.md](CHANGELOG.md) | تاریخچهٔ تغییرات |
