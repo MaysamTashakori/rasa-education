@@ -237,6 +237,32 @@ export function initStore(db, {auth, fail, DATA, ROOT, notify}) {
       db.prepare('INSERT OR REPLACE INTO planner(uid, blob, at) VALUES(?,?,?)').run(u.id, blob, now());
       return {ok: true};
     },
+    'GET /api/search': (req, res, b, p, url) => {
+      const q = String(url.searchParams.get('q') || '').trim();
+      if (!q) return {products: [], paths: [], pages: []};
+      const like = '%' + q + '%';
+      const products = db.prepare("SELECT id, title, kind, cat, subject, price, status FROM products WHERE status='live' AND (title LIKE ? OR summary LIKE ? OR tags LIKE ? OR subject LIKE ?) LIMIT 12").all(like, like, like, like);
+      let paths = [];
+      try {paths = (J(fs.readFileSync(path.join(ROOT, 'content/store/paths.json'), 'utf8'), {}).paths || []).filter(p => (p.title || '').includes(q) || (p.desc || '').includes(q)).slice(0, 5).map(p => ({id: p.id, title: p.title, icon: p.icon}))} catch {}
+      const PAGES = [['آزمون آنلاین', '/quiz'], ['کارنامهٔ هوشمند', '/me#report'], ['برنامه‌ریز درسی', '/planner/'], ['سامانهٔ کلاس دوم', '/kids/'], ['تعرفه', '/pricing'], ['سازندگان', '/creators'], ['پشتیبانی', '/support'], ['اطلاع‌رسانی', '/me#notice']];
+      return {products, paths: Array.isArray(paths) ? paths : [], pages: PAGES.filter(x => x[0].includes(q)).map(x => ({title: x[0], url: x[1]}))};
+    },
+    'POST /api/report/send': req => {
+      const u = auth(req);
+      const rows = db.prepare('SELECT score, total, topics FROM attempts WHERE uid=? ORDER BY at DESC LIMIT 50').all(u.id);
+      if (!rows.length) fail(404, 'هنوز آزمونکی ثبت نشده است');
+      const topics = {};
+      for (const a of rows) for (const t of J(a.topics, [])) {const g = topics[t.name] || (topics[t.name] = {s: 0, t: 0}); g.s += t.score; g.t += t.total}
+      const knows = Object.entries(topics).filter(([, v]) => v.t && v.s / v.t >= .8).map(([n]) => n).slice(0, 6);
+      const next = Object.entries(topics).filter(([, v]) => v.t && v.s / v.t < .5).map(([n]) => n).slice(0, 6);
+      const text = `📊 کارنامهٔ روایی ${u.name}\n` +
+        `آزمونک‌ها: ${rows.length}\n` +
+        (knows.length ? `✅ بلد است: ${knows.join('، ')}\n` : '') +
+        (next.length ? `📌 گام بعدی: ${next.join('، ')}\n` : '') +
+        `جزئیات در رسا آموزش`;
+      if (notify) {notify(u.id, text, 'rc|' + u.id + '|' + Math.floor(Date.now() / 864e5)); return {ok: true}}
+      fail(503, 'ربات اطلاع‌رسانی فعال نیست');
+    },
     'POST /api/ev': (req, res, b) => {
       const ok = ['home', 'catalog', 'share', 'preview_open', 'cart_add', 'search', 'ref_visit'];
       if (ok.includes(b.name)) track(b.name, optUser(req)?.id, String(b.pid || '').slice(0, 64) || null, String(b.src || '').slice(0, 40) || null);

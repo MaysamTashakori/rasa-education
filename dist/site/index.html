@@ -299,14 +299,15 @@ document.addEventListener('click',e=>{const c=e.target.closest('[data-go]');if(c
 
 function nav(){
   const n=$('#nav');const path=location.pathname;
-  const LINKS=[['/c','کاتالوگ',p=>p.startsWith('/c')],['/pricing','تعرفه',p=>p==='/pricing'],['/planner/','برنامه‌ریز',()=>false],['/kids/','کلاس دوم',()=>false],['/creators','سازندگان',p=>p==='/creators']];
+  const LINKS=[['/c','کاتالوگ',p=>p.startsWith('/c')],['/quiz','آزمون آنلاین',p=>p==='/quiz'],['/services','خدمات',p=>p==='/services'],['/planner/','برنامه‌ریز',()=>false],['/kids/','کلاس دوم',()=>false],['/support','پشتیبانی',p=>p==='/support']];
+  const MORE=[['/pricing','تعرفه'],['/creators','سازندگان'],['/terms','قوانین'],['/about','دربارهٔ ما']];
   n.innerHTML=`<div class="wrap"><a class="brand" href="/">${LOGO}<span>رسا آموزش<small>RASA AMOZESH</small></span></a>
   <nav class="links">${LINKS.map(([h,t,on])=>`<a href="${h}" class="${on(path)?'on':''}">${t}</a>`).join('')}${isStaff()?`<a href="/admin" class="${path.startsWith('/admin')?'on':''}">مرکز فرمان</a>`:''}</nav>
   <span class="sp"></span><button class="ib" id="thm" title="تغییر تم" aria-label="تغییر تم">◐</button>
   <button class="ib" id="cartB" aria-label="سبد">🛍<b id="cartN" ${S.cart.length?'':'hidden'}>${fa(S.cart.length)}</b></button>
   <button class="ib mbtn" id="mbtn" aria-label="منو">☰</button>
   ${S.me?`<a class="btn sm" href="/me">${esc(S.me.name.split(' ')[0])}</a>`:'<button class="btn sm y" id="loginB">ورود / ثبت‌نام</button>'}</div>
-  <div class="mmenu" id="mmenu">${LINKS.map(([h,t])=>`<a href="${h}">${t}</a>`).join('')}${isStaff()?'<a href="/admin">مرکز فرمان</a>':''}<a href="/me">حساب من</a><a href="/terms">قوانین و حریم خصوصی</a></div>`;
+  <div class="mmenu" id="mmenu">${LINKS.map(([h,t])=>`<a href="${h}">${t}</a>`).join('')}${MORE.map(([h,t])=>`<a href="${h}">${t}</a>`).join('')}${isStaff()?'<a href="/admin">مرکز فرمان</a>':''}<a href="/me">حساب من</a></div>`;
   $('#thm').onclick=()=>{const l=document.documentElement.classList.toggle('light');localStorage.setItem('ra:theme',l?'light':'dark')};
   $('#cartB').onclick=cartDrawer;$('#loginB')&&($('#loginB').onclick=()=>authModal());
   const mm=$('#mmenu');$('#mbtn').onclick=()=>mm.classList.toggle('open');
@@ -363,8 +364,11 @@ const SERVICES=[
   ['۰۴','کارنامهٔ روایی','به‌جای نمره: «بلد است، در حال تمرین، گام بعدی» + خلاصهٔ روشن برای والد.','گزارش','#4BE68A','/p/report-card-math8'],
   ['۰۵','برنامه‌ریز هوشمند','برنامهٔ هفتگی خودکار، مرور فاصله‌دار و پشتیبان رمزدار؛ وب‌اپ نصب‌شدنی.','اپ','#FFB547','/planner/'],
   ['۰۶','سامانهٔ کلاس دوم','روال روزانهٔ کودک: ستاره، مشق، کیف فردا و ۱۱ درس برای دبستان.','کودک','#E35DFF','/kids/'],
-  ['۰۷','بازار سازندگان','جزوه و گزارش از سازندگان مستقل؛ پیش‌نمایش زنده و صفحهٔ محصول اختصاصی.','بازار','#4BE8E2','/creators'],
-  ['۰۸','تعرفه و اشتراک','ابزارهای پایه رایگان؛ محتواهای ویژه با پرداخت امن زرین‌پال.','مالی','#8A8A8A','/pricing']
+  ['۰۷','اطلاع‌رسانی و یادآوری','روال صبح، مشق، کیف فردا، گزارش هفتگی و نتیجهٔ آزمونک — در بله و تلگرام.','ربات','#26A69A','/me#notice'],
+  ['۰۸','کارنامه برای والد','روایت پیشرفت فرزند با یک لمس به ربات خانواده ارسال می‌شود.','والد','#4BE68A','/me#report'],
+  ['۰۹','بازار سازندگان','جزوه و گزارش از سازندگان مستقل؛ پیش‌نمایش زنده و صفحهٔ محصول اختصاصی.','بازار','#4BE8E2','/creators'],
+  ['۱۰','پشتیبانی درسی','تیکت، ربات و پاسخ‌گویی انسانی — کنار خانواده هستیم.','پشتیبانی','#FF8A65','/support'],
+  ['۱۱','تعرفه و اشتراک','ابزارهای پایه رایگان؛ محتواهای ویژه با پرداخت امن زرین‌پال.','مالی','#8A8A8A','/pricing']
 ];
 function home(){
   const st=S.store,live=st.products.filter(p=>p.status==='live'),lv=st.live||{};
@@ -404,7 +408,7 @@ function home(){
   <div class="faq">${[['رسا آموزش چیست؟','پلتفرم یادگیری گام‌به‌گام فارسی است: درس و آزمون تعاملی، جزوه‌های گام‌به‌گام، مسیرهای یادگیری مرتب، برنامه‌ریز هوشمند و کارنامه‌ای روایی که به‌جای نمره، می‌گوید فرزندتان چه بلد است و گام بعدی چیست.'],['آیا رایگان است؟','ابزارهای پایه — برنامه‌ریز، سامانهٔ کلاس دوم و پیش‌نمایش درس‌ها — رایگان‌اند. جزوه‌ها و درس‌های ویژه قیمت دارند و با پرداخت امن زرین‌پال دریافت می‌شوند؛ اشتراک خانواده هم در راه است.'],['محتوا برای چه پایه‌هایی داریم؟','فعلاً کانون ما کلاس دوم ابتدایی و ریاضی هشتم است و به‌تدریج به همهٔ مقاطع گسترش می‌یابد؛ مسیرها و کاتالوگ همین‌جا به‌روز می‌شوند.'],['روی گوشی من کار می‌کند؟','بله؛ همه‌چیز موبایل‌محور و راست‌به‌چپ است و به‌صورت وب‌اپ نصب‌شدنی (PWA) روی گوشی و رایانه کار می‌کند.'],['دادهٔ کودک من کجا می‌رود؟','داده‌های کلاس دوم فقط برای همان خانواده و معلمش استفاده می‌شود، رمزگذاری می‌شود و هرگز فروخته یا برای آموزش مدل به کار نمی‌رود.'],['می‌خواهم سازنده باشم','در صفحهٔ «سازندگان» درخواست همکاری ثبت کنید؛ موتور ما پیش‌نمایش زنده، صفحهٔ محصول، کارنامهٔ روایی و آمار را برای شما می‌سازد.']].map(f=>`<details><summary>${esc(f[0])}</summary><p class="mute">${esc(f[1])}</p></details>`).join('')}</div></div></section>
   <div class="nt-tear" aria-hidden="true"></div>
   <section class="nt-sec"><div class="wrap"><div class="cta nt-cta"><div><h2 class="h2" style="font-size:clamp(24px,3.4vw,38px)">اولین گام را همین حالا بردارید</h2><p class="mute" style="margin:8px 0 0">ثبت‌نام رایگان است و در کمتر از یک دقیقه انجام می‌شود.</p></div><div class="row wrapr"><a class="btn y" href="/c">دیدن کاتالوگ</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/kids/">سامانهٔ کلاس دوم</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/planner/">برنامه‌ریز هوشمند</a></div></div></div></section>`;
-  $('#hs').onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/c?q='+encodeURIComponent(q))};
+  $('#hs').onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/search?q='+encodeURIComponent(q))};
   if(innerWidth<900)$('#rcs').style.gridTemplateColumns='1fr';
   // count-up stats
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
@@ -515,7 +519,9 @@ async function profile(){
       pb.innerHTML=`<div class="card mb" id="smrc"><div class="eyebrow">کارنامهٔ هوشمند</div><p class="dim" style="font-size:13px">در حال تحلیل تلاش‌های تو…</p></div>`+(ks.length?ks.map(k=>`<div class="card mb" data-rc="${esc(k)}"></div>`).join(''):'<div class="empty"><i>📊</i>هنوز آزمونکی ثبت نشده است.<br>پس از حل آزمونک هر درس، کارنامهٔ روایی اینجا ساخته می‌شود.</div>');
       api('report').then(r=>{const c=$('#smrc');if(!c)return;const row=(items,none)=>items.length?items.map(t=>`<div class="row" style="justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)"><span>${esc(t.name)}<span class="dim" style="font-size:11px"> · ${esc(t.where||'')}</span></span><b>${fa(t.ratio)}٪</b></div>`).join(''):`<p class="dim" style="font-size:13px">${none}</p>`;
         c.innerHTML=`<div class="eyebrow">کارنامهٔ هوشمند</div><div class="row gap" style="margin:10px 0 14px"><span class="tag" style="--c:var(--cy)">${fa(r.attempts)} آزمونک</span><span class="tag" style="--c:var(--ok)">${fa(r.recent)} در ۷ روز اخیر</span></div>
-        <div class="rc"><div class="a"><div class="k">✓ بلد است</div>${row(r.knows,'هنوز مبحثی به تسلط نرسیده.')}</div><div class="b"><div class="k">↻ در حال تمرین</div>${row(r.practice,'—')}</div><div class="c"><div class="k">← گام بعدی</div>${row(r.next,'—')}</div></div>`}).catch(()=>{const c=$('#smrc');if(c)c.innerHTML=''});
+        <div class="rc"><div class="a"><div class="k">✓ بلد است</div>${row(r.knows,'هنوز مبحثی به تسلط نرسیده.')}</div><div class="b"><div class="k">↻ در حال تمرین</div>${row(r.practice,'—')}</div><div class="c"><div class="k">← گام بعدی</div>${row(r.next,'—')}</div></div>
+        <button class="btn sm y mt" id="rcsend">📤 ارسال کارنامه به والد (بله/تلگرام)</button>`;
+        const sb=$('#rcsend');if(sb)sb.onclick=async()=>{sb.disabled=true;try{await api('report/send');toast('کارنامه به ربات متصل ارسال شد')}catch(e){toast(e.message==='ربات اطلاع‌رسانی فعال نیست'?'اول ربات را در «اطلاعیه‌ها» وصل کن':e.message)}sb.disabled=false}}).catch(()=>{const c=$('#smrc');if(c)c.innerHTML=''});
       ks.forEach(k=>{const g=by[k],last=g.att.at(-1);reportCard($(`[data-rc="${k}"]`),{learner:last.learner,title:g.title,attempts:g.att,topics:last.topics.length?last.topics:[{name:'کل آزمون',score:last.score,total:last.total}]})})}
     if(tab==='fav'){const ps=S.store.products.filter(p=>L.favorites.includes(p.id));pb.innerHTML=ps.length?`<div class="grid3">${ps.map(pcard).join('')}</div>`:'<div class="empty"><i>♡</i>چیزی ذخیره نکرده‌اید.</div>'}
     if(tab==='orders'){const OST={paid:'تکمیل شد','paid-free':'رایگان',pending:'در انتظار پرداخت',failed:'ناموفق'};pb.innerHTML=L.orders.length?`<div class="card"><table class="tbl"><thead><tr><th>شماره</th><th>تاریخ</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody>${L.orders.map(o=>`<tr><td>${fa(o.id)}</td><td>${jd(o.at)}</td><td>${fa(o.n)}</td><td>${o.total?num(o.total)+' تومان':'رایگان'}</td><td><span class="tag" style="--c:${o.status==='paid'||o.status==='paid-free'?'var(--ok)':'var(--y)'}">${OST[o.status]||o.status}</span></td><td>${o.status==='pending'?`<button class="btn sm y" data-pay="${o.id}">پرداخت</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty"><i>🧾</i>سفارشی ندارید.</div>';
@@ -526,7 +532,14 @@ async function profile(){
       $('#nt').onsubmit=async e=>{e.preventDefault();try{await api('tickets',{body:Object.fromEntries(new FormData(e.target))});toast('پیام شما ثبت شد');profile()}catch(er){toast(er.message)}};
       pb.onclick=e=>{const r=e.target.closest('[data-tk]');if(r)ticketModal(+r.dataset.tk)}}
     if(tab==='ref'){const link=location.origin+'/?ref=ref:'+R.code;pb.innerHTML=`<div class="card" style="max-width:640px"><div style="font-size:40px">🎁</div><h2 style="font-size:22px">دوستانتان را دعوت کنید</h2><p class="mute">هر خانواده‌ای که با لینک شما ثبت‌نام کند، اینجا شمرده می‌شود. به‌زودی برای دعوت‌ها جایزه و محتوای ویژه در نظر می‌گیریم.</p><div class="search" style="max-width:none"><input readonly value="${esc(link)}" dir="ltr"><button class="btn y" id="cr">کپی</button></div><p class="mt"><b class="y" style="font-size:26px">${fa(R.signups||0)}</b> ثبت‌نام با دعوت شما</p></div>`;$('#cr').onclick=()=>{navigator.clipboard?.writeText(link);toast('لینک دعوت کپی شد')}}
-    if(tab==='notice')pb.innerHTML=N.length?N.map(n=>`<div class="card mb"><b>${esc(n.title)}</b><div class="dim" style="font-size:12px">${jd(n.at)}</div><p class="mute">${esc(n.body)}</p>${n.link?`<a class="y" href="${esc(n.link)}">بیشتر ←</a>`:''}</div>`).join(''):'<div class="empty"><i>🔔</i>اطلاعیه‌ای نیست.</div>';
+    if(tab==='notice'){pb.innerHTML=`<div class="card mb" id="nbox"><div class="eyebrow">اطلاع‌رسانی و یادآوری</div><p class="dim" style="font-size:13px;margin-top:8px">در حال بررسی اتصال…</p></div>`+(N.length?N.map(n=>`<div class="card mb"><b>${esc(n.title)}</b><div class="dim" style="font-size:12px">${jd(n.at)}</div><p class="mute">${esc(n.body)}</p>${n.link?`<a class="y" href="${esc(n.link)}">بیشتر ←</a>`:''}</div>`).join(''):'');
+      api('notify').then(n=>{const b2=$('#nbox');if(!b2)return;
+        const linked=(n.links||[]).map(l=>l.kind);
+        b2.innerHTML=`<div class="eyebrow">اطلاع‌رسانی و یادآوری</div><p class="mute" style="font-size:14px;margin:10px 0">روال صبح، مشق، کیف فردا، گزارش هفتگی و نتیجهٔ آزمونک‌ها را در ربات دریافت کن.</p>
+        <div class="row wrapr">${linked.length?linked.map(k=>`<span class="tag" style="--c:var(--ok)">✓ ${k==='bale'?'بله':'تلگرام'} متصل</span>`).join(''):'<span class="tag">هنوز رباتی وصل نیست</span>'}<button class="btn sm y" id="gcode">دریافت کد اتصال</button><button class="btn sm ghost" id="tnt">تست پیام</button></div>
+        <div id="codew"></div>`;
+        $('#gcode').onclick=async()=>{try{const r=await api('notify/link',{method:'POST',body:{}});$('#codew').innerHTML=`<div class="card" style="background:var(--card2);margin-top:12px"><b>کد اتصال تو:</b><div style="font-size:30px;font-weight:900;letter-spacing:.1em;color:var(--y);text-align:center;padding:8px">${fa(r.code)}</div><p class="dim" style="font-size:13px">کد را در یکی از ربات‌ها با دستور <code>/start</code> بفرست${r.names?.telegram?` — تلگرام: @${r.names.telegram}`:''}${r.names?.bale?` — بله: @${r.names.bale}`:''}. تا ۱۵ دقیقه معتبر است.</p></div>`}catch(e){toast(e.message)}};
+        $('#tnt').onclick=async()=>{try{await api('notify/test',{method:'POST',body:{}});toast('پیام آزمایشی ارسال شد')}catch(e){toast(e.message)}}}).catch(()=>{const b2=$('#nbox');if(b2)b2.innerHTML='<p class="dim">سرویس اطلاع‌رسانی در دسترس نیست.</p>'})}
   };draw();
 }
 async function ticketModal(id,staffView){
@@ -680,6 +693,58 @@ function pricing(){const plans=S.store?.pricing?.plans||[];setMeta('تعرفه�
   <p class="dim mt" style="font-size:12.5px">قیمت‌ها به تومان و پیش‌نویس‌اند؛ پلن خانواده به‌زودی فعال می‌شود. برای مدرسه و سازندگان با ما در تماس باشید.</p></section>`}
 
 // ---------- router ----------
+async function quizPage(){
+  setMeta('آزمون آنلاین · رسا آموزش','آزمون آنلاین رسا آموزش بر اساس مقطع تحصیلی و درس؛ سؤال‌های واقعی درس‌ها با بازخورد فوری و ثبت در کارنامهٔ هوشمند.');
+  main().innerHTML=`<section class="nt-sec" style="padding-top:30px"><div class="wrap">
+  <div class="nt-sh"><span class="nt-pg">آزمون</span><h2>آزمون آنلاین — بر اساس مقطع و درس</h2><span class="nt-rule"></span></div>
+  <div class="exam" style="margin-bottom:20px"><div class="exam-head"><b>برگهٔ آزمونک</b><span>سؤال‌های واقعی درس‌های رسا</span></div><div class="qz-tabs" id="qzTabs"></div><div id="quiz"></div></div>
+  <div id="qhist"></div></div></section>`;
+  bindQuiz();
+  if(S.me)api('store/library').then(L=>{const h=$('#qhist');if(!h)return;const atts=(L.attempts||[]).filter(a=>String(a.pid).startsWith('quiz:')).slice(0,10);
+    if(atts.length)h.innerHTML=`<div class="card"><b>سوابق آزمونک تو</b>${atts.map(a=>`<div class="row" style="justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line)"><span>${esc(a.pid.slice(5))}</span><span><b>${fa(a.score)} از ${fa(a.total)}</b> <span class="dim" style="font-size:12px">${jd(a.at)}</span></span></div>`).join('')}</div>`}).catch(()=>{});
+}
+const SVC_GROUPS=[
+  ['📚 یادگیری',[['درس‌های تعاملی','گام‌های کوچک با شبیه‌ساز و بازخورد فوری','/c?kind=lesson'],['جزوه‌های گام‌به‌گام','مرحله‌به‌مرحله با تمرین و پاسخ','/c?kind=booklet'],['مسیرهای یادگیری','از ابتدا تا تسلط، مرتب و شماره‌دار','/#paths'],['آزمون آنلاین','بانک سؤال واقعی بر اساس مقطع و درس','/quiz'],['سامانهٔ کلاس دوم','روال روزانه، ستاره، مشق و کیف فردا','/kids/']]],
+  ['📊 ردیابی و رشد',[['کارنامهٔ هوشمند','تحلیل تلاش‌ها به «بلد است / در حال تمرین / گام بعدی»','/me#report'],['کارنامه برای والد','ارسال روایت پیشرفت فرزند در بله و تلگرام','/me#report'],['برنامه‌ریز درسی','برنامهٔ هفتگی، مرور فاصله‌دار، پشتیبان ابری رمزدار','/planner/'],['اطلاع‌رسانی و یادآوری','روال صبح، مشق، کیف فردا، گزارش هفتگی در ربات','/me#notice']]],
+  ['🤝 جامعه',[['بازار سازندگان','جزوه و گزارش از سازندگان مستقل با پیش‌نمایش زنده','/creators'],['تعرفه و اشتراک','ابزارهای پایه رایگان، محتواهای ویژه با زرین‌پال','/pricing'],['پشتیبانی درسی','تیکت، ربات و پاسخ‌گویی به خانواده‌ها','/support'],['مرکز فرمان','۱۹ ایجنت داخلی برای تولید و پشتیبانی','/admin']]]
+];
+function servicesPage(){
+  setMeta('خدمات · رسا آموزش','همهٔ سرویس‌های رسا آموزش: درس تعاملی، آزمون، کارنامهٔ هوشمند، برنامه‌ریز، اطلاع‌رسانی ربات، بازار سازندگان و پشتیبانی.');
+  main().innerHTML=`<section class="nt-sec" style="padding-top:36px"><div class="wrap">
+  <div class="nt-sh"><span class="nt-pg">خدمات</span><h2>همهٔ سرویس‌های رسا، در یک نگاه</h2><span class="nt-rule"></span></div>
+  ${SVC_GROUPS.map(([g,items])=>`<h3 class="mt" style="margin-bottom:14px;font-size:19px">${g}</h3><div class="tkts">${items.map((s,i)=>`<a class="tkt" style="--c:var(--cy)" href="${s[2]}"><span class="tkt-stub"><b>${fa(i+1).padStart(2,'۰')}</b><span class="tkt-bc"></span></span><span class="tkt-body"><strong>${s[0]}</strong><em>${s[1]}</em></span><span class="tkt-a">←</span></a>`).join('')}</div>`).join('')}
+  </div></section>`;
+}
+function supportPage(){
+  setMeta('پشتیبانی · رسا آموزش','پشتیبانی رسا آموزش: تیکت داخل حساب، ربات بله و تلگرام، و پاسخ به خانواده‌ها.');
+  main().innerHTML=`<section class="nt-sec" style="padding-top:36px"><div class="wrap">
+  <div class="nt-sh"><span class="nt-pg">پشتیبانی</span><h2>کنار توییم، گام‌به‌گام</h2><span class="nt-rule"></span></div>
+  <div class="grid3">
+  <div class="card"><div style="font-size:32px">💬</div><h3>تیکت پشتیبانی</h3><p class="mute" style="font-size:14px">سریع‌ترین راه؛ داخل حساب شما پیگیری می‌شود.</p><a class="btn y sm mt" href="/me#support">رفتن به تیکت‌ها</a></div>
+  <div class="card"><div style="font-size:32px">🤖</div><h3>ربات بله و تلگرام</h3><p class="mute" style="font-size:14px">اطلاع‌رسانی، یادآوری و پیام‌رسانی مستقیم — در «اطلاعیه‌ها» وصلش کن.</p><a class="btn sm mt" href="/me#notice">اتصال ربات</a></div>
+  <div class="card"><div style="font-size:32px">❓</div><h3>پرسش‌های پرتکرار</h3><p class="mute" style="font-size:14px">پاسخ دربارهٔ قیمت، حریم خصوصی کودک، رفتار روی گوشی.</p><a class="btn sm mt" href="/">دیدن صفحهٔ اول</a></div>
+  </div>
+  ${!S.me?`<div class="cta mt"><div><h2 style="font-size:20px">برای ارسال تیکت وارد شو</h2><p class="mute">ورود با موبایل یا ایمیل، کمتر از یک دقیقه.</p></div><button class="btn y" id="sl">ورود / ثبت‌نام</button></div>`:''}
+  <div class="card mt"><h3>کانال‌های دیگر</h3><p class="mute" style="font-size:14px;margin:8px 0 0">مدرسه و همکاری سازمانی → <a class="y" href="/contact">صفحهٔ تماس</a> · قوانین → <a class="y" href="/terms">شرایط استفاده</a> · بازگشت وجه → <a class="y" href="/refund">سیاست بازگشت</a></p></div>
+  </div></section>`;
+  const b=$('#sl');if(b)b.onclick=()=>authModal();
+}
+async function searchPage(){
+  const q=new URLSearchParams(location.search).get('q')||'';
+  setMeta('جست‌وجو: '+q+' · رسا آموزش','جست‌وجو در محصولات، مسیرها و سرویس‌های رسا آموزش');
+  main().innerHTML=`<section class="wrap" style="padding:36px 20px 60px"><div class="nt-sh"><span class="nt-pg">جست‌وجو</span><h2>«${esc(q)}»</h2><span class="nt-rule"></span></div>
+  <form class="search" id="sf" style="margin:0 0 24px;max-width:none"><input name="q" value="${esc(q)}" placeholder="درس، جزوه، سرویس…"><button class="btn y">جست‌وجو</button></form><div id="sres"></div></section>`;
+  $('#sf').onsubmit=e=>{e.preventDefault();go('/search?q='+encodeURIComponent(new FormData(e.target).get('q')))};
+  const el=$('#sres');el.innerHTML='<p class="dim">در حال جست‌وجو…</p>';
+  try{const r=await api('search?q='+encodeURIComponent(q));
+    const blk=(t,h)=>h?`<h3 class="mt" style="margin-bottom:12px">${t}</h3>${h}`:'';
+    el.innerHTML=
+      blk('صفحه‌ها و خدمات',r.pages.map(x=>`<a class="chip" style="margin:0 0 8px 8px" href="${esc(x.url)}">${esc(x.title)}</a>`).join(''))+
+      blk('مسیرهای یادگیری',r.paths.map(p=>`<a class="pstep mb" href="/"><i>🧭</i><span>${esc(p.icon||'')} ${esc(p.title)}</span></a>`).join(''))+
+      blk('محصولات',r.products.length?`<div class="grid3">${r.products.map(p=>{const full=S.store.products.find(x=>x.id===p.id);return full?pcard(full):''}).join('')}</div>`:'')+
+      ((!r.pages.length&&!r.paths.length&&!r.products.length)?'<div class="empty"><i>🔍</i>چیزی پیدا نشد.<br><a class="y" href="/c">کاتالوگ کامل</a></div>':'');
+  }catch(e){el.innerHTML='<p class="err">'+esc(e.message)+'</p>'}
+}
 async function route(){
   const p=location.pathname;closeModal();nav();
   if(p==='/'||p==='')home();
@@ -689,6 +754,10 @@ async function route(){
   else if(p==='/creators')creators();
   else if(p.startsWith('/admin'))await admin(p.split('/')[2]);
   else if(p==='/pricing')pricing();
+  else if(p==='/quiz')quizPage();
+  else if(p==='/services')servicesPage();
+  else if(p==='/support')supportPage();
+  else if(p==='/search')searchPage();
   else if(LEGAL[p.slice(1)])legal(p.slice(1));
   else main().innerHTML='<div class="empty"><i>🧭</i>این صفحه پیدا نشد.<br><a class="y" href="/">صفحهٔ اصلی</a></div>';
   if(p==='/'&&S.ref)ev('ref_visit',null);
