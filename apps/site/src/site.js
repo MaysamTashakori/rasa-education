@@ -104,40 +104,34 @@ const main=()=>$('#main');
 function home(){
   const st=S.store,live=st.products.filter(p=>p.status==='live'),tops=st.categories.filter(c=>!c.parent),lv=st.live||{};
   setMeta('رسا آموزش · گام‌به‌گام، تا رسیدن','رسا آموزش: درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیرهای یادگیری، برنامه‌ریز هوشمند و کارنامهٔ روایی برای دانش‌آموزان، خانواده‌ها و مدارس ایران. فعلاً همه‌چیز رایگان است.');
-  main().innerHTML=`<section class="hp-hero"><div class="wrap hp-grid"><div class="hp-copy">
-  <div class="eyebrow"><span class="live-dot"></span>زنده · ${fa(lv.attempts||0)} آزمونک امروز حل شد</div>
-  <h1 class="hp-title">گام‌به‌گام،<br><span class="hp-out">تا رسیدن.</span></h1>
-  <p class="lead">درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیر یادگیری مرتب و کارنامه‌ای که می‌گوید فرزندتان چه بلد است — و گام بعدی چیست.</p>
+  main().innerHTML=`<section class="ed-hero"><div class="wrap">
+  <div class="eyebrow"><span class="live-dot"></span>${fa(lv.attempts||0)} آزمونک امروز در رسا حل شد</div>
+  <h1 class="ed-title">گام‌به‌گام،<br>تا <span class="y">رسیدن.</span></h1>
+  <p class="lead">پلتفرم یادگیری فارسی: درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیر مرتب تا تسلط، برنامه‌ریز هوشمند و کارنامه‌ای که به‌جای نمره می‌گوید فرزندتان چه بلد است و گام بعدی چیست.</p>
   <form class="search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
-  <div class="hp-cta"><a class="btn y" href="/c">شروع یادگیری</a><a class="btn ghost" href="/kids/">🦁 کلاس دوم</a><a class="btn ghost" href="/planner/">🗓️ برنامه‌ریز</a></div>
-  <div class="stats hp-stats"><div><b data-cu="${live.length}">۰</b><span>محصول در کاتالوگ</span></div><div><b data-cu="${live.reduce((s,p)=>s+(p.meta?.steps||0),0)}">۰</b><span>گام تعاملی</span></div><div><b data-cu="${lv.attempts||0}">۰</b><span>آزمونک امروز</span></div><div><b data-cu="${lv.families||0}">۰</b><span>خانوادهٔ فعال</span></div></div></div>
-  <div class="hp-scene" aria-hidden="true">
-    <div class="hp-chip c1">✓ بلد است: جمع دورقمی</div><div class="hp-chip c2">↻ در حال تمرین: عدد گویا</div><div class="hp-chip c3">← گام بعدی: فصل ۲</div>
-    <svg class="hp-stairs" viewBox="0 0 420 420"><defs><linearGradient id="stg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#F4D438" stop-opacity=".15"/><stop offset="1" stop-color="#F4D438" stop-opacity=".55"/></linearGradient></defs>
-    <path d="M370 370 L370 305 L305 305 L305 240 L240 240 L240 175 L175 175 L175 110 L110 110 L110 55" fill="none" stroke="url(#stg)" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round"/>
-    <g fill="#1C1C1C" stroke="#2A2A2A"><rect x="300" y="330" width="80" height="16" rx="8"/><rect x="240" y="270" width="80" height="16" rx="8"/><rect x="180" y="205" width="80" height="16" rx="8"/><rect x="120" y="140" width="80" height="16" rx="8"/><rect x="60" y="80" width="80" height="16" rx="8" fill="#F4D438" stroke="none"/></g>
-    <circle r="11" fill="#F4D438"><animateMotion dur="7s" repeatCount="indefinite" rotate="0"><mpath href="#hpPath" xlink:href="#hpPath"/></animateMotion></circle>
-    <path id="hpPath" d="M370 370 L370 305 L305 305 L305 240 L240 240 L240 175 L175 175 L175 110 L110 110 L110 55" fill="none"/></svg>
-    <div class="hp-ring"></div></div></div></section>
+  <div class="ed-meta"><span>بدون نصب</span><span>موبایل‌محور</span><span>پرداخت امن زرین‌پال</span><span>ثبت‌نام رایگان</span></div>
+  <div class="ed-stats"><div><b data-cu="${live.length}">۰</b><span>محصول زنده</span></div><div><b data-cu="${live.reduce((s,p)=>s+(p.meta?.steps||0),0)}">۰</b><span>گام تعاملی</span></div><div><b data-cu="${lv.attempts||0}">۰</b><span>آزمونک امروز</span></div><div><b data-cu="${lv.families||0}">۰</b><span>خانوادهٔ فعال</span></div></div>
+  </div></section>
   <div class="hp-marquee" aria-hidden="true"><div class="hp-mq">${Array(2).fill(['ریاضی','علوم','فارسی','عربی','فیزیک','شیمی','برنامه‌ریزی','کارنامهٔ روایی','کلاس دوم','کنکور','درس تعاملی','مسیر یادگیری'].map(t=>`<span>${t}</span><i>✦</i>`).join('')).join('')}</div></div>
-  <section class="sec" style="padding-top:44px"><div class="wrap"><div class="sech"><div><div class="eyebrow">خدمات پلتفرم</div><h2 class="h2">همه‌چیز برای «یک گام روشن»</h2></div><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div>
-  <div class="svcs">${[
-    ['📖','درس‌های تعاملی','هر درس به گام‌های کوچک با شبیه‌ساز و بازخورد فوری شکسته شده.','/c?kind=lesson','#4BE8E2'],
-    ['🧭','مسیرهای یادگیری','به‌جای تک‌تک درس، مسیر مرتب از ابتدا تا تسلط.','#paths','#7C9CFF'],
-    ['📊','کارنامهٔ روایی','به‌جای نمره: «بلد است، در حال تمرین، گام بعدی» + خلاصه برای والد.','/p/report-card-math8','#4BE68A'],
-    ['🗓️','برنامه‌ریز هوشمند','برنامهٔ هفتگی خودکار، مرور فاصله‌دار، پشتیبان رمزدار — وب‌اپ نصب‌شدنی.','/planner/','#F4D438'],
-    ['🦁','سامانهٔ کلاس دوم','روال روزانه با ستاره، مشق، کیف فردا و ۱۱ درس برای دبستان.','/kids/','#FFB547'],
-    ['🏪','بازار رسا','جزوه و گزارش سازندگان؛ پیش‌نمایش زنده و صفحهٔ محصول اختصاصی.','/c','#E35DFF']
-  ].map(s=>`<a class="svc" style="--c:${s[4]}" href="${s[3]}"><span class="svc-ic">${s[0]}</span><h3>${s[1]}</h3><p>${s[2]}</p><span class="svc-go">مشاهده ←</span></a>`).join('')}</div></div></section>
-  <section class="sec" style="padding-top:0"><div class="wrap"><div class="sech"><div><div class="eyebrow">راهنمای شماتیک</div><h2 class="h2">رسا چطور کار می‌کند؟</h2></div></div>
-  <div class="map"><div class="map-col"><div class="map-h">مخاطب</div>${['دانش‌آموز','والد','معلم و مدرسه','سازنده'].map(x=>`<div class="map-node">${x}</div>`).join('')}</div>
-  <div class="map-arrow">‹</div>
-  <div class="map-col"><div class="map-h">کانال‌ها</div>${['وب‌اپ موبایل (PWA)','ربات بله','ربات تلگرام','مرکز فرمان'].map(x=>`<div class="map-node">${x}</div>`).join('')}</div>
-  <div class="map-arrow">‹</div>
-  <div class="map-col"><div class="map-h">موتور رسا</div>${['درس و آزمونک تعاملی','مسیر و مرور فاصله‌دار','کارنامهٔ روایی','برنامه‌ریز هوشمند','۱۹ ایجنت داخلی'].map(x=>`<div class="map-node hot">${x}</div>`).join('')}</div>
-  <div class="map-arrow">‹</div>
-  <div class="map-col"><div class="map-h">نتیجه</div>${['یادگیری گام‌به‌گام','گزارش روشن به والد','بازار و درآمد سازنده','دادهٔ کودک امن'].map(x=>`<div class="map-node">${x}</div>`).join('')}</div></div>
-  <p class="dim" style="font-size:12.5px;margin-top:14px">روی موبایل: کانال‌ها را با انگشت بکشید. همه‌چیز بدون نصب، روی هر دستگاه و بدون اینترنتِ کامل هم کار می‌کند.</p></div></section>
+  <section class="sec" id="services" style="padding-top:44px"><div class="wrap"><div class="sech"><div><div class="eyebrow">فهرست خدمات</div><h2 class="h2">هر آنچه برای آموختن لازم است</h2></div><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div>
+  <div class="idx">${[
+    ['۰۱','درس‌های تعاملی','هر درس به گام‌های کوچک با شبیه‌ساز و بازخورد فوری شکسته شده؛ نه فقط خواندن.','درس','#4BE8E2','/c?kind=lesson'],
+    ['۰۲','جزوه‌های گام‌به‌گام','جزوهٔ مرحله‌به‌مرحله با تمرین و پاسخ؛ برای مرور و جمع‌بندی.','جزوه','#7C9CFF','/c?kind=booklet'],
+    ['۰۳','مسیرهای یادگیری','به‌جای تک‌تک درس، مسیر مرتب از ابتدا تا تسلط — هر مسیر چند گام دارد.','مسیر','#F4D438','#paths'],
+    ['۰۴','کارنامهٔ روایی','به‌جای نمره: «بلد است، در حال تمرین، گام بعدی» + خلاصهٔ روشن برای والد.','گزارش','#4BE68A','/p/report-card-math8'],
+    ['۰۵','برنامه‌ریز هوشمند','برنامهٔ هفتگی خودکار، مرور فاصله‌دار و پشتیبان رمزدار؛ وب‌اپ نصب‌شدنی.','اپ','#FFB547','/planner/'],
+    ['۰۶','سامانهٔ کلاس دوم','روال روزانهٔ کودک: ستاره، مشق، کیف فردا و ۱۱ درس برای دبستان.','کودک','#E35DFF','/kids/'],
+    ['۰۷','بازار سازندگان','جزوه و گزارش از سازندگان مستقل؛ پیش‌نمایش زنده و صفحهٔ محصول اختصاصی.','بازار','#4BE8E2','/creators'],
+    ['۰۸','تعرفه و اشتراک','ابزارهای پایه رایگان؛ محتواهای ویژه با پرداخت امن زرین‌پال.','مالی','#8A8A8A','/pricing']
+  ].map(s=>`<a class="idx-row" style="--c:${s[4]}" href="${s[5]}"><span class="idx-n">${s[0]}</span><span class="idx-t">${s[1]}</span><span class="idx-d">${s[2]}</span><span class="idx-k">${s[3]}</span><span class="idx-a">←</span></a>`).join('')}</div></div></section>
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="sech"><div><div class="eyebrow">معماری پلتفرم</div><h2 class="h2">رسا چطور کار می‌کند؟</h2></div></div>
+  <div class="flow">
+  <div class="fl"><b>شما</b><span>دانش‌آموز · والد · معلم و مدرسه · سازنده</span></div><i class="fa">‹</i>
+  <div class="fl"><b>کانال‌ها</b><span>وب‌اپ موبایل (PWA) · ربات بله · ربات تلگرام · مرکز فرمان</span></div><i class="fa">‹</i>
+  <div class="fl hot"><b>موتور رسا</b><span>درس و آزمونک · مسیر و مرور فاصله‌دار · کارنامهٔ روایی · برنامه‌ریز · ۱۹ ایجنت داخلی</span></div><i class="fa">‹</i>
+  <div class="fl"><b>نتیجه</b><span>یادگیری گام‌به‌گام با گزارش روشن و دادهٔ کودک امن</span></div>
+  </div>
+  <p class="dim" style="font-size:12.5px;margin-top:14px">همه‌چیز بدون نصب، روی هر دستگاه و با اینترنت ضعیف هم کار می‌کند.</p></div></section>
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="hp-ticker" id="ticker"><span class="live-dot"></span><span id="tickTxt"></span></div></div></section>
   <section class="sec" style="padding-top:30px"><div class="wrap"><div class="sech"><div><div class="eyebrow">بدون ثبت‌نام</div><h2 class="h2">یک گام را همین‌جا امتحان کن</h2></div><span class="tag" style="--c:var(--ok)">۳ سؤال · ۳۰ ثانیه</span></div>
   <div class="card hp-quiz" id="quiz" style="max-width:680px;margin:0 auto"></div></div></section>
