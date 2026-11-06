@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>شماتیک صفحات — رسا آموزش</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Vazirmatn,system-ui,sans-serif;background:#0B0B0D;color:#EDEDED;direction:rtl;padding:40px 20px 80px}
+.wrap{max-width:1280px;margin:0 auto}
+h1{font-size:30px;font-weight:900;margin-bottom:6px}
+.sub{color:#8A8A8A;font-size:14px;margin-bottom:40px}
+.pg{margin-bottom:56px}
+.pg-h{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}
+.pg-h b{font-size:20px}
+.pg-h code{font-size:12px;color:#F4D438;background:#1A1A1F;padding:3px 10px;border-radius:8px}
+.pg-h span{color:#8A8A8A;font-size:13px}
+.frames{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
+.frame{background:#141418;border:1px solid #2A2A30;border-radius:18px;padding:14px;position:relative}
+.frame .fl{position:absolute;top:-10px;inset-inline-start:14px;background:#F4D438;color:#0A0A0A;font-size:11px;font-weight:900;padding:2px 10px;border-radius:99px}
+.desk{width:660px}
+.mob{width:250px}
+.scr{background:#0B0B0D;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;gap:6px;padding:10px}
+.b{border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#9a9aa5;background:#1E1E24;border:1px dashed #33333c;padding:8px 6px;position:relative;min-height:30px;text-align:center;line-height:1.5}
+.b i{position:absolute;top:3px;inset-inline-start:6px;font-style:normal;font-size:8.5px;color:#666;font-weight:600}
+.b.acc{background:#2a2410;border-color:#6b5a1e;color:#F4D438}
+.b.ok{background:#0f2417;border-color:#1f5c38;color:#4BE68A}
+.b.cy{background:#0d2226;border-color:#1e5c63;color:#4BE8E2}
+.b.ink{background:#26262e;border-color:#444;color:#EDEDED}
+.b.h1{min-height:64px;font-size:15px;color:#FAFAFA;background:#1E1E24;border-style:solid;border-color:#3a3a44}
+.b.p{min-height:22px;background:transparent;border:none;color:#777}
+.b.nav{min-height:26px;background:#15151a;border-color:#333}
+.b.hero{min-height:200px;background:linear-gradient(135deg,#1a1a20,#14141a);border-color:#3a3a44}
+.b.row{display:flex;gap:6px}.b.row>*{flex:1}
+.b.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.b.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.b.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.b.side{display:grid;grid-template-columns:70px 1fr;gap:8px;min-height:220px}
+.note{font-size:12px;color:#8A8A8A;margin-top:10px;line-height:1.8}
+.note b{color:#F4D438}
+.tag{display:inline-block;font-size:10px;background:#1E1E24;border:1px solid #333;border-radius:6px;padding:1px 7px;color:#9a9aa5;margin-inline-start:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>شماتیک صفحات رسا آموزش</h1>
+<p class="sub">wireframe دسکتاپ (۶۶۰px) و موبایل (۲۵۰px) — برای بازبینی ساختار پیش از نهایی‌کردن طراحی.</p>
+<div id="pages"></div>
+</div>
+<script>
+const B=(t,c,l)=>`<div class="b ${c||''}">${l?`<i>${l}</i>`:''}${t||''}</div>`;
+const R=(...xs)=>`<div class="row">${xs.join('')}</div>`;
+const G2=(...xs)=>`<div class="grid2">${xs.join('')}</div>`;
+const G3=(...xs)=>`<div class="grid3">${xs.join('')}</div>`;
+const G4=(...xs)=>`<div class="grid4">${xs.join('')}</div>`;
+const P={
+ home:{url:'/',fa:'صفحهٔ اول',d:`
+  ${B('نوار بالا: لوگو + منو + جست‌وجو + دکمه‌ها','nav','global')}
+  ${B('هیرو: کپی (eyebrow، تیتر، ECG→پله، زیرنویس، جست‌وجو، CTA، چیپ‌ها، آمار زنده)','hero','hero')}
+  ${B('ستون درس زنده (۴ گام تعاملی + ستاره) + کارت کارنامه','ok','demo')}
+  ${B('نوار متحرک مقاطع و دروس','nav','band')}
+  ${B('سکشن ۰۱: یک روز در رسا — ۴ کارت صبح/روز/شب/هفته','','day')}
+  ${B('سکشن ۰۲: خدمات — ۸ کارت + همهٔ خدمات','','svc')}
+  ${B('سکشن ۰۳: کاتالوگ — ۴ مقطع + ردیف‌های محصول','','cat')}
+  ${B('سکشن ۰۴: مسیرها — زنجیره‌های گام','','paths')}
+  ${B('سکشن ۰۵: تعرفه — ۳ سطح','','price')}
+  ${B('CTA پایانی + فوتر','','cta')}`,
+  m:`
+  ${B('همبرگری + لوگو','nav','m-nav')}
+  ${B('هیرو فشرده: تیتر + زیرنویس','','m-hero')}
+  ${B('درس زنده — تمام‌عرض، بالای fold','ok','m-demo')}
+  ${B('کارنامه — زیر درس','cy','m-report')}
+  ${B('نوار مقاطع (اسکرول افقی)','nav','m-band')}
+  ${B('کارت‌های روز/خدمات — ۱ ستونه','','m-cards')}
+  ${B('مقاطع + ردیف محصول — فشرده','','m-cat')}
+  ${B('تعرفه + CTA','','m-end')}`,
+  note:'موبایل: ترتیب هیرو→درس→کارنامه حفظ شد؛ کارت‌ها ۱ ستونه؛ منو به ☰ می‌رود.'},
+ cat:{url:'/c',fa:'کاتالوگ',d:`
+  ${B('نوار بالا','nav','global')}
+  ${R(B('جست‌وجوی کاتالوگ + فیلترها','ink','filters'),B('','ink','sp'))}
+  ${B('تب‌های نوع: همه / درس / جزوه / آزمون / گزارش','nav','tabs')}
+  ${B('ردیف دسته‌بندی‌ها (حباب‌های رنگی)','cy','cats')}
+  ${B('گرید محصول: کاور + عنوان + نوع + قیمت + پیش‌نمایش','','grid 3col')}
+  ${B('محصول × ۶—۱۲ — صفحه‌بندی','','more')}
+  ${B('فوتر','','foot')}`,
+  m:`
+  ${B('نوار + ☰','nav','m-nav')}
+  ${B('جست‌وجو + فیلترها — فشرده','ink','m-filter')}
+  ${B('تب‌ها — اسکرول افقی','nav','m-tabs')}
+  ${B('دسته‌ها — ۲ ستونه','cy','m-cats')}
+  ${B('گرید محصول — ۱ ستونه (کاور کوچک)','', 'm-grid')}
+  ${B('فوتر فشرده','','m-foot')}`,
+  note:'موبایل: تب‌ها اسکرول افقی؛ گرید ۱ ستونه؛ کاور کوچک‌تر.'},
+ prod:{url:'/p/:id',fa:'صفحهٔ محصول',d:`
+  ${B('بردکرامب: کاتالوگ › دسته › محصول','p','crumb')}
+  ${R(B('پیش‌نمایش زنده (iframe درس/جزوه) — ۶۰٪','ok','preview'),B('کارت خرید: قیمت، زرین‌پال، کتابخانه، امتیاز','acc','buy'))}
+  ${B('دربارهٔ محصول + برچسب‌ها','', 'about')}
+  ${B('مسیر یادگیری (گام فعلی + بعدی)','cy','path')}
+  ${B('نظر خانواده‌ها','', 'reviews')}
+  ${B('فوتر','','foot')}`,
+  m:`
+  ${B('بردکرامب فشرده','p','m-crumb')}
+  ${B('پیش‌نمایش — تمام‌عرض','ok','m-preview')}
+  ${B('کارت خرید — زیر پیش‌نمایش','acc','m-buy')}
+  ${B('درباره + برچسب','', 'm-about')}
+  ${B('مسیر + نظرها','cy','m-rest')}
+  ${B('فوتر','','m-foot')}`,
+  note:'موبایل: چیدمان عمودی؛ دکمهٔ خرید قبل از اسکرول طولانی می‌ماند (sticky نیست — بررسی شود).'},
+ quiz:{url:'/quiz',fa:'آزمون آنلاین',d:`
+  ${B('نوار بالا','nav','global')}
+  ${B('تیتر + توضیح','h1','head')}
+  ${R(B('مقطع: همه/دبستان/متوسطهٔ دوم','nav','levels'),B('','', 'sp'))}
+  ${B('درس‌های همان مقطع — حباب‌ها','cy','subjects')}
+  ${B('برگهٔ آزمون: سؤال + ۴ گزینه + بازخورد','hero','exam')}
+  ${B('کارنامهٔ هوشمند (rcdemo) — ۳ سبد','ok','report')}
+  ${B('سوابق آزمونک‌های من','', 'history')}
+  ${B('فوتر','','foot')}`,
+  m:`
+  ${B('نوار + ☰','nav','m-nav')}
+  ${B('تیتر فشرده','h1','m-head')}
+  ${B('مقطع + درس — اسکرول افقی','cy','m-pick')}
+  ${B('سؤال + گزینه‌ها — بزرگ و لمسی','hero','m-exam')}
+  ${B('کارنامه — ۱ ستونه','ok','m-report')}
+  ${B('سوابق','','m-hist')}`,
+  note:'موبایل: گزینه‌ها لمسی؛ انتخاب مقطع/درس افقی.'},
+ svc:{url:'/services',fa:'خدمات',d:`
+  ${B('نوار بالا','nav','global')}
+  ${B('تیتر + توضیح','h1','head')}
+  ${B('گروه ۱: یادگیری — ۵ خدمت','ok','g1')}
+  ${B('گروه ۲: ردیابی — ۳ خدمت','cy','g2')}
+  ${B('گروه ۳: جامعه — ۳ خدمت','acc','g3')}
+  ${B('معماری: کانال ← موتور ← نتیجه','ink','arch')}
+  ${B('فوتر','','foot')}`,
+  m:`
+  ${B('نوار + ☰','nav','m-nav')}
+  ${B('تیتر','h1','m-head')}
+  ${B('گروه‌ها — کارت‌های فشرده ۱ ستونه','','m-groups')}
+  ${B('معماری — عمودی','ink','m-arch')}`,
+  note:'موبایل: گروه‌ها جمع می‌شوند؛ معماری عمودی.'},
+ me:{url:'/me',fa:'حساب من',d:`
+  ${B('نوار بالا','nav','global')}
+  ${R(B('پروفایل کاربر','ink','prof'),B('','', 'sp'))}
+  ${B('تب‌ها: کتابخانه/کارنامه/سفارش/پشتیبانی/دعوت/اطلاعیه','nav','tabs')}
+  ${B('محتوای تب فعال (کتابخانه یا کارنامه)','hero','content')}
+  ${B('دکمهٔ ارسال کارنامه به والد','acc','send')}
+  ${B('فوتر','','foot')}`,
+  m:`
+  ${B('نوار + ☰','nav','m-nav')}
+  ${B('پروفایل فشرده','ink','m-prof')}
+  ${B('تب‌ها — اسکرول افقی','nav','m-tabs')}
+  ${B('محتوا — تمام‌عرض','hero','m-content')}
+  ${B('ارسال به والد','acc','m-send')}`,
+  note:'موبایل: تب‌ها افقی؛ کارنامه ۱ ستونه.'}
+};
+const pages=Object.entries(P);
+document.getElementById('pages').innerHTML=pages.map(([k,p],pi)=>`
+<section class="pg"><div class="pg-h"><b>${pi+1}. ${p.fa}</b><code>${p.url}</code><span>${p.note}</span></div>
+<div class="frames">
+ <div class="frame desk"><span class="fl">دسکتاپ</span><div class="scr">${p.d}</div></div>
+ <div class="frame mob"><span class="fl">موبایل</span><div class="scr">${p.m}</div></div>
+</div></section>`).join('');
+</script>
+</body>
+</html>
