@@ -733,6 +733,35 @@ a.st-tag:hover{color:var(--ink);border-color:var(--line2)}
 .br-msg.me{margin-inline-start:auto;background:#1d2b45;border-radius:14px 14px 4px 14px;text-align:left}
 @media(max-width:960px){.ph{margin-inline-start:0;max-width:none}}
 @media(prefers-reduced-motion:reduce){.ph{box-shadow:none}}
+/* planner week preview + badges + live feed */
+.wk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:18px}
+.wk-day{border:1px solid var(--line);border-radius:14px;padding:10px 8px;background:var(--card);min-height:120px}
+.wk-day b{display:block;font-size:11px;color:var(--dim);margin-bottom:8px;text-align:center}
+.wk-day.today{border-color:var(--y);background:color-mix(in srgb,var(--y) 6%,var(--card))}
+.wk-day.today b{color:var(--y)}
+.wk-items{display:flex;flex-direction:column;gap:5px}
+.wk-it{font-size:9.5px;font-weight:800;padding:5px 7px;border-radius:8px;text-align:center;line-height:1.5}
+.wk-it.m{background:color-mix(in srgb,var(--cy) 15%,transparent);color:var(--cy)}
+.wk-it.l{background:color-mix(in srgb,var(--y) 15%,transparent);color:var(--y)}
+.wk-it.v{background:color-mix(in srgb,var(--ok) 13%,transparent);color:var(--ok)}
+.wk-it.c{background:color-mix(in srgb,var(--vi) 15%,transparent);color:var(--vi)}
+.wk-bot{display:flex;gap:12px;align-items:flex-start;border:1px dashed var(--line2);border-radius:16px;padding:14px 16px;margin-bottom:22px;background:color-mix(in srgb,var(--card) 60%,transparent)}
+.wk-bot i{font-style:normal;font-size:20px}
+.wk-bot b{font-size:13px}
+.wk-bot .dim{font-size:12px}
+.bdg-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.bdg{border:1px solid var(--line);border-radius:14px;padding:14px 10px;text-align:center;background:var(--card)}
+.bdg i{font-style:normal;font-size:22px;display:block;margin-bottom:6px}
+.bdg b{display:block;font-size:12px}
+.bdg span{font-size:10px;color:var(--dim)}
+.lv-feed{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.lv-item{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:16px;padding:18px;background:var(--card)}
+.lv-item i{font-style:normal;font-size:26px}
+.lv-item b{display:block;font-size:24px;font-weight:900;font-variant-numeric:tabular-nums}
+.lv-item span{font-size:11.5px;color:var(--mute)}
+.lv-item em{margin-inline-start:auto;font-style:normal;font-size:10px;color:var(--ok);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);border-radius:99px;padding:2px 8px}
+@media(max-width:960px){.wk-grid{grid-template-columns:repeat(4,1fr)}.bdg-row{grid-template-columns:repeat(3,1fr)}.lv-feed{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.wk-grid{grid-template-columns:repeat(2,1fr)}.bdg-row{grid-template-columns:repeat(2,1fr)}.lv-feed{grid-template-columns:1fr}}
 </style></head><body><header class="nav" id="nav"></header><main id="main"></main><footer class="foot" id="foot"></footer><script>'use strict';
 // رسا آموزش — storefront + profile + command center (vanilla SPA, history routing)
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -910,17 +939,23 @@ function home(){
   <section class="hl-sec"><div class="wrap">${head('۰۲','AUTOMATION','یک درس، مرحله به مرحله','از لحظه‌ای که سؤال باز می‌شود تا گزارش هفتگی برای والد — خودکار و قابل‌ردیابی.')}
   <div class="pp-flow">${pipe.map((p,i)=>`<div class="pp-node st-reveal" style="--i:${i}"><i>${fa(i+1)}</i><b>${p[0]}</b><span>${p[1]}</span></div>${i<pipe.length-1?'<div class="pp-arrow">←</div>':''}`).join('')}</div>
   <div class="pp-ch">${['وب‌اپ','بله','تلگرام','مرکز فرمان'].map(c=>`<span class="st-tag">${c}</span>`).join('')}</div></div></section>
-  <section class="hl-sec"><div class="wrap">${head('۰۳','DAY','از صبح تا جمعه، چه اتفاقی می‌افتد؟','برنامه‌ریز، درس، آزمون و کارنامه در یک روزِ واقعی کنار هم کار می‌کنند.')}
+  <section class="hl-sec"><div class="wrap">${head('۰۳','PLANNER','برنامه‌ات را ببین، نه فقط بخوان','یک هفتهٔ واقعی در برنامه‌ریز — درس، مرور و یادآور ربات در یک نگاه.')}
+  <div class="wk-grid">${['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'].map((d,i)=>`<div class="wk-day ${i===4?'today':''}"><b>${d}</b><div class="wk-items">${i===4?'<span class="wk-it m">۸:۰۰ بیداری و برنامه</span><span class="wk-it l">۱۶:۰۰ ریاضی ۴۰د</span><span class="wk-it v">۱۸:۰۰ فارسی ۳۰د</span><span class="wk-it c">۲۰:۰۰ مرور شب</span>':i%2?'<span class="wk-it v">مشق ۲۰د</span><span class="wk-it l">درس جدید</span>':'<span class="wk-it m">آزمونک ۱۰د</span>'}</div></div>`).join('')}</div>
+  <div class="wk-bot"><i>🧭</i><div><b>یادآوری ربات — چهارشنبه ۱۵:۵۵</b><br><span class="dim">«امروز ساعت ۱۶ ریاضی داری؛ ۱۰ دقیقه دیگر شروع می‌کنیم. کیف فردا آماده است.»</span></div></div>
+  <div class="bdg-row">${[['🔥','۷ روز پیاپی','مطالعهٔ متوالی'],['⭐','۱۰ آزمونک','تکمیل‌شده'],['🏆','یک مسیر کامل','از ابتدا تا تسلط'],['📚','۵ درس تمام','گام‌به‌گام'],['🎯','دقت ۹۰٪','در آزمونک‌ها'],['🎒','کیف فردا','آماده هر شب']].map(b=>`<div class="bdg"><i>${b[0]}</i><b>${b[1]}</b><span>${b[2]}</span></div>`).join('')}</div></div></section>
+  <section class="hl-sec"><div class="wrap">${head('۰۴','LIVE','همین حالا در رسا','اعداد واقعی و زنده — هر بار که برمی‌گردی تازه است.')}
+  <div class="lv-feed">${[['📘',live.length,'محصول زنده در کاتالوگ'],['✏️',lv.attempts||0,'آزمونک امروز حل شد'],['👪',lv.families||0,'خانوادهٔ فعال'],['🧭',(st.paths||[]).length,'مسیر یادگیری'],['📊',live.reduce((s,p)=>s+(p.meta?.steps||0),0),'گام تعاملی'],['🏪',live.filter(p=>p.creator).length||'—','سازندهٔ فعال']].map((x,i)=>`<div class="lv-item st-reveal" style="--i:${i}"><i>${x[0]}</i><div><b data-cu="${x[1]}">۰</b><span>${x[2]}</span></div><em class="dim">زنده</em></div>`).join('')}</div></div></section>
+<section class="hl-sec"><div class="wrap">${head('۰۵','DAY','از صبح تا جمعه، چه اتفاقی می‌افتد؟','برنامه‌ریز، درس، آزمون و کارنامه در یک روزِ واقعی کنار هم کار می‌کنند.')}
   <div class="hl-cards">${[['صبح','🌅','برنامه‌ریز بیدارت می‌کند','برنامهٔ امروز و یادآور کیف فردا در رباتت می‌نشیند.',[['برنامه‌ریز درسی','/planner/'],['یادآوری در بله','/me#notice']]],['روز','📖','درس، قدم‌به‌قدم','هر مفهوم به گام‌های کوچک شکسته می‌شود؛ انجام می‌دهی، نه فقط می‌خوانی.',[['درس‌های تعاملی','/c?kind=lesson'],['جزوهٔ گام‌به‌گام','/c?kind=booklet']]],['شب','🌙','کارنامه، روایت می‌شود','چه بلدی، کجا گیر کردی و گام بعدی چیست — برای والد می‌رود.',[['کارنامهٔ هوشمند','/me#report'],['ارسال به والد','/me#report']]],['هفته','📊','گزارش هفتگی','مرور فاصله‌دار برنامه‌ریزی می‌کند و خلاصهٔ پیشرفت برای خانواده می‌رود.',[['مرور فاصله‌دار','/planner/'],['گزارش هفتگی','/me#report']]]].map((d,i)=>`<div class="hl-card st-spot st-reveal" style="--i:${i}"><div class="hl-card-h"><i>${d[1]}</i><b>${d[0]}</b></div><h3>${d[2]}</h3><p>${d[3]}</p><div class="hl-card-l">${d[4].map(l=>`<a href="${l[1]}">${l[0]} ←</a>`).join('')}</div></div>`).join('')}</div></div></section>
-  <section class="hl-sec"><div class="wrap">${head('۰۴','SERVICES','همهٔ خدمات در یک جا','ده خدمت اصلی؛ هرکدام به مقصد واقعی خودش لینک می‌شود.')}
+  <section class="hl-sec"><div class="wrap">${head('۰۶','SERVICES','همهٔ خدمات در یک جا','ده خدمت اصلی؛ هرکدام به مقصد واقعی خودش لینک می‌شود.')}
   <div class="hl-cards hl-cards-4">${[['درس تعاملی','گام‌های کوچک با بازخورد فوری','/c?kind=lesson','📘'],['جزوهٔ گام‌به‌گام','تمرین مرحله‌به‌مرحله','/c?kind=booklet','📝'],['مسیر یادگیری','از ابتدا تا تسلط','/#paths','🧭'],['آزمون آنلاین','سؤال واقعی بر اساس مقطع','/quiz','✏️'],['کارنامهٔ هوشمند','روایت پیشرفت برای والد','/me#report','📊'],['برنامه‌ریز درسی','برنامه و مرور فاصله‌دار','/planner/','🗓️'],['کلاس دوم','سامانهٔ روزانهٔ کودک','/kids/','🎒'],['بازار سازندگان','محتوای سازندگان مستقل','/creators','🏪']].map((v,i)=>`<a class="hl-card st-spot st-reveal" style="--i:${i}" href="${v[2]}"><div class="hl-card-h"><i>${v[3]}</i></div><h3>${v[0]}</h3><p>${v[1]}</p><span class="hl-go">مشاهده ←</span></a>`).join('')}<a class="hl-card hl-more st-reveal" style="--i:8" href="/services"><div class="hl-card-h"><i>＋</i></div><h3>همهٔ خدمات</h3><p>۱۵ خدمت در چهار لایه: دسترسی، یادگیری، ردیابی، بازار.</p><span class="hl-go">مشاهده ←</span></a></div></div></section>
-  <section class="hl-sec" id="paths"><div class="wrap">${head('۰۵','CATALOG','بر اساس مقطع تحصیلی','کاتالوگ بر اساس پایه  شده؛ هر ردیف به محصول‌های همان مقطع می‌رسد.')}
+  <section class="hl-sec" id="paths"><div class="wrap">${head('۰۷','CATALOG','بر اساس مقطع تحصیلی','کاتالوگ بر اساس پایه  شده؛ هر ردیف به محصول‌های همان مقطع می‌رسد.')}
   <div class="dl-lvls">${[['دبستان','کلاس اول تا ششم'],['متوسطهٔ اول','هفتم تا نهم'],['متوسطهٔ دوم','دهم تا دوازدهم'],['کنکور','ریاضی، تجربی، انسانی']].map((l,i)=>`<a class="dl-lvl st-spot st-reveal" style="--i:${i}" href="/c"><i>${fa(i+1).padStart(2,'۰')}</i><div><b>${l[0]}</b><span>${l[1]}</span></div><em>${fa(live.filter(p=>(p.meta?.level||'').includes(l[0].slice(0,4))||p.cat==='konkur'&&l[0]==='کنکور').length||'—')} محصول</em><span class="dl-lvlgo">←</span></a>`).join('')}</div>
   <div class="dl-prods">${live.map((p,i)=>`<a class="dl-prow" href="/p/${esc(p.id)}"><i>${fa(i+1).padStart(2,'۰')}</i><b>${esc(p.title)}</b><span class="dl-kind">${esc(p.kind)}</span><span class="dim dl-prow-d">${esc(p.meta?.subject||p.summary||'')}</span><span class="dl-price">${p.price?p.price.toLocaleString('fa-IR'):'رایگان'}</span></a>`).join('')}</div></div></section>
-  ${st.paths?.length?`<section class="hl-sec"><div class="wrap">${head('۰۶','PATHS','هر مسیر، یک زنجیرهٔ گام','مسیرها دانش‌آموز را از ابتدا تا تسلط، مرحله‌به‌مرحله جلو می‌برند.')}
+  ${st.paths?.length?`<section class="hl-sec"><div class="wrap">${head('۰۸','PATHS','هر مسیر، یک زنجیرهٔ گام','مسیرها دانش‌آموز را از ابتدا تا تسلط، مرحله‌به‌مرحله جلو می‌برند.')}
   <div class="dl-chains">${st.paths.map(pa=>`<div class="dl-chain st-spot st-reveal" style="--c:${esc(pa.color||'#F4D438')}"><div class="dl-chainh"><i>${esc(pa.icon||'🧭')}</i><div><b>${esc(pa.title)}</b><p>${esc(pa.audience||'')} · ${fa(pa.steps.length)} گام</p></div></div>
   <div class="dl-steps">${pa.steps.map((st2,i)=>`<a class="dl-stp ${st2.status==='soon'?'soon':''}" href="/p/${esc(st2.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(st2.title)}</span></a>`).join('')}</div></div>`).join('')}</div></div></section>`:''}
-  <section class="hl-sec"><div class="wrap">${head('۰۷','PRICING','هسته رایگان، ارزش واقعی قیمت‌دار','پایه همیشه رایگان می‌ماند؛ پول از محتوای ویژه و خدمات می‌آید، نه از قفل‌کردن.')}
+  <section class="hl-sec"><div class="wrap">${head('۰۹','PRICING','هسته رایگان، ارزش واقعی قیمت‌دار','پایه همیشه رایگان می‌ماند؛ پول از محتوای ویژه و خدمات می‌آید، نه از قفل‌کردن.')}
   <div class="dl-tiers">${[['رایگان','برنامه‌ریز، کلاس دوم، آزمونک و پیش‌نمایش همهٔ درس‌ها'],['محتوای ویژه','جزوه‌ها، کارنامهٔ روایی و گزارش‌ها با پرداخت امن زرین‌پال'],['سازندگان','فروش جزوه و گزارش در بازار با پیش‌نمایش زنده']].map((t,i)=>`<a class="dl-tier st-spot st-reveal" style="--i:${i}" href="/pricing"><i>${fa(i+1)}</i><b>${t[0]}</b><p>${t[1]}</p></a>`).join('')}</div></div></section>
   <section class="dl-last" data-st="شروع"><div class="wrap dl-lastin st-ring st-reveal"><div><span class="mn-k">گام آخر، همین است</span><h2>امروز شروع کنید —<br>خانواده‌ات می‌بیند.</h2></div><div class="row wrapr"><a class="btn y lg" href="/c">دیدن کاتالوگ</a><a class="btn lg hl-ghost" href="/quiz">آزمون آنلاین</a><a class="btn lg hl-ghost" href="/planner/">برنامه‌ریز</a></div></div></section>`;
 
