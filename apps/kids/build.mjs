@@ -1,6 +1,7 @@
 // Builds dist/kids (grade-2 system web app). Shares core.js + design system with apps/planner.
 import {readFileSync as r, writeFileSync as w, mkdirSync} from 'node:fs';
-const here = new URL('.', import.meta.url).pathname, root = here + '../../', pl = root + 'apps/planner/';
+import {fileURLToPath} from 'node:url';
+const here = fileURLToPath(new URL('.', import.meta.url)), root = here + '../../', pl = root + 'apps/planner/';
 const fonts = ['arabic', 'latin'].flatMap(set => [400, 700, 900].map(wt => {
   const b64 = r(`${pl}fonts/vazirmatn-${set}-${wt}-normal.woff2`).toString('base64');
   const range = set === 'arabic' ? 'U+0600-06FF,U+0750-077F,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FEFC' : 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD';

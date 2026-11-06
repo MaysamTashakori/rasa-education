@@ -3,12 +3,13 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {fileURLToPath} from 'node:url';
 import {DatabaseSync} from 'node:sqlite';
 import {initBots} from './bots.mjs';
 import {initStore} from './store.mjs';
 import {initAdmin} from './admin.mjs';
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = +(process.env.PORT || 8080);
 const DATA = process.env.DATA_DIR || path.join(ROOT, 'data');
 const WEB = process.env.WEB_DIR || path.join(ROOT, 'dist', 'site');

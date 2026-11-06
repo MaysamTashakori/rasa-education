@@ -12,6 +12,8 @@ const STATUS={live:'منتشرشده',draft:'پیش‌نویس',soon:'به‌ز�
 const S={me:null,roles:[],store:null,cart:JSON.parse(localStorage.getItem('ra:cart')||'[]'),ref:new URLSearchParams(location.search).get('utm_source')||new URLSearchParams(location.search).get('ref')||sessionStorage.getItem('ra:ref')||''};
 if(S.ref)sessionStorage.setItem('ra:ref',S.ref);
 const isStaff=()=>S.roles.some(r=>['founder','admin','editor','support','marketer'].includes(r));
+const setMeta=(title,desc)=>{document.title=title;const m=document.querySelector('meta[name="description"]');if(m&&desc)m.content=desc};
+const pathOf=pid=>(S.store?.paths||[]).find(p=>(p.steps||[]).some(s=>s.id===pid));
 const theme=localStorage.getItem('ra:theme');if(theme==='light')document.documentElement.classList.add('light');
 
 async function api(p,o={}){
@@ -35,7 +37,7 @@ const catOf=id=>S.store?.categories.find(c=>c.id===id);
 function pcard(p){const c=catOf(p.cat);
   return `<article class="pc" data-go="/p/${esc(p.id)}">${cover(p)}<div class="bd"><div class="row wrapr"><span class="tag" style="--c:${esc(c?.color||'#F4D438')}">${esc(c?.title||'')}</span><span class="tag" style="--c:var(--mute)">${KIND[p.kind]||''}</span></div>
   <h3 style="font-size:16px">${esc(p.title)}</h3><p>${esc(p.summary)}</p><div class="ft"><span>${p.status==='soon'?'<span class="dim">به‌زودی</span>':'<span class="free">رایگان</span>'}</span>
-  <span class="row">${p.rating?.n?`<span class="dim">★ ${fa(p.rating.a)}</span>`:''}${p.owned?'<span class="tag" style="--c:var(--ok)">در کتابخانه</span>':''}</span></div></div></article>`}
+  <span class="row">${pathOf(p.id)?'<span class="tag" style="--c:var(--vi)">🧭 مسیر</span>':''}${p.rating?.n?`<span class="dim">★ ${fa(p.rating.a)}</span>`:''}${p.owned?'<span class="tag" style="--c:var(--ok)">در کتابخانه</span>':''}</span></div></div></article>`}
 document.addEventListener('click',e=>{const c=e.target.closest('[data-go]');if(c&&!e.target.closest('button,a'))go(c.dataset.go)});
 
 function nav(){
@@ -91,7 +93,7 @@ function addCart(id){if(!S.cart.includes(id)){S.cart.push(id);saveCart();ev('car
 const main=()=>$('#main');
 function home(){
   const st=S.store,live=st.products.filter(p=>p.status==='live'),tops=st.categories.filter(c=>!c.parent);
-  document.title='رسا آموزش · گام‌به‌گام، تا رسیدن';
+  setMeta('رسا آموزش · گام‌به‌گام، تا رسیدن','رسا آموزش: درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیرهای یادگیری، برنامه‌ریز هوشمند و کارنامهٔ روایی برای دانش‌آموزان، خانواده‌ها و مدارس ایران. فعلاً همه‌چیز رایگان است.');
   main().innerHTML=`<section class="hero"><div class="wrap grid"><div><div class="eyebrow">پلتفرم یادگیری گام‌به‌گام</div><h1 class="h1" style="margin-top:14px">گام‌به‌گام،<br><span class="y">تا رسیدن.</span></h1>
   <p class="lead">درس‌ها و آزمون‌های تعاملی، جزوه‌های گام‌به‌گام، برنامه‌ریز هوشمند و کارنامه‌هایی که می‌گویند فرزندتان چه بلد است و گام بعدی چیست.</p>
   <form class="search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
@@ -100,6 +102,11 @@ function home(){
   <div class="float" style="top:10%;inset-inline-end:8%">✓ بلد است: <b>جمع دورقمی</b></div><div class="float" style="top:26%;inset-inline-end:16%;animation-delay:1s">↻ در حال تمرین: <b>عدد گویا</b></div><div class="float" style="bottom:6%;inset-inline-end:6%;animation-delay:2s">← گام بعدی: <b>فصل ۲</b></div></div></div></section>
   <section class="sec" style="padding-top:20px"><div class="wrap"><div class="sech"><h2 class="h2">از کجا شروع کنیم؟</h2><a class="btn sm ghost" href="/c">همهٔ دسته‌ها ←</a></div>
   <div class="cats">${tops.map(c=>`<div class="cat" style="--c:${esc(c.color)}" data-go="/c/${esc(c.id)}"><i>${esc(c.icon)}</i><h3>${esc(c.title)}</h3><div class="dim" style="font-size:13px">${esc(c.info||'')}</div></div>`).join('')}</div></div></section>
+  ${(st.paths||[]).length?`<section class="sec" style="padding-top:20px"><div class="wrap"><div class="sech"><div><div class="eyebrow">مسیرهای یادگیری</div><h2 class="h2">به‌جای تک‌تک درس، یک مسیر کامل</h2></div></div>
+  <div class="paths">${st.paths.map(pa=>`<div class="path" style="--c:${esc(pa.color||'#F4D438')}"><div class="row"><span style="font-size:26px">${esc(pa.icon||'🧭')}</span><div style="flex:1"><h3 style="font-size:17px">${esc(pa.title)}</h3><div class="dim" style="font-size:12.5px">${esc(pa.audience||'')}</div></div><span class="tag" style="--c:var(--mute)">${fa(pa.steps.length)} گام</span></div>
+  <p class="mute" style="font-size:13.5px;margin:10px 0 14px">${esc(pa.desc)}</p>
+  <div class="psteps">${pa.steps.map((s,i)=>`<a class="pstep ${s.status==='soon'?'soon':''}" href="/p/${esc(s.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(s.title)}</span></a>`).join('')}</div>
+  <a class="btn sm ghost mt" href="/p/${esc(pa.steps[0].id)}" style="margin-top:14px">شروع مسیر ←</a></div>`).join('')}</div></div></section>`:''}
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="sech"><div><div class="eyebrow">ویترین</div><h2 class="h2">تازه و محبوب</h2></div><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div><div class="grid3">${st.products.slice(0,8).map(pcard).join('')}</div></div></section>
   <section class="sec"><div class="wrap"><div class="sech"><h2 class="h2">در سه گام</h2></div><div class="how">
   <div class="card"><b>۱</b><h3>پیش‌نمایش زنده</h3><p class="mute">پیش از دریافت، خود درس را همین‌جا امتحان کنید؛ نه فقط عکس و توضیح.</p></div>
@@ -108,14 +115,17 @@ function home(){
   <section class="sec"><div class="wrap card" style="padding:32px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center" id="rcs"><div><div class="eyebrow">کارنامهٔ خلاقانه</div><h2 class="h2" style="margin:10px 0">عدد کافی نیست؛ روایت لازم است.</h2><p class="mute">کارنامهٔ رسا به‌جای یک نمره، مسیر را نشان می‌دهد: چه پله‌هایی طی شده و پلهٔ بعدی کدام است. برای والد خلاصه دارد و قابل چاپ و ارسال است.</p><a class="btn y mt" href="/p/report-card-math8">دیدن نمونه</a></div>
   <div><div class="ladder">${[40,55,48,70,82,90].map((h,i)=>`<i class="${i>3?'on':''}" style="height:${h}%"><span>${fa('هفته '+(i+1))}</span></i>`).join('')}</div><div class="rc mt"><div class="a"><div class="k">✓ بلد است</div><div class="mute" style="font-size:13px">عددهای صحیح، محور عدد</div></div><div class="b"><div class="k">↻ در حال تمرین</div><div class="mute" style="font-size:13px">ضرب عددهای گویا</div></div><div class="c"><div class="k">← گام بعدی</div><div class="mute" style="font-size:13px">فصل ۲، عددهای اول</div></div></div></div></div></section>
   <section class="sec"><div class="wrap"><div class="sech"><h2 class="h2">برای همه</h2></div><div class="aud">
-  ${[['🧒','دانش‌آموز','درس‌هایی که با انجام‌دادن یاد گرفته می‌شوند.'],['👨‍👩‍👧','والد','گزارش روشن، یادآوری در بله و تلگرام، جایزه.'],['🧑‍🏫','معلم و مدرسه','کلاس، تکلیف، گزارش مدیریتی.'],['✍️','سازنده','موتور ساخت جزوه و گزارش تعاملی؛ انتشار در بازار.']].map(a=>`<div class="card"><div style="font-size:30px">${a[0]}</div><h3>${a[1]}</h3><p class="mute" style="margin:6px 0 0;font-size:14px">${a[2]}</p></div>`).join('')}</div></div></section>`;
+  ${[['🧒','دانش‌آموز','درس‌هایی که با انجام‌دادن یاد گرفته می‌شوند.'],['👨‍👩‍👧','والد','گزارش روشن، یادآوری در بله و تلگرام، جایزه.'],['🧑‍🏫','معلم و مدرسه','کلاس، تکلیف، گزارش مدیریتی.'],['✍️','سازنده','موتور ساخت جزوه و گزارش تعاملی؛ انتشار در بازار.']].map(a=>`<div class="card"><div style="font-size:30px">${a[0]}</div><h3>${a[1]}</h3><p class="mute" style="margin:6px 0 0;font-size:14px">${a[2]}</p></div>`).join('')}</div></div></section>
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="sech"><h2 class="h2">پرسش‌های پرتکرار</h2></div>
+  <div class="faq">${[['رسا آموزش چیست؟','پلتفرم یادگیری گام‌به‌گام فارسی است: درس و آزمون تعاملی، جزوه‌های گام‌به‌گام، مسیرهای یادگیری مرتب، برنامه‌ریز هوشمند و کارنامه‌ای روایی که به‌جای نمره، می‌گوید فرزندتان چه بلد است و گام بعدی چیست.'],['آیا واقعاً رایگان است؟','بله؛ همهٔ محصولات فعلاً رایگان و بدون پرداخت دریافت می‌شوند. برای خانواده‌ها، دانش‌آموزان و معلمان.'],['محتوا برای چه پایه‌هایی داریم؟','فعلاً کانون ما کلاس دوم ابتدایی و ریاضی هشتم است و به‌تدریج به همهٔ مقاطع گسترش می‌یابد؛ مسیرها و کاتالوگ همین‌جا به‌روز می‌شوند.'],['روی گوشی من کار می‌کند؟','بله؛ همه‌چیز موبایل‌محور و راست‌به‌چپ است و به‌صورت وب‌اپ نصب‌شدنی (PWA) روی گوشی و رایانه کار می‌کند.'],['دادهٔ کودک من کجا می‌رود؟','داده‌های کلاس دوم فقط برای همان خانواده و معلمش استفاده می‌شود، رمزگذاری می‌شود و هرگز فروخته یا برای آموزش مدل به کار نمی‌رود.'],['می‌خواهم سازنده باشم','در صفحهٔ «سازندگان» درخواست همکاری ثبت کنید؛ موتور ما پیش‌نمایش زنده، صفحهٔ محصول، کارنامهٔ روایی و آمار را برای شما می‌سازد.']].map(f=>`<details><summary>${esc(f[0])}</summary><p class="mute">${esc(f[1])}</p></details>`).join('')}</div></div></section>
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="cta"><div><h2 class="h2" style="font-size:clamp(24px,3.4vw,38px)">اولین گام را همین حالا بردارید</h2><p class="mute" style="margin:8px 0 0">ثبت‌نام رایگان است و در کمتر از یک دقیقه انجام می‌شود.</p></div><div class="row wrapr"><a class="btn y" href="/c">دیدن کاتالوگ</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/kids/">سامانهٔ کلاس دوم</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/planner/">برنامه‌ریز هوشمند</a></div></div></div></section>`;
   $('#hs').onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/c?q='+encodeURIComponent(q))};
   if(innerWidth<900)$('#rcs').style.gridTemplateColumns='1fr';
 }
 
 function catalog(cat){
   const st=S.store,q=new URLSearchParams(location.search),c=catOf(cat);let kind=q.get('kind')||'',text=q.get('q')||'';
-  document.title=(c?c.title+' · ':'')+'کاتالوگ رسا آموزش';
+  setMeta((c?c.title+' · ':'')+'کاتالوگ رسا آموزش','مرور درس‌های تعاملی، جزوه‌های گام‌به‌گام، مسیرهای یادگیری و گزارش‌های مدیریتی رسا آموزش؛ همه رایگان.');
   main().innerHTML=`<section class="wrap" style="padding:36px 20px 60px"><div class="eyebrow">کاتالوگ</div><h1 class="h2" style="margin:8px 0 18px">${esc(c?.title||'همهٔ محصولات')}</h1>
   <div class="search" style="max-width:none;margin:0 0 16px"><input id="cq" value="${esc(text)}" placeholder="جست‌وجو در عنوان، درس، برچسب…"></div>
   <div class="tabs"><a class="chip ${!cat?'on':''}" href="/c">همه</a>${st.categories.map(x=>`<a class="chip ${x.id===cat?'on':''}" href="/c/${esc(x.id)}">${esc(x.icon)} ${esc(x.title)}</a>`).join('')}</div>
@@ -129,7 +139,7 @@ function catalog(cat){
 async function product(id){
   main().innerHTML='<div class="empty"><i>⏳</i>در حال بارگذاری…</div>';
   let d;try{d=await api('store/p/'+encodeURIComponent(id))}catch(e){main().innerHTML=`<div class="empty"><i>🧭</i>${esc(e.message)}<br><a class="y" href="/c">بازگشت به کاتالوگ</a></div>`;return}
-  const p=d.product,c=catOf(p.cat),url=location.origin+'/p/'+p.id,app=p.meta?.app;document.title=p.title+' · رسا آموزش';
+  const p=d.product,c=catOf(p.cat),url=location.origin+'/p/'+p.id,app=p.meta?.app,path=pathOf(p.id);setMeta(p.title+' · رسا آموزش',p.summary||'');
   const pv=p.hasFile?`<div class="pv"><div class="pvbar"><span class="dots"><i></i><i></i><i></i></span><b style="font-size:13px">پیش‌نمایش زنده</b><span class="sp"></span><button class="btn sm" id="fs">تمام‌صفحه ⤢</button></div><iframe id="pvf" title="پیش‌نمایش ${esc(p.title)}" src="/p/${esc(p.id)}/preview" sandbox="allow-scripts allow-forms allow-modals" loading="lazy"></iframe></div>`
     :app?`<div class="pv"><div class="pvbar"><b style="font-size:13px">نسخهٔ زنده</b><span class="sp"></span><a class="btn sm" href="${esc(app)}" target="_blank">باز کردن در صفحهٔ جدا ↗</a></div><iframe title="${esc(p.title)}" src="${esc(app)}" loading="lazy"></iframe></div>`
     :p.meta?.report?`<div class="card" id="rcdemo"></div>`:`<div class="pv" style="background:none;border:0">${cover(p,true)}</div>`;
@@ -145,6 +155,9 @@ async function product(id){
     :`<button class="btn y" id="get" style="width:100%">دریافت رایگان</button><button class="btn ghost mt" id="add" style="width:100%">افزودن به سبد</button>`}
   <div class="row mt"><button class="btn sm ghost" id="fav">${p.fav?'♥ ذخیره شده':'♡ ذخیره'}</button><span class="sp"></span><span class="dim" style="font-size:12px">${num(p.views)} بازدید · ${num(p.downloads)} دانلود</span></div>
   <div class="share"><a class="chip" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(url+'?utm_source=telegram')}&text=${encodeURIComponent(p.title)}">تلگرام</a><a class="chip" target="_blank" rel="noopener" href="https://ble.ir/share?url=${encodeURIComponent(url+'?utm_source=bale')}">بله</a><a class="chip" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(p.title+' '+url+'?utm_source=whatsapp')}">واتس‌اپ</a><button class="chip" id="cp">کپی لینک</button></div></aside></div>
+  ${path?`<section class="wrap" style="padding-bottom:40px"><div class="card pathcard" style="--c:${esc(path.color||'#F4D438')}"><div class="row"><span style="font-size:24px">${esc(path.icon||'🧭')}</span><div style="flex:1"><div class="eyebrow">مسیر یادگیری</div><h2 style="font-size:19px;margin-top:4px">${esc(path.title)}</h2></div><span class="tag" style="--c:var(--mute)">گام ${fa(path.steps.findIndex(s=>s.id===p.id)+1)} از ${fa(path.steps.length)}</span></div>
+  <p class="mute" style="font-size:13.5px;margin:10px 0 14px">${esc(path.desc)}</p>
+  <div class="psteps">${path.steps.map((s,i)=>{const cur=s.id===p.id,nxt=path.steps[i+1];return `<div class="pstep ${cur?'cur':''} ${s.status==='soon'?'soon':''}"><i>${i+1}</i><span>${cur?'شما اینجا هستید':esc(s.title)}</span>${cur&&nxt?`<a class="btn sm y" href="/p/${esc(nxt.id)}" style="margin-inline-start:auto">گام بعدی ←</a>`:''}</div>`}).join('')}</div></div></section>`:''}
   ${d.related.length?`<div class="sech"><h2 class="h2" style="font-size:24px">محصولات مرتبط</h2></div><div class="grid3" style="padding-bottom:60px">${d.related.map(pcard).join('')}</div>`:''}</section>`;
   $('#get')&&($('#get').onclick=()=>checkout([p.id]));$('#add')&&($('#add').onclick=()=>addCart(p.id));
   $('#notify')&&($('#notify').onclick=()=>toast('ثبت شد؛ هنگام انتشار خبرتان می‌کنیم'));

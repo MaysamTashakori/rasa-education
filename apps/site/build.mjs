@@ -1,6 +1,7 @@
 // Builds dist/site (Rasa Amozesh storefront + profile + command center) as a single inline HTML + PWA shell.
 import {readFileSync as r, writeFileSync as w, mkdirSync, copyFileSync} from 'node:fs';
-const here = new URL('.', import.meta.url).pathname, root = here + '../../', pl = root + 'apps/planner/';
+import {fileURLToPath} from 'node:url';
+const here = fileURLToPath(new URL('.', import.meta.url)), root = here + '../../', pl = root + 'apps/planner/';
 const fonts = ['arabic', 'latin'].flatMap(set => [400, 700, 900].map(wt => {
   const b64 = r(`${pl}fonts/vazirmatn-${set}-${wt}-normal.woff2`).toString('base64');
   const range = set === 'arabic' ? 'U+0600-06FF,U+0750-077F,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE70-FEFC' : 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD';
@@ -23,4 +24,7 @@ self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.me
  if(e.request.mode==='navigate')return e.respondWith(fetch(e.request).catch(()=>caches.match('/')));
  e.respondWith(fetch(e.request).then(res=>{const cp=res.clone();caches.open(C).then(c=>c.put(e.request,cp));return res}).catch(()=>caches.match(e.request)))});
 `);
+w(out + 'robots.txt', 'User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /admin\nDisallow: /me\nSitemap: /sitemap.xml\n');
+const siteUrl = process.env.SITE_URL || '';
+w(out + 'sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${['/', '/c', '/creators', '/kids/', '/planner/', '/brand.html'].map(u => `<url><loc>${siteUrl}${u}</loc></url>`).join('')}</urlset>`);
 console.log('built site', (html.length / 1024).toFixed(0) + ' KB');

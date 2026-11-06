@@ -1,6 +1,7 @@
 // Builds dist/rasa-planner.html (single offline file) and dist/web/ (PWA for GitHub Pages).
 import {readFileSync as r, writeFileSync as w, mkdirSync} from 'node:fs';
-const here = new URL('.', import.meta.url).pathname, root = here + '../../';
+import {fileURLToPath} from 'node:url';
+const here = fileURLToPath(new URL('.', import.meta.url)), root = here + '../../';
 const src = f => r(here + 'src/' + f, 'utf8');
 const fonts = ['arabic', 'latin'].flatMap(set => [400, 700, 900].map(wt => {
   const b64 = r(`${here}fonts/vazirmatn-${set}-${wt}-normal.woff2`).toString('base64');

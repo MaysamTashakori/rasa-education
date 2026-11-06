@@ -112,7 +112,11 @@ export function initStore(db, {auth, fail, DATA, ROOT}) {
   const routes = {
     'GET /api/store': (req, res, b, p, url) => {
       ensureFounder(); const u = optUser(req);
-      return {categories: db.prepare('SELECT * FROM categories ORDER BY sort').all(), products: list(u, Object.fromEntries(url.searchParams)),
+      let paths = [];
+      try {paths = J(fs.readFileSync(path.join(ROOT, 'content/store/paths.json'), 'utf8'), {paths: []}).paths || []} catch {}
+      const prods = list(u, Object.fromEntries(url.searchParams));
+      const byId = Object.fromEntries(prods.map(x => [x.id, x]));
+      return {categories: db.prepare('SELECT * FROM categories ORDER BY sort').all(), products: prods, paths: paths.map(x => ({...x, steps: (x.steps || []).map(id => byId[id]).filter(Boolean)})),
         roles: u ? rolesOf(u.id) : []};
     },
     'GET /api/store/p/:id': (req, res, b, p) => {
