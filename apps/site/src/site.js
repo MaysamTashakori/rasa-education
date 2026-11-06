@@ -124,31 +124,34 @@ function home(){
    ['شب','🌙','کارنامه، روایت می‌شود','نه فقط عدد: می‌گوید چه بلدی، کجا گیر کردی و گام بعدی چیست — و برای والد می‌رود.',[['کارنامهٔ هوشمند','بلد است / در حال تمرین / گام بعدی','/me#report'],['ارسال به والد','روایت کارنامه در ربات خانواده','/me#report'],['آزمون آنلاین','سنجش روزانه بر اساس مقطع','/quiz']]],
    ['هفته','📊','گزارش هفتگی، جمع می‌شود','هر جمعه مرور فاصله‌دار برنامه‌ریزی می‌کند و گزارش هفتگی برای خانواده می‌رود.',[['مرور فاصله‌دار','الگوریتم تکرار به‌موقع در برنامه‌ریز','/planner/'],['گزارش هفتگی','خلاصهٔ پیشرفت برای والد','/me#report'],['بازار سازندگان','محتوای تازه هر هفته','/creators']]]
   ];
-  main().innerHTML=`<section class="dl-hero" data-st="شروع" data-sn="شروع"><div class="wrap dl-heroin">
-  <div class="dl-mission"><span class="live-dot"></span>مأموریت رسا آموزش</div>
-  <h1 class="dl-title">هر روز، یک گام روشن.<br><span class="y">خانواده‌ات می‌بیند.</span></h1>
+  main().innerHTML=`<section class="dl-hero" data-st="شروع" data-sn="شروع"><div class="st-mesh" aria-hidden="true"><i></i><i></i></div><div class="st-grid" aria-hidden="true"></div><div class="wrap dl-heroin">
+  <div class="dl-mission"><span class="st-live"></span>مأموریت رسا آموزش</div>
+  <h1 class="dl-title">هر روز، یک گام روشن.<br><span class="st-grad">خانواده‌ات می‌بیند.</span></h1>
   <p class="dl-sub">درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — همه در یک پلتفرم برای دانش‌آموزان، والدین و معلمان.</p>
   <form class="search dl-search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
   <div class="dl-stats">${[['محصول زنده',live.length],['گام تعاملی',live.reduce((s,p)=>s+(p.meta?.steps||0),0)],['آزمونک امروز',lv.attempts||0],['خانوادهٔ فعال',lv.families||0]].map(x=>`<div><b data-cu="${x[1]}">۰</b><span>${x[0]}</span></div>`).join('')}</div>
   </div></section>
   <aside class="jr-rail" id="jr" aria-hidden="true"><div class="jr-line"></div><div class="jr-dot" id="jrd"></div><div class="jr-nodes" id="jrn"></div></aside>
-  <section class="dl-day"><div class="wrap"><div class="dl-dayh"><span class="mn-k">یک روز در رسا آموزش</span><h2>از صبح تا جمعه — همان‌طور که زندگی می‌کنی</h2></div>
+  <section class="dl-day"><div class="wrap"><div class="dl-dayh"><b class="st-index" aria-hidden="true">روز</b><span class="mn-k">یک روز در رسا آموزش</span><h2>از صبح تا جمعه — همان‌طور که زندگی می‌کنی</h2></div>
   <div class="dl-tl">${day.map((d,i)=>`<div class="dl-step ${i%2?'r':''}" data-st="۰${i+1}" data-sn="${d[0]}">
     <div class="dl-time"><i>${d[1]}</i><b>${d[0]}</b><span>${d[2]}</span></div>
-    <div class="dl-card"><h3>${d[3]}</h3><div class="dl-links">${d[4].map(l=>`<a href="${l[2]}"><b>${l[0]}</b><span>${l[1]}</span></a>`).join('')}</div></div>
+    <div class="dl-card st-spot st-reveal"><h3>${d[3]}</h3><div class="dl-links">${d[4].map(l=>`<a href="${l[2]}"><b>${l[0]}</b><span>${l[1]}</span></a>`).join('')}</div></div>
   </div>`).join('')}</div></div></section>
-  <section class="dl-sec" data-st="۰۵" data-sn="مقاطع"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">کاتالوگ</span><h2>بر اساس مقطع تحصیلی</h2></div><a class="btn sm ghost" href="/c">همهٔ محصولات ←</a></div>
-  <div class="dl-lvls">${[['دبستان','کلاس اول تا ششم','/c'],['متوسطهٔ اول','هفتم تا نهم','/c'],['متوسطهٔ دوم','دهم تا دوازدهم','/c'],['کنکور','ریاضی، تجربی، انسانی','/c']].map((l,i)=>`<a class="dl-lvl" href="${l[2]}"><i>${fa(i+1).padStart(2,'۰')}</i><div><b>${l[0]}</b><span>${l[1]}</span></div><em>${fa(live.filter(p=>(p.meta?.level||'').includes(l[0].slice(0,4))||p.cat==='konkur'&&l[0]==='کنکور').length||'—')} محصول</em><span class="dl-lvlgo">←</span></a>`).join('')}</div>
+  <section class="dl-sec" data-st="۰۵" data-sn="مقاطع"><div class="wrap"><div class="mn-sh"><div><b class="st-index" aria-hidden="true">۰۵</b><span class="mn-k">کاتالوگ</span><h2>بر اساس مقطع تحصیلی</h2></div><a class="btn sm ghost" href="/c">همهٔ محصولات ←</a></div>
+  <div class="dl-lvls">${[['دبستان','کلاس اول تا ششم','/c'],['متوسطهٔ اول','هفتم تا نهم','/c'],['متوسطهٔ دوم','دهم تا دوازدهم','/c'],['کنکور','ریاضی، تجربی، انسانی','/c']].map((l,i)=>`<a class="dl-lvl st-spot st-reveal" href="${l[2]}"><i>${fa(i+1).padStart(2,'۰')}</i><div><b>${l[0]}</b><span>${l[1]}</span></div><em>${fa(live.filter(p=>(p.meta?.level||'').includes(l[0].slice(0,4))||p.cat==='konkur'&&l[0]==='کنکور').length||'—')} محصول</em><span class="dl-lvlgo">←</span></a>`).join('')}</div>
   <div class="dl-prods">${live.map((p,i)=>`<a class="dl-prow" href="/p/${esc(p.id)}"><i>${fa(i+1).padStart(2,'۰')}</i><b>${esc(p.title)}</b><span class="dl-kind">${esc(p.kind)}</span><span class="dim dl-prow-d">${esc(p.meta?.subject||p.summary||'')}</span><span class="dl-price">${p.price?p.price.toLocaleString('fa-IR'):'رایگان'}</span></a>`).join('')}</div></div></section>
-  ${st.paths?.length?`<section class="dl-sec" data-st="۰۶" data-sn="مسیرها"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">مسیرها</span><h2>هر مسیر، یک زنجیرهٔ گام</h2></div></div>
-  <div class="dl-chains">${st.paths.map(pa=>`<div class="dl-chain" style="--c:${esc(pa.color||'#F4D438')}"><div class="dl-chainh"><i>${esc(pa.icon||'🧭')}</i><div><b>${esc(pa.title)}</b><p>${esc(pa.audience||'')} · ${fa(pa.steps.length)} گام</p></div></div>
+  ${st.paths?.length?`<section class="dl-sec" data-st="۰۶" data-sn="مسیرها"><div class="wrap"><div class="mn-sh"><div><b class="st-index" aria-hidden="true">۰۶</b><span class="mn-k">مسیرها</span><h2>هر مسیر، یک زنجیرهٔ گام</h2></div></div>
+  <div class="dl-chains">${st.paths.map(pa=>`<div class="dl-chain st-spot st-reveal" style="--c:${esc(pa.color||'#F4D438')}"><div class="dl-chainh"><i>${esc(pa.icon||'🧭')}</i><div><b>${esc(pa.title)}</b><p>${esc(pa.audience||'')} · ${fa(pa.steps.length)} گام</p></div></div>
   <div class="dl-steps">${pa.steps.map((st2,i)=>`<a class="dl-stp ${st2.status==='soon'?'soon':''}" href="/p/${esc(st2.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(st2.title)}</span></a>`).join('')}</div></div>`).join('')}</div></div></section>`:''}
-  <section class="dl-sec" data-st="۰۷" data-sn="تعرفه"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">تعرفه</span><h2>هسته رایگان، ارزش واقعی قیمت‌دار</h2></div><a class="btn sm ghost" href="/pricing">جزئیات کامل ←</a></div>
-  <div class="dl-tiers">${[['رایگان','برنامه‌ریز، کلاس دوم، آزمونک و پیش‌نمایش همهٔ درس‌ها'],['محتوای ویژه','جزوه‌ها، کارنامهٔ روایی و گزارش‌ها با پرداخت امن زرین‌پال'],['سازندگان','فروش جزوه و گزارش در بازار با پیش‌نمایش زنده']].map((t,i)=>`<a class="dl-tier" href="/pricing"><i>${fa(i+1)}</i><b>${t[0]}</b><p>${t[1]}</p></a>`).join('')}</div></div></section>
-  <section class="dl-last" data-st="۰۸" data-sn="شروع"><div class="wrap dl-lastin"><div><span class="mn-k">گام آخر، همین است</span><h2>امروز شروع کنید —<br>خانواده‌ات می‌بیند.</h2></div><div class="row wrapr"><a class="btn y lg" href="/c">دیدن کاتالوگ</a><a class="btn lg ap-ghost" href="/quiz">آزمون آنلاین</a><a class="btn lg ap-ghost" href="/planner/">برنامه‌ریز</a></div></div></section>`;
+  <section class="dl-sec" data-st="۰۷" data-sn="تعرفه"><div class="wrap"><div class="mn-sh"><div><b class="st-index" aria-hidden="true">۰۷</b><span class="mn-k">تعرفه</span><h2>هسته رایگان، ارزش واقعی قیمت‌دار</h2></div><a class="btn sm ghost" href="/pricing">جزئیات کامل ←</a></div>
+  <div class="dl-tiers">${[['رایگان','برنامه‌ریز، کلاس دوم، آزمونک و پیش‌نمایش همهٔ درس‌ها'],['محتوای ویژه','جزوه‌ها، کارنامهٔ روایی و گزارش‌ها با پرداخت امن زرین‌پال'],['سازندگان','فروش جزوه و گزارش در بازار با پیش‌نمایش زنده']].map((t,i)=>`<a class="dl-tier st-spot st-reveal" href="/pricing"><i>${fa(i+1)}</i><b>${t[0]}</b><p>${t[1]}</p></a>`).join('')}</div></div></section>
+  <section class="dl-last" data-st="۰۸" data-sn="شروع"><div class="wrap dl-lastin st-ring"><div><span class="mn-k">گام آخر، همین است</span><h2>امروز شروع کنید —<br>خانواده‌ات می‌بیند.</h2></div><div class="row wrapr"><a class="btn y lg" href="/c">دیدن کاتالوگ</a><a class="btn lg ap-ghost" href="/quiz">آزمون آنلاین</a><a class="btn lg ap-ghost" href="/planner/">برنامه‌ریز</a></div></div></section>`;
   const hf=$('#hs')||$('#hss');if(hf)hf.onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/search?q='+encodeURIComponent(q))};
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
   journeyRail();
+  const rv=$$('.st-reveal'),io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.dataset.in='true';io2.unobserve(e.target)}}),{threshold:.1});
+  rv.forEach((el,i)=>{el.style.setProperty('--i',i%6);io2.observe(el)});
+  $$('.st-spot').forEach(el=>el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true}));
 }
 function journeyRail(){const rn=$('#jrn');if(!rn)return;
   const sts=[...$$('[data-st]')];

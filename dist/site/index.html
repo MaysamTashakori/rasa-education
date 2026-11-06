@@ -523,6 +523,44 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
  .dl-kind,.dl-price{grid-column:2;justify-self:start}
  .dl-prow-d{display:none}
 }
+/* ===== studio-alive layer (inspired by rasa-studio motion kit) ===== */
+.st-mesh{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.st-mesh i{position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(80px);opacity:.55}
+.st-mesh i:nth-child(1){top:-30vmax;inset-inline-start:-20vmax;background:radial-gradient(closest-side,color-mix(in srgb,var(--y) 9%,transparent),transparent);animation:stMeshA 26s linear infinite}
+.st-mesh i:nth-child(2){bottom:-35vmax;inset-inline-end:-25vmax;background:radial-gradient(closest-side,color-mix(in srgb,var(--cy) 8%,transparent),transparent);animation:stMeshB 32s linear infinite}
+@keyframes stMeshA{50%{transform:translate(6vw,-4vh) scale(1.1)}}
+@keyframes stMeshB{50%{transform:translate(-8vw,5vh) scale(.92)}}
+.st-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 15%,transparent 70%);mask-image:radial-gradient(ellipse at 50% 0%,#000 15%,transparent 70%);opacity:.45}
+.dl-hero .dl-heroin{position:relative;z-index:1}
+.dl-hero{isolation:isolate}
+.st-eyebrow{font:700 11px/1.4 ui-monospace,Consolas,monospace;letter-spacing:.14em;color:var(--cy);display:inline-flex;gap:8px;align-items:center}
+.st-eyebrow::after{content:'';width:2rem;height:1px;background:currentColor;opacity:.5}
+.st-grad{background:linear-gradient(100deg,var(--y),var(--y2) 40%,var(--cy));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:stFlow 8s linear infinite}
+@keyframes stFlow{to{background-position:200% 50%}}
+.st-ecg{width:min(520px,100%);height:44px;margin-top:4px;overflow:visible}
+.st-ecg path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.st-ecg-base{stroke:var(--line2);stroke-width:1}
+.st-ecg-line{stroke:var(--y);stroke-width:2;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--y) 70%,transparent));animation:stEcg 2.4s cubic-bezier(.65,0,.35,1) infinite}
+@keyframes stEcg{0%{stroke-dashoffset:1;opacity:1}55%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+.st-live{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:stLive 1.8s cubic-bezier(.23,1,.32,1) infinite;flex:none}
+@keyframes stLive{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent)}70%,100%{box-shadow:0 0 0 7px transparent}}
+.st-reveal{opacity:0;transform:translateY(16px);transition:opacity .6s cubic-bezier(.23,1,.32,1),transform .6s cubic-bezier(.23,1,.32,1);transition-delay:calc(var(--i,0)*70ms)}
+.st-reveal[data-in="true"]{opacity:1;transform:none}
+.st-spot{position:relative}
+.st-spot::before{content:'';position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity .25s;pointer-events:none;background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),color-mix(in srgb,var(--y) 9%,transparent),transparent 65%);z-index:0}
+.st-spot>*{position:relative;z-index:1}
+.st-spot:hover::before{opacity:1}
+.st-index{position:absolute;top:-52px;inset-inline-start:-10px;font-size:clamp(56px,7vw,84px);font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:1px var(--line2);user-select:none;pointer-events:none;font-family:ui-monospace,Consolas,monospace}
+.mn-sh>div,.dl-dayh{position:relative;padding-top:14px}
+.st-ring{position:relative}
+@property --st-ang{syntax:'<angle>';initial-value:0deg;inherits:false}
+.st-ring::before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--st-ang),transparent 0 70%,var(--y) 82%,var(--cy) 90%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:stSpin 7s linear infinite;pointer-events:none;z-index:2}
+@keyframes stSpin{to{--st-ang:360deg}}
+@media(prefers-reduced-motion:reduce){
+ .st-grad,.st-ecg-line,.st-live,.st-mesh i,.st-ring::before{animation:none}
+ .st-reveal{opacity:1;transform:none;transition:none}
+ .st-ecg-line{stroke-dashoffset:0;opacity:0}
+}
 </style></head><body><header class="nav" id="nav"></header><main id="main"></main><footer class="foot" id="foot"></footer><script>'use strict';
 // رسا آموزش — storefront + profile + command center (vanilla SPA, history routing)
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -649,31 +687,34 @@ function home(){
    ['شب','🌙','کارنامه، روایت می‌شود','نه فقط عدد: می‌گوید چه بلدی، کجا گیر کردی و گام بعدی چیست — و برای والد می‌رود.',[['کارنامهٔ هوشمند','بلد است / در حال تمرین / گام بعدی','/me#report'],['ارسال به والد','روایت کارنامه در ربات خانواده','/me#report'],['آزمون آنلاین','سنجش روزانه بر اساس مقطع','/quiz']]],
    ['هفته','📊','گزارش هفتگی، جمع می‌شود','هر جمعه مرور فاصله‌دار برنامه‌ریزی می‌کند و گزارش هفتگی برای خانواده می‌رود.',[['مرور فاصله‌دار','الگوریتم تکرار به‌موقع در برنامه‌ریز','/planner/'],['گزارش هفتگی','خلاصهٔ پیشرفت برای والد','/me#report'],['بازار سازندگان','محتوای تازه هر هفته','/creators']]]
   ];
-  main().innerHTML=`<section class="dl-hero" data-st="شروع" data-sn="شروع"><div class="wrap dl-heroin">
-  <div class="dl-mission"><span class="live-dot"></span>مأموریت رسا آموزش</div>
-  <h1 class="dl-title">هر روز، یک گام روشن.<br><span class="y">خانواده‌ات می‌بیند.</span></h1>
+  main().innerHTML=`<section class="dl-hero" data-st="شروع" data-sn="شروع"><div class="st-mesh" aria-hidden="true"><i></i><i></i></div><div class="st-grid" aria-hidden="true"></div><div class="wrap dl-heroin">
+  <div class="dl-mission"><span class="st-live"></span>مأموریت رسا آموزش</div>
+  <h1 class="dl-title">هر روز، یک گام روشن.<br><span class="st-grad">خانواده‌ات می‌بیند.</span></h1>
   <p class="dl-sub">درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — همه در یک پلتفرم برای دانش‌آموزان، والدین و معلمان.</p>
   <form class="search dl-search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
   <div class="dl-stats">${[['محصول زنده',live.length],['گام تعاملی',live.reduce((s,p)=>s+(p.meta?.steps||0),0)],['آزمونک امروز',lv.attempts||0],['خانوادهٔ فعال',lv.families||0]].map(x=>`<div><b data-cu="${x[1]}">۰</b><span>${x[0]}</span></div>`).join('')}</div>
   </div></section>
   <aside class="jr-rail" id="jr" aria-hidden="true"><div class="jr-line"></div><div class="jr-dot" id="jrd"></div><div class="jr-nodes" id="jrn"></div></aside>
-  <section class="dl-day"><div class="wrap"><div class="dl-dayh"><span class="mn-k">یک روز در رسا آموزش</span><h2>از صبح تا جمعه — همان‌طور که زندگی می‌کنی</h2></div>
+  <section class="dl-day"><div class="wrap"><div class="dl-dayh"><b class="st-index" aria-hidden="true">روز</b><span class="mn-k">یک روز در رسا آموزش</span><h2>از صبح تا جمعه — همان‌طور که زندگی می‌کنی</h2></div>
   <div class="dl-tl">${day.map((d,i)=>`<div class="dl-step ${i%2?'r':''}" data-st="۰${i+1}" data-sn="${d[0]}">
     <div class="dl-time"><i>${d[1]}</i><b>${d[0]}</b><span>${d[2]}</span></div>
-    <div class="dl-card"><h3>${d[3]}</h3><div class="dl-links">${d[4].map(l=>`<a href="${l[2]}"><b>${l[0]}</b><span>${l[1]}</span></a>`).join('')}</div></div>
+    <div class="dl-card st-spot st-reveal"><h3>${d[3]}</h3><div class="dl-links">${d[4].map(l=>`<a href="${l[2]}"><b>${l[0]}</b><span>${l[1]}</span></a>`).join('')}</div></div>
   </div>`).join('')}</div></div></section>
-  <section class="dl-sec" data-st="۰۵" data-sn="مقاطع"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">کاتالوگ</span><h2>بر اساس مقطع تحصیلی</h2></div><a class="btn sm ghost" href="/c">همهٔ محصولات ←</a></div>
-  <div class="dl-lvls">${[['دبستان','کلاس اول تا ششم','/c'],['متوسطهٔ اول','هفتم تا نهم','/c'],['متوسطهٔ دوم','دهم تا دوازدهم','/c'],['کنکور','ریاضی، تجربی، انسانی','/c']].map((l,i)=>`<a class="dl-lvl" href="${l[2]}"><i>${fa(i+1).padStart(2,'۰')}</i><div><b>${l[0]}</b><span>${l[1]}</span></div><em>${fa(live.filter(p=>(p.meta?.level||'').includes(l[0].slice(0,4))||p.cat==='konkur'&&l[0]==='کنکور').length||'—')} محصول</em><span class="dl-lvlgo">←</span></a>`).join('')}</div>
+  <section class="dl-sec" data-st="۰۵" data-sn="مقاطع"><div class="wrap"><div class="mn-sh"><div><b class="st-index" aria-hidden="true">۰۵</b><span class="mn-k">کاتالوگ</span><h2>بر اساس مقطع تحصیلی</h2></div><a class="btn sm ghost" href="/c">همهٔ محصولات ←</a></div>
+  <div class="dl-lvls">${[['دبستان','کلاس اول تا ششم','/c'],['متوسطهٔ اول','هفتم تا نهم','/c'],['متوسطهٔ دوم','دهم تا دوازدهم','/c'],['کنکور','ریاضی، تجربی، انسانی','/c']].map((l,i)=>`<a class="dl-lvl st-spot st-reveal" href="${l[2]}"><i>${fa(i+1).padStart(2,'۰')}</i><div><b>${l[0]}</b><span>${l[1]}</span></div><em>${fa(live.filter(p=>(p.meta?.level||'').includes(l[0].slice(0,4))||p.cat==='konkur'&&l[0]==='کنکور').length||'—')} محصول</em><span class="dl-lvlgo">←</span></a>`).join('')}</div>
   <div class="dl-prods">${live.map((p,i)=>`<a class="dl-prow" href="/p/${esc(p.id)}"><i>${fa(i+1).padStart(2,'۰')}</i><b>${esc(p.title)}</b><span class="dl-kind">${esc(p.kind)}</span><span class="dim dl-prow-d">${esc(p.meta?.subject||p.summary||'')}</span><span class="dl-price">${p.price?p.price.toLocaleString('fa-IR'):'رایگان'}</span></a>`).join('')}</div></div></section>
-  ${st.paths?.length?`<section class="dl-sec" data-st="۰۶" data-sn="مسیرها"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">مسیرها</span><h2>هر مسیر، یک زنجیرهٔ گام</h2></div></div>
-  <div class="dl-chains">${st.paths.map(pa=>`<div class="dl-chain" style="--c:${esc(pa.color||'#F4D438')}"><div class="dl-chainh"><i>${esc(pa.icon||'🧭')}</i><div><b>${esc(pa.title)}</b><p>${esc(pa.audience||'')} · ${fa(pa.steps.length)} گام</p></div></div>
+  ${st.paths?.length?`<section class="dl-sec" data-st="۰۶" data-sn="مسیرها"><div class="wrap"><div class="mn-sh"><div><b class="st-index" aria-hidden="true">۰۶</b><span class="mn-k">مسیرها</span><h2>هر مسیر، یک زنجیرهٔ گام</h2></div></div>
+  <div class="dl-chains">${st.paths.map(pa=>`<div class="dl-chain st-spot st-reveal" style="--c:${esc(pa.color||'#F4D438')}"><div class="dl-chainh"><i>${esc(pa.icon||'🧭')}</i><div><b>${esc(pa.title)}</b><p>${esc(pa.audience||'')} · ${fa(pa.steps.length)} گام</p></div></div>
   <div class="dl-steps">${pa.steps.map((st2,i)=>`<a class="dl-stp ${st2.status==='soon'?'soon':''}" href="/p/${esc(st2.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(st2.title)}</span></a>`).join('')}</div></div>`).join('')}</div></div></section>`:''}
-  <section class="dl-sec" data-st="۰۷" data-sn="تعرفه"><div class="wrap"><div class="mn-sh"><div><span class="mn-k">تعرفه</span><h2>هسته رایگان، ارزش واقعی قیمت‌دار</h2></div><a class="btn sm ghost" href="/pricing">جزئیات کامل ←</a></div>
-  <div class="dl-tiers">${[['رایگان','برنامه‌ریز، کلاس دوم، آزمونک و پیش‌نمایش همهٔ درس‌ها'],['محتوای ویژه','جزوه‌ها، کارنامهٔ روایی و گزارش‌ها با پرداخت امن زرین‌پال'],['سازندگان','فروش جزوه و گزارش در بازار با پیش‌نمایش زنده']].map((t,i)=>`<a class="dl-tier" href="/pricing"><i>${fa(i+1)}</i><b>${t[0]}</b><p>${t[1]}</p></a>`).join('')}</div></div></section>
-  <section class="dl-last" data-st="۰۸" data-sn="شروع"><div class="wrap dl-lastin"><div><span class="mn-k">گام آخر، همین است</span><h2>امروز شروع کنید —<br>خانواده‌ات می‌بیند.</h2></div><div class="row wrapr"><a class="btn y lg" href="/c">دیدن کاتالوگ</a><a class="btn lg ap-ghost" href="/quiz">آزمون آنلاین</a><a class="btn lg ap-ghost" href="/planner/">برنامه‌ریز</a></div></div></section>`;
+  <section class="dl-sec" data-st="۰۷" data-sn="تعرفه"><div class="wrap"><div class="mn-sh"><div><b class="st-index" aria-hidden="true">۰۷</b><span class="mn-k">تعرفه</span><h2>هسته رایگان، ارزش واقعی قیمت‌دار</h2></div><a class="btn sm ghost" href="/pricing">جزئیات کامل ←</a></div>
+  <div class="dl-tiers">${[['رایگان','برنامه‌ریز، کلاس دوم، آزمونک و پیش‌نمایش همهٔ درس‌ها'],['محتوای ویژه','جزوه‌ها، کارنامهٔ روایی و گزارش‌ها با پرداخت امن زرین‌پال'],['سازندگان','فروش جزوه و گزارش در بازار با پیش‌نمایش زنده']].map((t,i)=>`<a class="dl-tier st-spot st-reveal" href="/pricing"><i>${fa(i+1)}</i><b>${t[0]}</b><p>${t[1]}</p></a>`).join('')}</div></div></section>
+  <section class="dl-last" data-st="۰۸" data-sn="شروع"><div class="wrap dl-lastin st-ring"><div><span class="mn-k">گام آخر، همین است</span><h2>امروز شروع کنید —<br>خانواده‌ات می‌بیند.</h2></div><div class="row wrapr"><a class="btn y lg" href="/c">دیدن کاتالوگ</a><a class="btn lg ap-ghost" href="/quiz">آزمون آنلاین</a><a class="btn lg ap-ghost" href="/planner/">برنامه‌ریز</a></div></div></section>`;
   const hf=$('#hs')||$('#hss');if(hf)hf.onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/search?q='+encodeURIComponent(q))};
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
   journeyRail();
+  const rv=$$('.st-reveal'),io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.dataset.in='true';io2.unobserve(e.target)}}),{threshold:.1});
+  rv.forEach((el,i)=>{el.style.setProperty('--i',i%6);io2.observe(el)});
+  $$('.st-spot').forEach(el=>el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--mx',(e.clientX-r.left)+'px');el.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true}));
 }
 function journeyRail(){const rn=$('#jrn');if(!rn)return;
   const sts=[...$$('[data-st]')];

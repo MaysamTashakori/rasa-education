@@ -511,3 +511,41 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
  .dl-kind,.dl-price{grid-column:2;justify-self:start}
  .dl-prow-d{display:none}
 }
+/* ===== studio-alive layer (inspired by rasa-studio motion kit) ===== */
+.st-mesh{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.st-mesh i{position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(80px);opacity:.55}
+.st-mesh i:nth-child(1){top:-30vmax;inset-inline-start:-20vmax;background:radial-gradient(closest-side,color-mix(in srgb,var(--y) 9%,transparent),transparent);animation:stMeshA 26s linear infinite}
+.st-mesh i:nth-child(2){bottom:-35vmax;inset-inline-end:-25vmax;background:radial-gradient(closest-side,color-mix(in srgb,var(--cy) 8%,transparent),transparent);animation:stMeshB 32s linear infinite}
+@keyframes stMeshA{50%{transform:translate(6vw,-4vh) scale(1.1)}}
+@keyframes stMeshB{50%{transform:translate(-8vw,5vh) scale(.92)}}
+.st-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 15%,transparent 70%);mask-image:radial-gradient(ellipse at 50% 0%,#000 15%,transparent 70%);opacity:.45}
+.dl-hero .dl-heroin{position:relative;z-index:1}
+.dl-hero{isolation:isolate}
+.st-eyebrow{font:700 11px/1.4 ui-monospace,Consolas,monospace;letter-spacing:.14em;color:var(--cy);display:inline-flex;gap:8px;align-items:center}
+.st-eyebrow::after{content:'';width:2rem;height:1px;background:currentColor;opacity:.5}
+.st-grad{background:linear-gradient(100deg,var(--y),var(--y2) 40%,var(--cy));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:stFlow 8s linear infinite}
+@keyframes stFlow{to{background-position:200% 50%}}
+.st-ecg{width:min(520px,100%);height:44px;margin-top:4px;overflow:visible}
+.st-ecg path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.st-ecg-base{stroke:var(--line2);stroke-width:1}
+.st-ecg-line{stroke:var(--y);stroke-width:2;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--y) 70%,transparent));animation:stEcg 2.4s cubic-bezier(.65,0,.35,1) infinite}
+@keyframes stEcg{0%{stroke-dashoffset:1;opacity:1}55%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:0}}
+.st-live{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:stLive 1.8s cubic-bezier(.23,1,.32,1) infinite;flex:none}
+@keyframes stLive{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 55%,transparent)}70%,100%{box-shadow:0 0 0 7px transparent}}
+.st-reveal{opacity:0;transform:translateY(16px);transition:opacity .6s cubic-bezier(.23,1,.32,1),transform .6s cubic-bezier(.23,1,.32,1);transition-delay:calc(var(--i,0)*70ms)}
+.st-reveal[data-in="true"]{opacity:1;transform:none}
+.st-spot{position:relative}
+.st-spot::before{content:'';position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity .25s;pointer-events:none;background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),color-mix(in srgb,var(--y) 9%,transparent),transparent 65%);z-index:0}
+.st-spot>*{position:relative;z-index:1}
+.st-spot:hover::before{opacity:1}
+.st-index{position:absolute;top:-52px;inset-inline-start:-10px;font-size:clamp(56px,7vw,84px);font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:1px var(--line2);user-select:none;pointer-events:none;font-family:ui-monospace,Consolas,monospace}
+.mn-sh>div,.dl-dayh{position:relative;padding-top:14px}
+.st-ring{position:relative}
+@property --st-ang{syntax:'<angle>';initial-value:0deg;inherits:false}
+.st-ring::before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--st-ang),transparent 0 70%,var(--y) 82%,var(--cy) 90%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:stSpin 7s linear infinite;pointer-events:none;z-index:2}
+@keyframes stSpin{to{--st-ang:360deg}}
+@media(prefers-reduced-motion:reduce){
+ .st-grad,.st-ecg-line,.st-live,.st-mesh i,.st-ring::before{animation:none}
+ .st-reveal{opacity:1;transform:none;transition:none}
+ .st-ecg-line{stroke-dashoffset:0;opacity:0}
+}
