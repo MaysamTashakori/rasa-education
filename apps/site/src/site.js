@@ -44,13 +44,18 @@ document.addEventListener('click',e=>{const c=e.target.closest('[data-go]');if(c
 
 function nav(){
   const n=$('#nav');const path=location.pathname;
+  const LINKS=[['/c','کاتالوگ',p=>p.startsWith('/c')],['/pricing','تعرفه',p=>p==='/pricing'],['/planner/','برنامه‌ریز',()=>false],['/kids/','کلاس دوم',()=>false],['/creators','سازندگان',p=>p==='/creators']];
   n.innerHTML=`<div class="wrap"><a class="brand" href="/">${LOGO}<span>رسا آموزش<small>RASA AMOZESH</small></span></a>
-  <nav class="links"><a href="/c" class="${path.startsWith('/c')?'on':''}">کاتالوگ</a><a href="/pricing" class="${path==='/pricing'?'on':''}">تعرفه</a><a href="/c/planning">برنامه‌ریزی</a><a href="/c/grade2">کلاس دوم</a><a href="/creators" class="${path==='/creators'?'on':''}">سازندگان</a>${isStaff()?`<a href="/admin" class="${path.startsWith('/admin')?'on':''}">مرکز فرمان</a>`:''}</nav>
+  <nav class="links">${LINKS.map(([h,t,on])=>`<a href="${h}" class="${on(path)?'on':''}">${t}</a>`).join('')}${isStaff()?`<a href="/admin" class="${path.startsWith('/admin')?'on':''}">مرکز فرمان</a>`:''}</nav>
   <span class="sp"></span><button class="ib" id="thm" title="تغییر تم" aria-label="تغییر تم">◐</button>
   <button class="ib" id="cartB" aria-label="سبد">🛍<b id="cartN" ${S.cart.length?'':'hidden'}>${fa(S.cart.length)}</b></button>
-  ${S.me?`<a class="btn sm" href="/me">${esc(S.me.name.split(' ')[0])}</a>`:'<button class="btn sm y" id="loginB">ورود / ثبت‌نام</button>'}</div>`;
+  <button class="ib mbtn" id="mbtn" aria-label="منو">☰</button>
+  ${S.me?`<a class="btn sm" href="/me">${esc(S.me.name.split(' ')[0])}</a>`:'<button class="btn sm y" id="loginB">ورود / ثبت‌نام</button>'}</div>
+  <div class="mmenu" id="mmenu">${LINKS.map(([h,t])=>`<a href="${h}">${t}</a>`).join('')}${isStaff()?'<a href="/admin">مرکز فرمان</a>':''}<a href="/me">حساب من</a><a href="/terms">قوانین و حریم خصوصی</a></div>`;
   $('#thm').onclick=()=>{const l=document.documentElement.classList.toggle('light');localStorage.setItem('ra:theme',l?'light':'dark')};
   $('#cartB').onclick=cartDrawer;$('#loginB')&&($('#loginB').onclick=()=>authModal());
+  const mm=$('#mmenu');$('#mbtn').onclick=()=>mm.classList.toggle('open');
+  mm.onclick=e=>{if(e.target.tagName==='A')mm.classList.remove('open')};
 }
 function foot(){$('#foot').innerHTML=`<div class="wrap"><div><a class="brand" href="/">${LOGO}<span>رسا آموزش</span></a><p>گام‌به‌گام، تا رسیدن.<br>پلتفرم یادگیری گام‌به‌گام برای دانش‌آموز، خانواده، معلم و مدرسه.</p></div>
 <div><b>محصولات</b><a href="/c">کاتالوگ</a><a href="/planner/">برنامه‌ریز</a><a href="/kids/">سامانهٔ کلاس دوم</a></div><div><b>همکاری</b><a href="/creators">سازندگان محتوا</a><a href="/me#support">پشتیبانی</a><a href="/brand.html">برندبوک</a><a href="/logo-options.html">گزینه‌های نشان</a></div>
@@ -115,15 +120,32 @@ function home(){
     <path id="hpPath" d="M370 370 L370 305 L305 305 L305 240 L240 240 L240 175 L175 175 L175 110 L110 110 L110 55" fill="none"/></svg>
     <div class="hp-ring"></div></div></div></section>
   <div class="hp-marquee" aria-hidden="true"><div class="hp-mq">${Array(2).fill(['ریاضی','علوم','فارسی','عربی','فیزیک','شیمی','برنامه‌ریزی','کارنامهٔ روایی','کلاس دوم','کنکور','درس تعاملی','مسیر یادگیری'].map(t=>`<span>${t}</span><i>✦</i>`).join('')).join('')}</div></div>
+  <section class="sec" style="padding-top:44px"><div class="wrap"><div class="sech"><div><div class="eyebrow">خدمات پلتفرم</div><h2 class="h2">همه‌چیز برای «یک گام روشن»</h2></div><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div>
+  <div class="svcs">${[
+    ['📖','درس‌های تعاملی','هر درس به گام‌های کوچک با شبیه‌ساز و بازخورد فوری شکسته شده.','/c?kind=lesson','#4BE8E2'],
+    ['🧭','مسیرهای یادگیری','به‌جای تک‌تک درس، مسیر مرتب از ابتدا تا تسلط.','#paths','#7C9CFF'],
+    ['📊','کارنامهٔ روایی','به‌جای نمره: «بلد است، در حال تمرین، گام بعدی» + خلاصه برای والد.','/p/report-card-math8','#4BE68A'],
+    ['🗓️','برنامه‌ریز هوشمند','برنامهٔ هفتگی خودکار، مرور فاصله‌دار، پشتیبان رمزدار — وب‌اپ نصب‌شدنی.','/planner/','#F4D438'],
+    ['🦁','سامانهٔ کلاس دوم','روال روزانه با ستاره، مشق، کیف فردا و ۱۱ درس برای دبستان.','/kids/','#FFB547'],
+    ['🏪','بازار رسا','جزوه و گزارش سازندگان؛ پیش‌نمایش زنده و صفحهٔ محصول اختصاصی.','/c','#E35DFF']
+  ].map(s=>`<a class="svc" style="--c:${s[4]}" href="${s[3]}"><span class="svc-ic">${s[0]}</span><h3>${s[1]}</h3><p>${s[2]}</p><span class="svc-go">مشاهده ←</span></a>`).join('')}</div></div></section>
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="sech"><div><div class="eyebrow">راهنمای شماتیک</div><h2 class="h2">رسا چطور کار می‌کند؟</h2></div></div>
+  <div class="map"><div class="map-col"><div class="map-h">مخاطب</div>${['دانش‌آموز','والد','معلم و مدرسه','سازنده'].map(x=>`<div class="map-node">${x}</div>`).join('')}</div>
+  <div class="map-arrow">‹</div>
+  <div class="map-col"><div class="map-h">کانال‌ها</div>${['وب‌اپ موبایل (PWA)','ربات بله','ربات تلگرام','مرکز فرمان'].map(x=>`<div class="map-node">${x}</div>`).join('')}</div>
+  <div class="map-arrow">‹</div>
+  <div class="map-col"><div class="map-h">موتور رسا</div>${['درس و آزمونک تعاملی','مسیر و مرور فاصله‌دار','کارنامهٔ روایی','برنامه‌ریز هوشمند','۱۹ ایجنت داخلی'].map(x=>`<div class="map-node hot">${x}</div>`).join('')}</div>
+  <div class="map-arrow">‹</div>
+  <div class="map-col"><div class="map-h">نتیجه</div>${['یادگیری گام‌به‌گام','گزارش روشن به والد','بازار و درآمد سازنده','دادهٔ کودک امن'].map(x=>`<div class="map-node">${x}</div>`).join('')}</div></div>
+  <p class="dim" style="font-size:12.5px;margin-top:14px">روی موبایل: کانال‌ها را با انگشت بکشید. همه‌چیز بدون نصب، روی هر دستگاه و بدون اینترنتِ کامل هم کار می‌کند.</p></div></section>
+  <section class="sec" style="padding-top:0"><div class="wrap"><div class="hp-ticker" id="ticker"><span class="live-dot"></span><span id="tickTxt"></span></div></div></section>
   <section class="sec" style="padding-top:30px"><div class="wrap"><div class="sech"><div><div class="eyebrow">بدون ثبت‌نام</div><h2 class="h2">یک گام را همین‌جا امتحان کن</h2></div><span class="tag" style="--c:var(--ok)">۳ سؤال · ۳۰ ثانیه</span></div>
   <div class="card hp-quiz" id="quiz" style="max-width:680px;margin:0 auto"></div></div></section>
-  <section class="sec" style="padding-top:20px"><div class="wrap"><div class="sech"><h2 class="h2">از کجا شروع کنیم؟</h2><a class="btn sm ghost" href="/c">همهٔ دسته‌ها ←</a></div>
-  <div class="cats">${tops.map(c=>`<div class="cat" style="--c:${esc(c.color)}" data-go="/c/${esc(c.id)}"><i>${esc(c.icon)}</i><h3>${esc(c.title)}</h3><div class="dim" style="font-size:13px">${esc(c.info||'')}</div></div>`).join('')}</div></div></section>
-  ${(st.paths||[]).length?`<section class="sec" style="padding-top:20px"><div class="wrap"><div class="sech"><div><div class="eyebrow">مسیرهای یادگیری</div><h2 class="h2">به‌جای تک‌تک درس، یک مسیر کامل</h2></div></div>
+  <section class="sec" id="paths" style="padding-top:20px"><div class="wrap"><div class="sech"><div><div class="eyebrow">مسیرهای یادگیری</div><h2 class="h2">به‌جای تک‌تک درس، یک مسیر کامل</h2></div><a class="btn sm ghost" href="/c">همهٔ دسته‌ها ←</a></div>
   <div class="hp-paths">${st.paths.map((pa,pi)=>`<div class="path hp-path" style="--c:${esc(pa.color||'#F4D438')}"><div class="hp-pnum">${fa(pi+1).padStart(2,'۰')}</div><div class="row"><span style="font-size:26px">${esc(pa.icon||'🧭')}</span><div style="flex:1"><h3 style="font-size:17px">${esc(pa.title)}</h3><div class="dim" style="font-size:12.5px">${esc(pa.audience||'')}</div></div><span class="tag" style="--c:var(--mute)">${fa(pa.steps.length)} گام</span></div>
   <p class="mute" style="font-size:13.5px;margin:10px 0 14px">${esc(pa.desc)}</p>
   <div class="psteps">${pa.steps.map((s,i)=>`<a class="pstep ${s.status==='soon'?'soon':''}" href="/p/${esc(s.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(s.title)}</span></a>`).join('')}</div>
-  <a class="btn sm ghost mt" href="/p/${esc(pa.steps[0].id)}" style="margin-top:14px">شروع مسیر ←</a></div>`).join('')}</div><div class="dim" style="font-size:12px;margin-top:10px">→ برای دیدن همه بکشید</div></div></section>`:''}
+  <a class="btn sm ghost mt" href="/p/${esc(pa.steps[0].id)}" style="margin-top:14px">شروع مسیر ←</a></div>`).join('')}</div><div class="dim" style="font-size:12px;margin-top:10px">→ برای دیدن همه بکشید</div></div></section>
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="sech"><div><div class="eyebrow">ویترین</div><h2 class="h2">تازه و محبوب</h2></div><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div><div class="grid3">${st.products.slice(0,8).map(pcard).join('')}</div></div></section>
   <section class="sec"><div class="wrap"><div class="sech"><h2 class="h2">در سه گام</h2></div><div class="how">
   <div class="card"><b>۱</b><h3>پیش‌نمایش زنده</h3><p class="mute">پیش از دریافت، خود درس را همین‌جا امتحان کنید؛ نه فقط عکس و توضیح.</p></div>
@@ -140,8 +162,11 @@ function home(){
   if(innerWidth<900)$('#rcs').style.gridTemplateColumns='1fr';
   // count-up stats
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
-  bindQuiz();
+  bindQuiz();startTicker();
 }
+function startTicker(){const t=$('#tickTxt');if(!t)return;const st=S.store,lv=st.live||{};
+  const facts=[`${fa(st.products.filter(p=>p.status==='live').length)} محصول زنده در کاتالوگ`,`امروز ${fa(lv.attemptsToday||0)} آزمونک حل شد`,`${fa(lv.families||0)} خانواده فعال`,`${fa((st.paths||[]).length)} مسیر یادگیری`,`۱۹ ایجنت داخلی در مرکز فرمان`,`پرداخت امن زرین‌پال فعال`];
+  let i=0;t.textContent=facts[0];setInterval(()=>{i=(i+1)%facts.length;t.style.opacity=0;setTimeout(()=>{t.textContent=facts[i];t.style.opacity=1},300)},4200)}
 const QUIZ=[{q:'۸ + ۷ = ؟',o:['۱۴','۱۵','۱۶'],a:1,m:'آفرین! جمع درست حساب شد.'},{q:' نصف ۲۰ چند است؟',o:['۵','۱۰','۴۰'],a:1,m:'بله؛ نصف یعنی تقسیم بر ۲.'},{q:'۳ × ۴ = ؟',o:['۷','۱۰','۱۲'],a:2,m:'عالی! ضرب را هم بلدی.'}];
 function bindQuiz(){const el=$('#quiz');if(!el)return;let i=0,score=0;
   const draw=()=>{const pips=`<div class="hp-pips">${QUIZ.map((_,x)=>`<i class="${x<i?'done':x===i?'now':''}"></i>`).join('')}</div>`;
