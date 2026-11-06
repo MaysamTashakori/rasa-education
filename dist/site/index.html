@@ -811,7 +811,7 @@ function bindDemo(){const root=$('#demo');if(!root)return;let i=0,score=0;
   $('#dq-o').innerHTML=Q.o.map((o,x)=>`<button class="hl-opt" data-x="${x}">${fa(x+1)}. ${o}</button>`).join('');$('#dq-f').textContent='';
   $$('#dq-o .hl-opt').forEach(b=>b.onclick=()=>{const ok=+b.dataset.x===Q.a;$$('#dq-o .hl-opt').forEach(x=>{x.disabled=true;if(+x.dataset.x===Q.a)x.classList.add('ok');else if(x===b)x.classList.add('no')});
    if(ok){score++;$('#dq-f').innerHTML=`<b class="hl-ok">آفرین!</b> ${Q.f}`;setTimeout(()=>{i=(i+1)%DEMO_Q.length;show()},1600)}
-   else $('#dq-f').innerHTML=`<b class="hl-no">نه quite — پاسخ درست: ${Q.o[Q.a]}</b> ${Q.f} <button class="hl-next" id="dq-next">سؤال بعدی</button>`;$('#dq-next').onclick=()=>{i=(i+1)%DEMO_Q.length;show()}})};
+   else $('#dq-f').innerHTML=`<b class="hl-no">نه — پاسخ درست: ${Q.o[Q.a]}</b> ${Q.f} <button class="hl-next" id="dq-next">سؤال بعدی</button>`;$('#dq-next').onclick=()=>{i=(i+1)%DEMO_Q.length;show()}})};
  show()}
 function journeyRail(){const rn=$('#jrn');if(!rn)return;
   const sts=[...$$('[data-st]')];
