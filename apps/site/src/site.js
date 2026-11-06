@@ -138,9 +138,13 @@ function home(){
       <p class="hl-sub">رسا آموزش پلتفرم یادگیری گام‌به‌گام است: درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — برای دانش‌آموزان، والدین و معلمان.</p>
       <form class="search hl-search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
       <div class="hl-chips">${[['درس تعاملی','/c?kind=lesson'],['آزمون آنلاین','/quiz'],['کارنامه','/me#report'],['برنامه‌ریز','/planner/']].map(c=>`<a class="st-tag" href="${c[1]}">${c[0]}</a>`).join('')}</div>
+      <div class="hl-roles"><span class="hl-rl">من…</span>${[['📚 دانش‌آموز','/c'],['👪 والد','/me'],['🛠️ سازنده','/creators'],['🏫 مدرسه','/pricing']].map(r=>`<a class="st-tag" href="${r[1]}">${r[0]}</a>`).join('')}</div>
       <div class="hl-live"><span class="st-live"></span><span><b data-cu="${live.length}">۰</b> محصول زنده · <b data-cu="${lv.attempts||0}">۰</b> آزمونک امروز · <b data-cu="${lv.families||0}">۰</b> خانواده</span></div>
     </div>
-    <div class="hl-side st-reveal">
+    <div class="ph st-reveal">
+      <div class="ph-notch"></div>
+      <div class="ph-screen">
+        <div class="hl-side">
     <div class="br-lesson" id="lesson">
       <div class="br-top"><span class="st-eyebrow" dir="ltr">TRY IT · درس زنده</span><span class="br-stars" id="br-stars">☆☆☆</span></div>
       <div class="br-stage" id="br-stage"></div>
@@ -155,6 +159,13 @@ function home(){
       </div>
       <p class="br-rf">«مبحث «عددهای صحیح» را یک گام دیگر تمرین کن؛ فردا مرور کوتاهش در برنامه‌ست.»</p>
     </div>
+        <div class="br-bot">
+          <div class="br-bh"><i>🧭</i> رسا آموزش · بله</div>
+          <div class="br-msg"><b>کارنامهٔ امروز امیر</b><br>ریاضی ۸/۱۰ · علوم ۷/۱۰<br><span class="dim">گام بعدی: کسرها — ۱۲ دقیقه مرور در برنامه‌ست.</span></div>
+          <div class="br-msg me">ممنون! 🌟</div>
+        </div>
+        </div>
+      </div>
     </div>
   </div></section>
   <div class="hl-band" aria-hidden="true"><div class="hl-band-in">${[0,1].map(k=>`<div class="hl-band-r" ${k?'aria-hidden="true"':''}>${band.map(b=>`<span>${b}<i>✦</i></span>`).join('')}</div>`).join('')}</div></div>

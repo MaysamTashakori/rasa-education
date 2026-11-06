@@ -715,6 +715,24 @@ a.st-tag:hover{color:var(--ink);border-color:var(--line2)}
 .pp-arrow{align-self:center;color:var(--dim);font-weight:900;font-size:18px}
 .pp-ch{display:flex;gap:8px;flex-wrap:wrap}
 @media(max-width:900px){.rl-panel.on{grid-template-columns:1fr}.rl-num{font-size:44px}.pp-flow{flex-direction:column}.pp-arrow{transform:rotate(90deg);align-self:flex-start}}
+/* phone mockup + role chips + bot chat */
+.hl-roles{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+.hl-rl{font-size:12px;font-weight:800;color:var(--dim)}
+.ph{border-radius:44px;border:11px solid #17171c;background:#000;box-shadow:0 40px 90px -30px rgba(0,0,0,.85),inset 0 0 0 1px #2c2c33;overflow:hidden;position:relative;max-width:400px;margin-inline-start:auto}
+.ph-notch{position:absolute;top:10px;inset-inline-start:50%;transform:translateX(50%);width:90px;height:22px;border-radius:99px;background:#17171c;z-index:3}
+.ph-screen{padding:34px 14px 14px;display:flex;flex-direction:column;gap:12px;max-height:640px;overflow:auto;scrollbar-width:none}
+.ph-screen::-webkit-scrollbar{display:none}
+.ph-screen .hl-side{gap:12px}
+.ph-screen .br-lesson{padding:16px;border-radius:20px}
+.ph-screen .br-stage{min-height:230px}
+.ph-screen .br-report{padding:14px 16px}
+.br-bot{border:1px solid var(--line);border-radius:16px;background:var(--card);overflow:hidden}
+.br-bh{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#0E3B2E;color:#7ef0c4;font-size:12px;font-weight:800;border-bottom:1px solid var(--line)}
+.br-bh i{font-style:normal}
+.br-msg{margin:10px 12px;padding:10px 13px;border-radius:14px 14px 14px 4px;background:#182018;font-size:12.5px;line-height:1.8;max-width:88%}
+.br-msg.me{margin-inline-start:auto;background:#1d2b45;border-radius:14px 14px 4px 14px;text-align:left}
+@media(max-width:960px){.ph{margin-inline-start:0;max-width:none}}
+@media(prefers-reduced-motion:reduce){.ph{box-shadow:none}}
 </style></head><body><header class="nav" id="nav"></header><main id="main"></main><footer class="foot" id="foot"></footer><script>'use strict';
 // رسا آموزش — storefront + profile + command center (vanilla SPA, history routing)
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -855,9 +873,13 @@ function home(){
       <p class="hl-sub">رسا آموزش پلتفرم یادگیری گام‌به‌گام است: درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — برای دانش‌آموزان، والدین و معلمان.</p>
       <form class="search hl-search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
       <div class="hl-chips">${[['درس تعاملی','/c?kind=lesson'],['آزمون آنلاین','/quiz'],['کارنامه','/me#report'],['برنامه‌ریز','/planner/']].map(c=>`<a class="st-tag" href="${c[1]}">${c[0]}</a>`).join('')}</div>
+      <div class="hl-roles"><span class="hl-rl">من…</span>${[['📚 دانش‌آموز','/c'],['👪 والد','/me'],['🛠️ سازنده','/creators'],['🏫 مدرسه','/pricing']].map(r=>`<a class="st-tag" href="${r[1]}">${r[0]}</a>`).join('')}</div>
       <div class="hl-live"><span class="st-live"></span><span><b data-cu="${live.length}">۰</b> محصول زنده · <b data-cu="${lv.attempts||0}">۰</b> آزمونک امروز · <b data-cu="${lv.families||0}">۰</b> خانواده</span></div>
     </div>
-    <div class="hl-side st-reveal">
+    <div class="ph st-reveal">
+      <div class="ph-notch"></div>
+      <div class="ph-screen">
+        <div class="hl-side">
     <div class="br-lesson" id="lesson">
       <div class="br-top"><span class="st-eyebrow" dir="ltr">TRY IT · درس زنده</span><span class="br-stars" id="br-stars">☆☆☆</span></div>
       <div class="br-stage" id="br-stage"></div>
@@ -872,6 +894,13 @@ function home(){
       </div>
       <p class="br-rf">«مبحث «عددهای صحیح» را یک گام دیگر تمرین کن؛ فردا مرور کوتاهش در برنامه‌ست.»</p>
     </div>
+        <div class="br-bot">
+          <div class="br-bh"><i>🧭</i> رسا آموزش · بله</div>
+          <div class="br-msg"><b>کارنامهٔ امروز امیر</b><br>ریاضی ۸/۱۰ · علوم ۷/۱۰<br><span class="dim">گام بعدی: کسرها — ۱۲ دقیقه مرور در برنامه‌ست.</span></div>
+          <div class="br-msg me">ممنون! 🌟</div>
+        </div>
+        </div>
+      </div>
     </div>
   </div></section>
   <div class="hl-band" aria-hidden="true"><div class="hl-band-in">${[0,1].map(k=>`<div class="hl-band-r" ${k?'aria-hidden="true"':''}>${band.map(b=>`<span>${b}<i>✦</i></span>`).join('')}</div>`).join('')}</div></div>
