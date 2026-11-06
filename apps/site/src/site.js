@@ -118,7 +118,7 @@ const SERVICES=[
 function home(){
   const st=S.store,live=st.products.filter(p=>p.status==='live'),lv=st.live||{};
   setMeta('رسا آموزش · گام‌به‌گام، تا رسیدن','رسا آموزش: درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیرهای یادگیری، برنامه‌ریز هوشمند و کارنامهٔ روایی برای دانش‌آموزان، خانواده‌ها و مدارس ایران.');
-  main().innerHTML=`<section class="nt-hero"><div class="nt-margin" aria-hidden="true"><i></i><i></i><i></i></div><div class="wrap nt-heroin">
+  main().innerHTML=`<section class="nt-hero" data-st="۰۰" data-sn="شروع"><div class="nt-margin" aria-hidden="true"><i></i><i></i><i></i></div><div class="wrap nt-heroin">
   <div class="nt-stamp"><span class="live-dot"></span>پلتفرم یادگیری فارسی · ${fa(lv.attempts||0)} آزمونک امروز</div>
   <svg class="nt-doodle d1" viewBox="0 0 120 120" aria-hidden="true"><path d="M60 8 L67 40 L98 40 L72 58 L82 90 L60 70 L38 90 L48 58 L22 40 L53 40 Z" fill="none" stroke="#F4D438" stroke-width="3" stroke-linejoin="round"/></svg>
   <svg class="nt-doodle d2" viewBox="0 0 100 60" aria-hidden="true"><path d="M4 50 C30 10, 70 10, 94 44 M80 40 L94 44 L84 54" fill="none" stroke="#4BE8E2" stroke-width="3" stroke-linecap="round"/></svg>
@@ -130,24 +130,25 @@ function home(){
   <div class="nt-stats">${[['محصول زنده',live.length],['گام تعاملی',live.reduce((s,p)=>s+(p.meta?.steps||0),0)],['آزمونک امروز',lv.attempts||0],['خانوادهٔ فعال',lv.families||0]].map(x=>`<div><b data-cu="${x[1]}">۰</b><span>${x[0]}</span></div>`).join('')}</div>
   </div></section>
   <div class="nt-tear" aria-hidden="true"></div>
+  <aside class="jr-rail" id="jr" aria-hidden="true"><div class="jr-line"></div><div class="jr-dot" id="jrd"></div><div class="jr-nodes" id="jrn"></div></aside>
   <div class="hp-marquee" aria-hidden="true"><div class="hp-mq">${Array(2).fill(['ریاضی','علوم','فارسی','عربی','فیزیک','شیمی','برنامه‌ریزی','کارنامهٔ روایی','کلاس دوم','کنکور','درس تعاملی','مسیر یادگیری'].map(t=>`<span>${t}</span><i>✦</i>`).join('')).join('')}</div></div>
-  <section class="nt-sec" id="services"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۱</span><h2>فهرست خدمات</h2><span class="nt-rule"></span></div>
+  <section class="nt-sec" id="services" data-st="۰۱" data-sn="خدمات"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۱</span><h2>فهرست خدمات</h2><span class="nt-rule"></span></div>
   <div class="tkts">${SERVICES.map((s,si)=>`<a class="tkt" style="--c:${s[4]};--rot:${si%2?'.4deg':'-.4deg'}" href="${s[5]}"><span class="tkt-stub"><b>${s[0]}</b><i>${s[3]}</i><span class="tkt-bc"></span></span><span class="tkt-body"><strong>${s[1]}</strong><em>${s[2]}</em></span><span class="tkt-a">←</span></a>`).join('')}</div></div></section>
-  <section class="nt-sec"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۲</span><h2>رسا چطور کار می‌کند؟</h2><span class="nt-rule"></span></div>
+  <section class="nt-sec" data-st="۰۲" data-sn="معماری"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۲</span><h2>رسا چطور کار می‌کند؟</h2><span class="nt-rule"></span></div>
   <div class="route">${[['شما','دانش‌آموز · والد · معلم و مدرسه · سازنده'],['کانال‌ها','وب‌اپ موبایل (PWA) · ربات بله · ربات تلگرام'],['موتور رسا','درس و آزمونک · مسیر · کارنامه · برنامه‌ریز · ۱۹ ایجنت'],['نتیجه','یادگیری گام‌به‌گام با گزارش روشن و دادهٔ کودک امن']].map((f,i)=>`<div class="rt ${i===2?'hot':''}"><i>${fa(i+1)}</i><b>${f[0]}</b><span>${f[1]}</span></div>`).join('')}</div>
   <p class="dim" style="font-size:12.5px;margin-top:14px">بدون نصب، روی هر دستگاه و با اینترنت ضعیف هم کار می‌کند.</p></div></section>
-  <section class="nt-sec"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۳</span><h2>آزمونک بر اساس پایهٔ تحصیلی</h2><span class="nt-rule"></span></div>
+  <section class="nt-sec" data-st="۰۳" data-sn="آزمونک"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۳</span><h2>آزمونک بر اساس پایهٔ تحصیلی</h2><span class="nt-rule"></span></div>
   <div class="exam"><div class="exam-head"><b>برگهٔ آزمونک</b><span>بر اساس مقطع و درس — بدون ثبت‌نام</span></div><div class="qz-tabs" id="qzTabs"></div><div id="quiz"></div></div></div></section>
-  <section class="nt-sec" id="paths"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۴</span><h2>مسیرهای یادگیری — یک مسیر کامل، نه تک‌تک درس</h2><span class="nt-rule"></span></div>
+  <section class="nt-sec" id="paths" data-st="۰۴" data-sn="مسیرها"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۴</span><h2>مسیرهای یادگیری — یک مسیر کامل، نه تک‌تک درس</h2><span class="nt-rule"></span></div>
   <div class="hp-paths">${st.paths.map((pa,pi)=>`<div class="path hp-path" style="--c:${esc(pa.color||'#F4D438')}"><div class="hp-pnum">${fa(pi+1).padStart(2,'۰')}</div><div class="row"><span style="font-size:26px">${esc(pa.icon||'🧭')}</span><div style="flex:1"><h3 style="font-size:17px">${esc(pa.title)}</h3><div class="dim" style="font-size:12.5px">${esc(pa.audience||'')}</div></div><span class="tag" style="--c:var(--mute)">${fa(pa.steps.length)} گام</span></div>
   <p class="mute" style="font-size:13.5px;margin:10px 0 14px">${esc(pa.desc)}</p>
   <div class="psteps">${pa.steps.map((s,i)=>`<a class="pstep ${s.status==='soon'?'soon':''}" href="/p/${esc(s.id)}" data-ev-path="${esc(pa.id)}"><i>${i+1}</i><span>${esc(s.title)}</span></a>`).join('')}</div>
   <a class="btn sm ghost mt" href="/p/${esc(pa.steps[0].id)}" style="margin-top:14px">شروع مسیر ←</a></div>`).join('')}</div><div class="dim" style="font-size:12px;margin-top:10px">→ برای دیدن همه بکشید</div></div></section>
-  <section class="nt-sec"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۵</span><h2>تازه و محبوب</h2><span class="nt-rule"></span><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div><div class="grid3">${st.products.slice(0,8).map(pcard).join('')}</div></div></section>
-  <section class="nt-sec"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۶</span><h2>کارنامهٔ خلاقانه — عدد کافی نیست؛ روایت لازم است</h2><span class="nt-rule"></span></div>
+  <section class="nt-sec" data-st="۰۵" data-sn="ویترین"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۵</span><h2>تازه و محبوب</h2><span class="nt-rule"></span><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div><div class="grid3">${st.products.slice(0,8).map(pcard).join('')}</div></div></section>
+  <section class="nt-sec" data-st="۰۶" data-sn="کارنامه"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۶</span><h2>کارنامهٔ خلاقانه — عدد کافی نیست؛ روایت لازم است</h2><span class="nt-rule"></span></div>
   <div class="card" style="padding:32px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center" id="rcs"><div><p class="mute" style="margin-top:0">کارنامهٔ رسا به‌جای یک نمره، مسیر را نشان می‌دهد: چه پله‌هایی طی شده و پلهٔ بعدی کدام است. برای والد خلاصه دارد و قابل چاپ و ارسال است.</p><a class="btn y mt" href="/p/report-card-math8">دیدن نمونه</a></div>
   <div><div class="ladder">${[40,55,48,70,82,90].map((h,i)=>`<i class="${i>3?'on':''}" style="height:${h}%"><span>${fa('هفته '+(i+1))}</span></i>`).join('')}</div><div class="rc mt"><div class="a"><div class="k">✓ بلد است</div><div class="mute" style="font-size:13px">عددهای صحیح، محور عدد</div></div><div class="b"><div class="k">↻ در حال تمرین</div><div class="mute" style="font-size:13px">ضرب عددهای گویا</div></div><div class="c"><div class="k">← گام بعدی</div><div class="mute" style="font-size:13px">فصل ۲، عددهای اول</div></div></div></div></div></section>
-  <section class="nt-sec"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۷</span><h2>برای هر یک از شما</h2><span class="nt-rule"></span></div><div class="aud">
+  <section class="nt-sec" data-st="۰۷" data-sn="جامعه"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۷</span><h2>برای هر یک از شما</h2><span class="nt-rule"></span></div><div class="aud">
   ${[['🧒','دانش‌آموز','درس‌هایی که با انجام‌دادن یاد گرفته می‌شوند.'],['👨‍👩‍👧','والد','گزارش روشن، یادآوری در بله و تلگرام، جایزه.'],['🧑‍🏫','معلم و مدرسه','کلاس، تکلیف، گزارش مدیریتی.'],['✍️','سازنده','موتور ساخت جزوه و گزارش تعاملی؛ انتشار در بازار.']].map(a=>`<div class="card"><div style="font-size:30px">${a[0]}</div><h3>${a[1]}</h3><p class="mute" style="margin:6px 0 0;font-size:14px">${a[2]}</p></div>`).join('')}</div></div></section>
   <section class="nt-sec"><div class="wrap"><div class="nt-sh"><span class="nt-pg">صفحهٔ ۰۸</span><h2>پرسش‌های پرتکرار</h2><span class="nt-rule"></span></div>
   <div class="faq">${[['رسا آموزش چیست؟','پلتفرم یادگیری گام‌به‌گام فارسی است: درس و آزمون تعاملی، جزوه‌های گام‌به‌گام، مسیرهای یادگیری مرتب، برنامه‌ریز هوشمند و کارنامه‌ای روایی که به‌جای نمره، می‌گوید فرزندتان چه بلد است و گام بعدی چیست.'],['آیا رایگان است؟','ابزارهای پایه — برنامه‌ریز، سامانهٔ کلاس دوم و پیش‌نمایش درس‌ها — رایگان‌اند. جزوه‌ها و درس‌های ویژه قیمت دارند و با پرداخت امن زرین‌پال دریافت می‌شوند؛ اشتراک خانواده هم در راه است.'],['محتوا برای چه پایه‌هایی داریم؟','فعلاً کانون ما کلاس دوم ابتدایی و ریاضی هشتم است و به‌تدریج به همهٔ مقاطع گسترش می‌یابد؛ مسیرها و کاتالوگ همین‌جا به‌روز می‌شوند.'],['روی گوشی من کار می‌کند؟','بله؛ همه‌چیز موبایل‌محور و راست‌به‌چپ است و به‌صورت وب‌اپ نصب‌شدنی (PWA) روی گوشی و رایانه کار می‌کند.'],['دادهٔ کودک من کجا می‌رود؟','داده‌های کلاس دوم فقط برای همان خانواده و معلمش استفاده می‌شود، رمزگذاری می‌شود و هرگز فروخته یا برای آموزش مدل به کار نمی‌رود.'],['می‌خواهم سازنده باشم','در صفحهٔ «سازندگان» درخواست همکاری ثبت کنید؛ موتور ما پیش‌نمایش زنده، صفحهٔ محصول، کارنامهٔ روایی و آمار را برای شما می‌سازد.']].map(f=>`<details><summary>${esc(f[0])}</summary><p class="mute">${esc(f[1])}</p></details>`).join('')}</div></div></section>
@@ -157,8 +158,14 @@ function home(){
   if(innerWidth<900)$('#rcs').style.gridTemplateColumns='1fr';
   // count-up stats
   $$('[data-cu]').forEach(el=>{const target=+el.dataset.cu,t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3);el.textContent=num(Math.round(target*e));if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)});
-  bindQuiz();startTicker();
+  bindQuiz();startTicker();journeyRail();
 }
+function journeyRail(){const rn=$('#jrn');if(!rn)return;
+  const sts=[...$$('[data-st]')];
+  rn.innerHTML=sts.map((s,i)=>`<button class="jr-node ${i===0?'on':''}" data-i="${i}" data-n="${s.dataset.sn}" aria-label="${s.dataset.sn}">${s.dataset.st}</button>`).join('');
+  rn.querySelectorAll('.jr-node').forEach(n=>n.onclick=()=>sts[+n.dataset.i].scrollIntoView({behavior:'smooth'}));
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=sts.indexOf(e.target);rn.querySelectorAll('.jr-node').forEach((n,x)=>n.classList.toggle('on',x===i));const d=$('#jrd');if(d)d.style.top=(i*60+17)+'px'}})},{rootMargin:'-35% 0px -55% 0px'});
+  sts.forEach(s=>io.observe(s))}
 function startTicker(){const t=$('#tickTxt');if(!t)return;const st=S.store,lv=st.live||{};
   const facts=[`${fa(st.products.filter(p=>p.status==='live').length)} محصول زنده در کاتالوگ`,`امروز ${fa(lv.attemptsToday||0)} آزمونک حل شد`,`${fa(lv.families||0)} خانواده فعال`,`${fa((st.paths||[]).length)} مسیر یادگیری`,`۱۹ ایجنت داخلی در مرکز فرمان`,`پرداخت امن زرین‌پال فعال`];
   let i=0;t.textContent=facts[0];setInterval(()=>{i=(i+1)%facts.length;t.style.opacity=0;setTimeout(()=>{t.textContent=facts[i];t.style.opacity=1},300)},4200)}
