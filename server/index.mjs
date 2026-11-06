@@ -8,6 +8,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {initBots} from './bots.mjs';
 import {initStore} from './store.mjs';
 import {initAdmin} from './admin.mjs';
+import {initPay} from './pay.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = +(process.env.PORT || 8080);
@@ -171,7 +172,7 @@ const routes = {
 };
 Object.assign(routes, initBots(db, {auth, fail, PD}).routes);
 const store = initStore(db, {auth, fail, DATA, ROOT}), admin = initAdmin(db, {auth, fail, ROOT, store});
-Object.assign(routes, store.routes, admin.routes);
+Object.assign(routes, store.routes, admin.routes, initPay(db, {auth, fail}).routes);
 const compiled = Object.entries(routes).map(([k, fn]) => {
   const [method, pattern] = k.split(' '), keys = [];
   const re = new RegExp('^' + pattern.replace(/:(\w+)/g, (_, n) => {keys.push(n); return '([^/]+)'}) + '$');

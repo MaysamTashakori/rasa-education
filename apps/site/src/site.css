@@ -85,3 +85,19 @@ a.pstep:hover{border-color:var(--c);transform:translateX(-2px)}
 .faq details p{padding:0 20px 18px;margin:0}
 .cta{border-radius:28px;padding:44px 36px;background:linear-gradient(135deg,color-mix(in srgb,var(--y) 16%,var(--card)),var(--card) 55%);border:1px solid color-mix(in srgb,var(--y) 35%,var(--line));display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
 @media(max-width:900px){.faq{grid-template-columns:1fr}.cta{padding:28px 22px}.pstep{flex-wrap:wrap}}
+/* alive feel: ambient motion + staggered reveals + live pulse */
+.hero:before{content:"";position:absolute;inset-inline-start:-10%;top:-30%;width:55%;height:80%;background:radial-gradient(closest-side,rgba(244,212,56,.09),transparent);animation:drift 14s ease-in-out infinite alternate;pointer-events:none}
+.hero:after{content:"";position:absolute;inset-inline-end:-15%;bottom:-40%;width:50%;height:90%;background:radial-gradient(closest-side,rgba(75,232,226,.07),transparent);animation:drift 18s ease-in-out infinite alternate-reverse;pointer-events:none}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(6%,-4%) scale(1.12)}}
+.grid3 .pc,.cats .cat,.paths .path,.aud .card,.how .card{animation:pop .5s cubic-bezier(.2,.9,.3,1.15) both}
+.grid3 .pc:nth-child(2),.cats .cat:nth-child(2),.paths .path:nth-child(2),.aud .card:nth-child(2),.how .card:nth-child(2){animation-delay:.05s}
+.grid3 .pc:nth-child(3),.cats .cat:nth-child(3),.paths .path:nth-child(3),.aud .card:nth-child(3),.how .card:nth-child(3){animation-delay:.1s}
+.grid3 .pc:nth-child(4),.cats .cat:nth-child(4),.paths .path:nth-child(4),.aud .card:nth-child(4),.how .card:nth-child(4){animation-delay:.15s}
+.grid3 .pc:nth-child(n+5),.cats .cat:nth-child(n+5),.paths .path:nth-child(n+5),.aud .card:nth-child(n+5),.how .card:nth-child(n+5){animation-delay:.2s}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.98)}}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-inline-end:6px;animation:pulse 2s ease-in-out infinite;vertical-align:middle}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(75,230,138,.5)}50%{box-shadow:0 0 0 6px rgba(75,230,138,0)}}
+.faq details{transition:border-color .2s}
+.faq details[open]{border-color:color-mix(in srgb,var(--y) 45%,var(--line))}
+.pstep{transition:border-color .18s,transform .18s}
+@media (prefers-reduced-motion:reduce){.hero:before,.hero:after,.grid3 .pc,.cats .cat,.paths .path,.aud .card,.how .card,.live-dot{animation:none!important}.grid3 .pc,.cats .cat,.paths .path,.aud .card,.how .card{opacity:1!important;transform:none!important}}

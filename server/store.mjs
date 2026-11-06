@@ -53,8 +53,10 @@ export function initStore(db, {auth, fail, DATA, ROOT}) {
     (s.categories || []).forEach((x, i) => c.run(x.id, x.parent || null, x.title, x.icon || '', x.color || '', i, x.info || ''));
     const p = db.prepare(`INSERT OR IGNORE INTO products(id, kind, cat, grade, subject, title, summary, body, price, status, color, icon, tags, features, meta, sort, created, updated)
       VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
-    (s.products || []).forEach((x, i) => p.run(x.id, x.kind, x.cat, x.grade || '', x.subject || '', x.title, x.summary || '', x.body || '', x.price || 0,
-      x.status || 'live', x.color || '', x.icon || '', JSON.stringify(x.tags || []), JSON.stringify(x.features || []), JSON.stringify(x.meta || {}), i, now(), now()));
+    const backfill = db.prepare('UPDATE products SET price=? WHERE id=? AND price=0');
+    (s.products || []).forEach((x, i) => {p.run(x.id, x.kind, x.cat, x.grade || '', x.subject || '', x.title, x.summary || '', x.body || '', x.price || 0,
+      x.status || 'live', x.color || '', x.icon || '', JSON.stringify(x.tags || []), JSON.stringify(x.features || []), JSON.stringify(x.meta || {}), i, now(), now());
+      if (x.price) backfill.run(x.price, x.id)});
   }
   seed();
 
@@ -98,6 +100,27 @@ export function initStore(db, {auth, fail, DATA, ROOT}) {
       });
       return true;
     }
+    // Creator submission file: PUT /api/tickets/:id/file (owner of the ticket only)
+    m = url.pathname.match(/^\/api\/tickets\/(\d+)\/file$/);
+    if (m && req.method === 'PUT') {
+      try {
+        const u = auth(req), t = db.prepare('SELECT * FROM tickets WHERE id=?').get(+m[1]);
+        if (!t || t.uid !== u.id) fail(403, 'دسترسی ندارید');
+        const ext = ({'text/html': '.html', 'application/pdf': '.pdf', 'application/zip': '.zip', 'application/x-zip-compressed': '.zip'})[String(req.headers['content-type']).split(';')[0]];
+        if (!ext) fail(400, 'فقط HTML، PDF یا ZIP');
+        const name = `sub-${t.id}-${crypto.randomBytes(4).toString('hex')}${ext}`, out = fs.createWriteStream(path.join(FILES, name));
+        let size = 0, big = false;
+        req.on('data', c => {size += c.length; if (size > 40e6 && !big) {big = true; req.destroy()}});
+        req.pipe(out);
+        out.on('finish', () => {
+          if (big) {fs.rmSync(path.join(FILES, name), {force: true}); res.writeHead(413, {'content-type': 'application/json'}); res.end('{"error":"فایل بزرگ‌تر از ۴۰ مگابایت"}'); return}
+          db.prepare('INSERT INTO ticket_msgs(tid, uid, staff, body, at) VALUES(?,?,?,?,?)').run(t.id, u.id, 0, `فایل پیوست شد: ${req.headers['x-file-name'] || name} (${Math.round(size / 1024)}KB) — روی سرور: ${name}`, now());
+          db.prepare('UPDATE tickets SET updated=? WHERE id=?').run(now(), t.id);
+          res.writeHead(200, {'content-type': 'application/json'}); res.end(JSON.stringify({ok: true, size}));
+        });
+        return true;
+      } catch (e) {res.writeHead(e.status || 500, {'content-type': 'application/json'}); res.end(JSON.stringify({error: e.message})); return true}
+    }
     return false;
   }
 
@@ -112,11 +135,22 @@ export function initStore(db, {auth, fail, DATA, ROOT}) {
   const routes = {
     'GET /api/store': (req, res, b, p, url) => {
       ensureFounder(); const u = optUser(req);
-      let paths = [];
+      let paths = [], plans = {};
       try {paths = J(fs.readFileSync(path.join(ROOT, 'content/store/paths.json'), 'utf8'), {paths: []}).paths || []} catch {}
+      try {plans = J(fs.readFileSync(path.join(ROOT, 'content/store/pricing.json'), 'utf8'), {})} catch {}
       const prods = list(u, Object.fromEntries(url.searchParams));
       const byId = Object.fromEntries(prods.map(x => [x.id, x]));
-      return {categories: db.prepare('SELECT * FROM categories ORDER BY sort').all(), products: prods, paths: paths.map(x => ({...x, steps: (x.steps || []).map(id => byId[id]).filter(Boolean)})),
+      const day = now() - 864e5;
+      const live = {
+        products: db.prepare("SELECT COUNT(*) n FROM products WHERE status='live'").get().n,
+        attempts: db.prepare('SELECT COUNT(*) n FROM attempts WHERE at>?').get(day).n,
+        claims: db.prepare("SELECT COUNT(*) n FROM events WHERE name='claim' AND at>?").get(day).n,
+        families: db.prepare('SELECT COUNT(DISTINCT uid) n FROM owned').get().n,
+        jobs: (() => {try {return db.prepare('SELECT COUNT(*) n FROM jobs WHERE at>?').get(day).n} catch {return 0}})(),
+      };
+      return {categories: db.prepare('SELECT * FROM categories ORDER BY sort').all(), products: prods,
+        paths: paths.map(x => ({...x, steps: (x.steps || []).map(id => byId[id]).filter(Boolean)})),
+        pricing: {plans: plans.plans || [], defaults: plans.defaults || {}}, live,
         roles: u ? rolesOf(u.id) : []};
     },
     'GET /api/store/p/:id': (req, res, b, p) => {
@@ -132,13 +166,14 @@ export function initStore(db, {auth, fail, DATA, ROOT}) {
       const ps = ids.map(id => db.prepare("SELECT * FROM products WHERE id=? AND status='live'").get(id)).filter(Boolean);
       if (!ps.length) fail(400, 'سبد خالی است');
       const total = ps.reduce((s, p) => s + p.price, 0);
-      // Everything is free for now: orders are completed immediately with total 0.
-      const oid = db.prepare('INSERT INTO store_orders(uid, total, status, ref, at) VALUES(?,?,?,?,?)').run(u.id, 0, 'paid-free', String(b.ref || '').slice(0, 40), now()).lastInsertRowid;
+      const paid = total === 0;
+      const oid = db.prepare('INSERT INTO store_orders(uid, total, status, ref, at) VALUES(?,?,?,?,?)').run(u.id, total, paid ? 'paid-free' : 'pending', String(b.ref || '').slice(0, 40), now()).lastInsertRowid;
       for (const p of ps) {
-        db.prepare('INSERT INTO store_order_items VALUES(?,?,?)').run(oid, p.id, 0);
-        db.prepare('INSERT OR IGNORE INTO owned VALUES(?,?,?)').run(u.id, p.id, now()); track('claim', u.id, p.id, b.ref);
+        db.prepare('INSERT INTO store_order_items VALUES(?,?,?)').run(oid, p.id, p.price);
+        track('checkout', u.id, p.id, b.ref);
       }
-      return {order: oid, listTotal: total, total: 0, items: ps.map(p => p.id)};
+      if (paid) for (const p of ps) {db.prepare('INSERT OR IGNORE INTO owned VALUES(?,?,?)').run(u.id, p.id, now()); track('claim', u.id, p.id, b.ref)}
+      return {order: oid, listTotal: total, total: paid ? 0 : total, paid, items: ps.map(p => p.id)};
     },
     'GET /api/store/library': req => {
       const u = auth(req);

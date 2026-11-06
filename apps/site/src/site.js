@@ -14,6 +14,8 @@ if(S.ref)sessionStorage.setItem('ra:ref',S.ref);
 const isStaff=()=>S.roles.some(r=>['founder','admin','editor','support','marketer'].includes(r));
 const setMeta=(title,desc)=>{document.title=title;const m=document.querySelector('meta[name="description"]');if(m&&desc)m.content=desc};
 const pathOf=pid=>(S.store?.paths||[]).find(p=>(p.steps||[]).some(s=>s.id===pid));
+const toman=n=>n?`${num(n)}<span class="dim" style="font-size:11px;font-weight:700"> تومان</span>`:'<span class="free">رایگان</span>';
+const cartTotal=()=>S.cart.reduce((s,id)=>s+(S.store?.products.find(p=>p.id===id)?.price||0),0);
 const theme=localStorage.getItem('ra:theme');if(theme==='light')document.documentElement.classList.add('light');
 
 async function api(p,o={}){
@@ -36,14 +38,14 @@ function cover(p,big){const st=p.meta?.steps?Math.min(5,Math.ceil(p.meta.steps/6
 const catOf=id=>S.store?.categories.find(c=>c.id===id);
 function pcard(p){const c=catOf(p.cat);
   return `<article class="pc" data-go="/p/${esc(p.id)}">${cover(p)}<div class="bd"><div class="row wrapr"><span class="tag" style="--c:${esc(c?.color||'#F4D438')}">${esc(c?.title||'')}</span><span class="tag" style="--c:var(--mute)">${KIND[p.kind]||''}</span></div>
-  <h3 style="font-size:16px">${esc(p.title)}</h3><p>${esc(p.summary)}</p><div class="ft"><span>${p.status==='soon'?'<span class="dim">به‌زودی</span>':'<span class="free">رایگان</span>'}</span>
+  <h3 style="font-size:16px">${esc(p.title)}</h3><p>${esc(p.summary)}</p><div class="ft"><span>${p.status==='soon'?'<span class="dim">به‌زودی</span>':toman(p.price)}</span>
   <span class="row">${pathOf(p.id)?'<span class="tag" style="--c:var(--vi)">🧭 مسیر</span>':''}${p.rating?.n?`<span class="dim">★ ${fa(p.rating.a)}</span>`:''}${p.owned?'<span class="tag" style="--c:var(--ok)">در کتابخانه</span>':''}</span></div></div></article>`}
 document.addEventListener('click',e=>{const c=e.target.closest('[data-go]');if(c&&!e.target.closest('button,a'))go(c.dataset.go)});
 
 function nav(){
   const n=$('#nav');const path=location.pathname;
   n.innerHTML=`<div class="wrap"><a class="brand" href="/">${LOGO}<span>رسا آموزش<small>RASA AMOZESH</small></span></a>
-  <nav class="links"><a href="/c" class="${path.startsWith('/c')?'on':''}">کاتالوگ</a><a href="/c/planning">برنامه‌ریزی</a><a href="/c/grade2">کلاس دوم</a><a href="/creators" class="${path==='/creators'?'on':''}">سازندگان</a>${isStaff()?`<a href="/admin" class="${path.startsWith('/admin')?'on':''}">مرکز فرمان</a>`:''}</nav>
+  <nav class="links"><a href="/c" class="${path.startsWith('/c')?'on':''}">کاتالوگ</a><a href="/pricing" class="${path==='/pricing'?'on':''}">تعرفه</a><a href="/c/planning">برنامه‌ریزی</a><a href="/c/grade2">کلاس دوم</a><a href="/creators" class="${path==='/creators'?'on':''}">سازندگان</a>${isStaff()?`<a href="/admin" class="${path.startsWith('/admin')?'on':''}">مرکز فرمان</a>`:''}</nav>
   <span class="sp"></span><button class="ib" id="thm" title="تغییر تم" aria-label="تغییر تم">◐</button>
   <button class="ib" id="cartB" aria-label="سبد">🛍<b id="cartN" ${S.cart.length?'':'hidden'}>${fa(S.cart.length)}</b></button>
   ${S.me?`<a class="btn sm" href="/me">${esc(S.me.name.split(' ')[0])}</a>`:'<button class="btn sm y" id="loginB">ورود / ثبت‌نام</button>'}</div>`;
@@ -51,8 +53,9 @@ function nav(){
   $('#cartB').onclick=cartDrawer;$('#loginB')&&($('#loginB').onclick=()=>authModal());
 }
 function foot(){$('#foot').innerHTML=`<div class="wrap"><div><a class="brand" href="/">${LOGO}<span>رسا آموزش</span></a><p>گام‌به‌گام، تا رسیدن.<br>پلتفرم یادگیری گام‌به‌گام برای دانش‌آموز، خانواده، معلم و مدرسه.</p></div>
-<div><b>محصولات</b><a href="/c">کاتالوگ</a><a href="/planner/">برنامه‌ریز</a><a href="/kids/">سامانهٔ کلاس دوم</a></div><div><b>همکاری</b><a href="/creators">سازندگان محتوا</a><a href="/me#support">پشتیبانی</a><a href="/brand.html">برندبوک</a></div>
-<div><b>اعتماد</b><span>همهٔ محصولات فعلاً رایگان است.</span><span>دادهٔ کودک فروخته یا برای آموزش مدل استفاده نمی‌شود.</span></div></div>`}
+<div><b>محصولات</b><a href="/c">کاتالوگ</a><a href="/planner/">برنامه‌ریز</a><a href="/kids/">سامانهٔ کلاس دوم</a></div><div><b>همکاری</b><a href="/creators">سازندگان محتوا</a><a href="/me#support">پشتیبانی</a><a href="/brand.html">برندبوک</a><a href="/logo-options.html">گزینه‌های نشان</a></div>
+<div><b>اعتماد</b><span>پرداخت امن با زرین‌پال</span><span>دادهٔ کودک فروخته یا برای آموزش مدل استفاده نمی‌شود.</span></div></div>
+<div class="wrap mt" style="border-top:1px solid var(--line);padding-top:14px;display:flex;gap:14px;flex-wrap:wrap;font-size:12px"><a href="/about">دربارهٔ ما</a><a href="/terms">قوانین</a><a href="/privacy">حریم خصوصی</a><a href="/refund">بازگشت وجه</a><a href="/contact">تماس با ما</a></div></div>`}
 
 async function loadMe(){try{const m=await api('me');S.me=m.user}catch(e){S.me=null}}
 async function loadStore(q=''){S.store=await api('store'+q);S.roles=S.store.roles||[];return S.store}
@@ -78,26 +81,28 @@ function cartDrawer(){closeModal();const o=document.createElement('div');o.class
   const items=S.cart.map(id=>S.store.products.find(p=>p.id===id)).filter(Boolean);
   o.innerHTML=`<aside class="drawer"><div class="row" style="justify-content:space-between"><h2 style="font-size:20px">سبد شما</h2><button class="ib" onclick="closeModal()">✕</button></div>
   <div style="flex:1;overflow:auto;margin:16px 0">${items.length?items.map(p=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--line)"><span style="font-size:26px">${esc(p.icon)}</span><div style="flex:1"><b style="font-size:14px">${esc(p.title)}</b><div class="free" style="font-size:13px">رایگان</div></div><button class="btn sm ghost" data-rm="${esc(p.id)}">حذف</button></div>`).join(''):'<div class="empty"><i>🛍</i>سبد خالی است.<br><a class="y" href="/c" onclick="closeModal()">دیدن کاتالوگ</a></div>'}</div>
-  ${items.length?`<div class="card" style="padding:16px"><div class="row" style="justify-content:space-between"><span class="mute">${fa(items.length)} محصول</span><span class="price" style="font-size:22px">رایگان</span></div><button class="btn y mt" id="co" style="width:100%">دریافت همه</button><p class="dim" style="font-size:12px;margin:8px 0 0;text-align:center">پرداختی در کار نیست؛ محصولات فوراً به کتابخانهٔ شما اضافه می‌شوند.</p></div>`:''}</aside>`;
+  ${items.length?`<div class="card" style="padding:16px"><div class="row" style="justify-content:space-between"><span class="mute">${fa(items.length)} محصول</span><span class="price" style="font-size:22px">${toman(cartTotal())}</span></div><button class="btn y mt" id="co" style="width:100%">${cartTotal()?'ادامه و پرداخت':'دریافت همه'}</button><p class="dim" style="font-size:12px;margin:8px 0 0;text-align:center">${cartTotal()?'پرداخت امن از درگاه زرین‌پال؛ بلافاصله پس از تأیید به کتابخانه اضافه می‌شود.':'پرداختی در کار نیست؛ محصولات فوراً به کتابخانهٔ شما اضافه می‌شوند.'}</p></div>`:''}</aside>`;
   o.addEventListener('click',e=>{if(e.target===o)closeModal();const r=e.target.closest('[data-rm]');if(r){S.cart=S.cart.filter(x=>x!==r.dataset.rm);saveCart();cartDrawer()}});
   document.body.append(o);$('#co',o)&&($('#co',o).onclick=()=>checkout(S.cart));
 }
 async function checkout(ids){
   if(!S.me)return authModal(()=>checkout(ids));
-  try{const r=await api('store/checkout',{body:{items:ids,ref:S.ref}});S.cart=S.cart.filter(x=>!r.items.includes(x));saveCart();closeModal();await loadStore();
-    modal(`<div style="text-align:center"><div style="font-size:54px">🎉</div><h2 style="font-size:22px">به کتابخانهٔ شما اضافه شد</h2><p class="mute">${fa(r.items.length)} محصول، رایگان. از کتابخانه باز یا دانلودشان کنید.</p><div class="row" style="justify-content:center;margin-top:14px"><a class="btn y" href="/me" onclick="closeModal()">رفتن به کتابخانه</a><button class="btn" onclick="closeModal()">ادامهٔ گشت‌وگذار</button></div></div>`);route()}
+  try{const r=await api('store/checkout',{body:{items:ids,ref:S.ref}});S.cart=S.cart.filter(x=>!r.items.includes(x));saveCart();
+    if(!r.paid){closeModal();const p=await api('pay/request',{body:{order:r.order}});location.href=p.url;return}
+    closeModal();await loadStore();
+    modal(`<div style="text-align:center"><div style="font-size:54px">🎉</div><h2 style="font-size:22px">به کتابخانهٔ شما اضافه شد</h2><p class="mute">${fa(r.items.length)} محصول. از کتابخانه باز یا دانلودشان کنید.</p><div class="row" style="justify-content:center;margin-top:14px"><a class="btn y" href="/me" onclick="closeModal()">رفتن به کتابخانه</a><button class="btn" onclick="closeModal()">ادامهٔ گشت‌وگذار</button></div></div>`);route()}
   catch(e){toast(e.message)}
 }
 function addCart(id){if(!S.cart.includes(id)){S.cart.push(id);saveCart();ev('cart_add',id)}toast('به سبد اضافه شد')}
 
 const main=()=>$('#main');
 function home(){
-  const st=S.store,live=st.products.filter(p=>p.status==='live'),tops=st.categories.filter(c=>!c.parent);
+  const st=S.store,live=st.products.filter(p=>p.status==='live'),tops=st.categories.filter(c=>!c.parent),lv=st.live||{};
   setMeta('رسا آموزش · گام‌به‌گام، تا رسیدن','رسا آموزش: درس و آزمون تعاملی، جزوهٔ گام‌به‌گام، مسیرهای یادگیری، برنامه‌ریز هوشمند و کارنامهٔ روایی برای دانش‌آموزان، خانواده‌ها و مدارس ایران. فعلاً همه‌چیز رایگان است.');
-  main().innerHTML=`<section class="hero"><div class="wrap grid"><div><div class="eyebrow">پلتفرم یادگیری گام‌به‌گام</div><h1 class="h1" style="margin-top:14px">گام‌به‌گام،<br><span class="y">تا رسیدن.</span></h1>
+  main().innerHTML=`<section class="hero"><div class="wrap grid"><div><div class="eyebrow"><span class="live-dot"></span>پلتفرم یادگیری گام‌به‌گام · زنده</div><h1 class="h1" style="margin-top:14px">گام‌به‌گام،<br><span class="y">تا رسیدن.</span></h1>
   <p class="lead">درس‌ها و آزمون‌های تعاملی، جزوه‌های گام‌به‌گام، برنامه‌ریز هوشمند و کارنامه‌هایی که می‌گویند فرزندتان چه بلد است و گام بعدی چیست.</p>
   <form class="search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
-  <div class="stats"><div><b>${num(live.length)}</b><span>محصول آماده</span></div><div><b>${num(live.reduce((s,p)=>s+(p.meta?.steps||0),0))}</b><span>گام تعاملی</span></div><div><b>۱۰۰٪</b><span>رایگان</span></div></div></div>
+  <div class="stats"><div><b>${num(live.length)}</b><span>محصول در کاتالوگ</span></div><div><b>${num(live.reduce((s,p)=>s+(p.meta?.steps||0),0))}</b><span>گام تعاملی</span></div><div><b>${num(lv.attempts||0)}</b><span>آزمونک امروز</span></div><div><b>${num(lv.families||0)}</b><span>خانوادهٔ فعال</span></div></div></div>
   <div class="stage" aria-hidden="true"><div class="dot"></div><div class="st" style="top:40%;width:34%;background:#FAFAFA"></div><div class="st" style="top:58%;width:52%;background:var(--y);animation-delay:.15s"></div><div class="st" style="top:76%;width:70%;background:#FAFAFA;animation-delay:.3s"></div>
   <div class="float" style="top:10%;inset-inline-end:8%">✓ بلد است: <b>جمع دورقمی</b></div><div class="float" style="top:26%;inset-inline-end:16%;animation-delay:1s">↻ در حال تمرین: <b>عدد گویا</b></div><div class="float" style="bottom:6%;inset-inline-end:6%;animation-delay:2s">← گام بعدی: <b>فصل ۲</b></div></div></div></section>
   <section class="sec" style="padding-top:20px"><div class="wrap"><div class="sech"><h2 class="h2">از کجا شروع کنیم؟</h2><a class="btn sm ghost" href="/c">همهٔ دسته‌ها ←</a></div>
@@ -110,14 +115,14 @@ function home(){
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="sech"><div><div class="eyebrow">ویترین</div><h2 class="h2">تازه و محبوب</h2></div><a class="btn sm ghost" href="/c">کاتالوگ کامل ←</a></div><div class="grid3">${st.products.slice(0,8).map(pcard).join('')}</div></div></section>
   <section class="sec"><div class="wrap"><div class="sech"><h2 class="h2">در سه گام</h2></div><div class="how">
   <div class="card"><b>۱</b><h3>پیش‌نمایش زنده</h3><p class="mute">پیش از دریافت، خود درس را همین‌جا امتحان کنید؛ نه فقط عکس و توضیح.</p></div>
-  <div class="card"><b>۲</b><h3>دریافت با یک لمس</h3><p class="mute">بدون پرداخت و فرم طولانی. محصول به کتابخانهٔ شما اضافه می‌شود و روی گوشی هم کار می‌کند.</p></div>
+  <div class="card"><b>۲</b><h3>دریافت با یک لمس</h3><p class="mute">رایگان‌ها فوری به کتابخانه می‌آیند؛ برای محتواهای ویژه پرداخت امن زرین‌پال. روی گوشی هم کار می‌کند.</p></div>
   <div class="card"><b>۳</b><h3>کارنامهٔ روایی</h3><p class="mute">بعد از هر آزمونک، کارنامه‌ای سه‌بخشی می‌گیرید: بلد است، در حال تمرین، گام بعدی.</p></div></div></div></section>
   <section class="sec"><div class="wrap card" style="padding:32px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center" id="rcs"><div><div class="eyebrow">کارنامهٔ خلاقانه</div><h2 class="h2" style="margin:10px 0">عدد کافی نیست؛ روایت لازم است.</h2><p class="mute">کارنامهٔ رسا به‌جای یک نمره، مسیر را نشان می‌دهد: چه پله‌هایی طی شده و پلهٔ بعدی کدام است. برای والد خلاصه دارد و قابل چاپ و ارسال است.</p><a class="btn y mt" href="/p/report-card-math8">دیدن نمونه</a></div>
   <div><div class="ladder">${[40,55,48,70,82,90].map((h,i)=>`<i class="${i>3?'on':''}" style="height:${h}%"><span>${fa('هفته '+(i+1))}</span></i>`).join('')}</div><div class="rc mt"><div class="a"><div class="k">✓ بلد است</div><div class="mute" style="font-size:13px">عددهای صحیح، محور عدد</div></div><div class="b"><div class="k">↻ در حال تمرین</div><div class="mute" style="font-size:13px">ضرب عددهای گویا</div></div><div class="c"><div class="k">← گام بعدی</div><div class="mute" style="font-size:13px">فصل ۲، عددهای اول</div></div></div></div></div></section>
   <section class="sec"><div class="wrap"><div class="sech"><h2 class="h2">برای همه</h2></div><div class="aud">
   ${[['🧒','دانش‌آموز','درس‌هایی که با انجام‌دادن یاد گرفته می‌شوند.'],['👨‍👩‍👧','والد','گزارش روشن، یادآوری در بله و تلگرام، جایزه.'],['🧑‍🏫','معلم و مدرسه','کلاس، تکلیف، گزارش مدیریتی.'],['✍️','سازنده','موتور ساخت جزوه و گزارش تعاملی؛ انتشار در بازار.']].map(a=>`<div class="card"><div style="font-size:30px">${a[0]}</div><h3>${a[1]}</h3><p class="mute" style="margin:6px 0 0;font-size:14px">${a[2]}</p></div>`).join('')}</div></div></section>
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="sech"><h2 class="h2">پرسش‌های پرتکرار</h2></div>
-  <div class="faq">${[['رسا آموزش چیست؟','پلتفرم یادگیری گام‌به‌گام فارسی است: درس و آزمون تعاملی، جزوه‌های گام‌به‌گام، مسیرهای یادگیری مرتب، برنامه‌ریز هوشمند و کارنامه‌ای روایی که به‌جای نمره، می‌گوید فرزندتان چه بلد است و گام بعدی چیست.'],['آیا واقعاً رایگان است؟','بله؛ همهٔ محصولات فعلاً رایگان و بدون پرداخت دریافت می‌شوند. برای خانواده‌ها، دانش‌آموزان و معلمان.'],['محتوا برای چه پایه‌هایی داریم؟','فعلاً کانون ما کلاس دوم ابتدایی و ریاضی هشتم است و به‌تدریج به همهٔ مقاطع گسترش می‌یابد؛ مسیرها و کاتالوگ همین‌جا به‌روز می‌شوند.'],['روی گوشی من کار می‌کند؟','بله؛ همه‌چیز موبایل‌محور و راست‌به‌چپ است و به‌صورت وب‌اپ نصب‌شدنی (PWA) روی گوشی و رایانه کار می‌کند.'],['دادهٔ کودک من کجا می‌رود؟','داده‌های کلاس دوم فقط برای همان خانواده و معلمش استفاده می‌شود، رمزگذاری می‌شود و هرگز فروخته یا برای آموزش مدل به کار نمی‌رود.'],['می‌خواهم سازنده باشم','در صفحهٔ «سازندگان» درخواست همکاری ثبت کنید؛ موتور ما پیش‌نمایش زنده، صفحهٔ محصول، کارنامهٔ روایی و آمار را برای شما می‌سازد.']].map(f=>`<details><summary>${esc(f[0])}</summary><p class="mute">${esc(f[1])}</p></details>`).join('')}</div></div></section>
+  <div class="faq">${[['رسا آموزش چیست؟','پلتفرم یادگیری گام‌به‌گام فارسی است: درس و آزمون تعاملی، جزوه‌های گام‌به‌گام، مسیرهای یادگیری مرتب، برنامه‌ریز هوشمند و کارنامه‌ای روایی که به‌جای نمره، می‌گوید فرزندتان چه بلد است و گام بعدی چیست.'],['آیا رایگان است؟','ابزارهای پایه — برنامه‌ریز، سامانهٔ کلاس دوم و پیش‌نمایش درس‌ها — رایگان‌اند. جزوه‌ها و درس‌های ویژه قیمت دارند و با پرداخت امن زرین‌پال دریافت می‌شوند؛ اشتراک خانواده هم در راه است.'],['محتوا برای چه پایه‌هایی داریم؟','فعلاً کانون ما کلاس دوم ابتدایی و ریاضی هشتم است و به‌تدریج به همهٔ مقاطع گسترش می‌یابد؛ مسیرها و کاتالوگ همین‌جا به‌روز می‌شوند.'],['روی گوشی من کار می‌کند؟','بله؛ همه‌چیز موبایل‌محور و راست‌به‌چپ است و به‌صورت وب‌اپ نصب‌شدنی (PWA) روی گوشی و رایانه کار می‌کند.'],['دادهٔ کودک من کجا می‌رود؟','داده‌های کلاس دوم فقط برای همان خانواده و معلمش استفاده می‌شود، رمزگذاری می‌شود و هرگز فروخته یا برای آموزش مدل به کار نمی‌رود.'],['می‌خواهم سازنده باشم','در صفحهٔ «سازندگان» درخواست همکاری ثبت کنید؛ موتور ما پیش‌نمایش زنده، صفحهٔ محصول، کارنامهٔ روایی و آمار را برای شما می‌سازد.']].map(f=>`<details><summary>${esc(f[0])}</summary><p class="mute">${esc(f[1])}</p></details>`).join('')}</div></div></section>
   <section class="sec" style="padding-top:0"><div class="wrap"><div class="cta"><div><h2 class="h2" style="font-size:clamp(24px,3.4vw,38px)">اولین گام را همین حالا بردارید</h2><p class="mute" style="margin:8px 0 0">ثبت‌نام رایگان است و در کمتر از یک دقیقه انجام می‌شود.</p></div><div class="row wrapr"><a class="btn y" href="/c">دیدن کاتالوگ</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/kids/">سامانهٔ کلاس دوم</a><a class="btn ghost" style="border-color:#fff4;color:#fff" href="/planner/">برنامه‌ریز هوشمند</a></div></div></div></section>`;
   $('#hs').onsubmit=e=>{e.preventDefault();const q=new FormData(e.target).get('q');ev('search',null);go('/c?q='+encodeURIComponent(q))};
   if(innerWidth<900)$('#rcs').style.gridTemplateColumns='1fr';
@@ -148,11 +153,11 @@ async function product(id){
   <div class="card mt"><div class="row" style="justify-content:space-between"><h2 style="font-size:20px">نظر خانواده‌ها</h2>${p.owned?'<button class="btn sm" id="rv">ثبت نظر</button>':''}</div>${d.reviews.length?d.reviews.map(r=>`<div style="padding:12px 0;border-bottom:1px solid var(--line)"><b>${esc(r.name)}</b> <span class="y">${'★'.repeat(r.stars)}</span><div class="mute">${esc(r.text)}</div></div>`).join(''):'<p class="dim">هنوز نظری ثبت نشده است.</p>'}</div></div>
   <aside class="buy card"><div class="row wrapr"><span class="tag" style="--c:${esc(c?.color||'#F4D438')}">${esc(c?.title||'')}</span><span class="tag" style="--c:var(--mute)">${KIND[p.kind]||''}</span>${p.grade?`<span class="tag" style="--c:var(--cy)">${esc(p.grade)}</span>`:''}</div>
   <h1 style="font-size:24px;margin:12px 0 6px">${esc(p.title)}</h1><p class="mute" style="margin:0">${esc(p.summary)}</p>
-  <div class="row mt"><span class="price free">رایگان</span>${p.meta?.minutes?`<span class="dim">· حدود ${fa(p.meta.minutes)} دقیقه</span>`:''}</div>
+  <div class="row mt"><span class="price ${p.price?'':'free'}">${p.price?num(p.price):'رایگان'}</span>${p.price?'<span class="dim">تومان</span>':''}${p.meta?.minutes?`<span class="dim">· حدود ${fa(p.meta.minutes)} دقیقه</span>`:''}</div>
   <ul>${p.features.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>
   ${p.status==='soon'?'<button class="btn" disabled style="width:100%">به‌زودی</button><button class="btn ghost mt" id="notify" style="width:100%">خبرم کن</button>'
     :p.owned?`<div class="row">${p.hasFile?`<a class="btn y" style="flex:1" href="/p/${esc(p.id)}/open" target="_blank">باز کردن</a><a class="btn" href="/p/${esc(p.id)}/download" download>دانلود</a>`:app?`<a class="btn y" style="flex:1" href="${esc(app)}">ورود به ${esc(KIND[p.kind])}</a>`:'<a class="btn y" style="flex:1" href="/me">کتابخانهٔ من</a>'}</div><p class="dim" style="font-size:12px;text-align:center;margin:8px 0 0">این محصول در کتابخانهٔ شماست.</p>`
-    :`<button class="btn y" id="get" style="width:100%">دریافت رایگان</button><button class="btn ghost mt" id="add" style="width:100%">افزودن به سبد</button>`}
+    :`<button class="btn y" id="get" style="width:100%">${p.price?'خرید و افزودن به کتابخانه':'دریافت رایگان'}</button><button class="btn ghost mt" id="add" style="width:100%">افزودن به سبد</button>${p.price?'<p class="dim" style="font-size:12px;text-align:center;margin:8px 0 0">پرداخت امن با زرین‌پال</p>':''}`}
   <div class="row mt"><button class="btn sm ghost" id="fav">${p.fav?'♥ ذخیره شده':'♡ ذخیره'}</button><span class="sp"></span><span class="dim" style="font-size:12px">${num(p.views)} بازدید · ${num(p.downloads)} دانلود</span></div>
   <div class="share"><a class="chip" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(url+'?utm_source=telegram')}&text=${encodeURIComponent(p.title)}">تلگرام</a><a class="chip" target="_blank" rel="noopener" href="https://ble.ir/share?url=${encodeURIComponent(url+'?utm_source=bale')}">بله</a><a class="chip" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(p.title+' '+url+'?utm_source=whatsapp')}">واتس‌اپ</a><button class="chip" id="cp">کپی لینک</button></div></aside></div>
   ${path?`<section class="wrap" style="padding-bottom:40px"><div class="card pathcard" style="--c:${esc(path.color||'#F4D438')}"><div class="row"><span style="font-size:24px">${esc(path.icon||'🧭')}</span><div style="flex:1"><div class="eyebrow">مسیر یادگیری</div><h2 style="font-size:19px;margin-top:4px">${esc(path.title)}</h2></div><span class="tag" style="--c:var(--mute)">گام ${fa(path.steps.findIndex(s=>s.id===p.id)+1)} از ${fa(path.steps.length)}</span></div>
@@ -185,6 +190,7 @@ function reportCard(el,{learner,title,attempts,topics}){
 
 // ---------- profile ----------
 async function profile(){
+  const pq=new URLSearchParams(location.search).get('pay');if(pq){toast(pq==='ok'?'پرداخت با موفقیت انجام شد؛ محصول‌ها در کتابخانه‌اند':'پرداخت انجام نشد یا لغو شد');history.replaceState(null,'',location.pathname+location.hash)}
   if(!S.me){main().innerHTML='<div class="empty"><i>🔐</i>برای دیدن کتابخانه وارد شوید.<br><button class="btn y mt" id="lg">ورود / ثبت‌نام</button></div>';$('#lg').onclick=()=>authModal();return}
   document.title='کتابخانهٔ من · رسا آموزش';let tab=location.hash.slice(1)||'lib';
   const [L,T,N,R]=await Promise.all([api('store/library'),api('tickets'),api('notices'),api('ref').catch(()=>({}))]);
@@ -200,7 +206,8 @@ async function profile(){
       pb.innerHTML=ks.length?ks.map(k=>`<div class="card mb" data-rc="${esc(k)}"></div>`).join(''):'<div class="empty"><i>📊</i>هنوز آزمونکی ثبت نشده است.<br>پس از حل آزمونک هر درس، کارنامهٔ روایی اینجا ساخته می‌شود.</div>';
       ks.forEach(k=>{const g=by[k],last=g.att.at(-1);reportCard($(`[data-rc="${k}"]`),{learner:last.learner,title:g.title,attempts:g.att,topics:last.topics.length?last.topics:[{name:'کل آزمون',score:last.score,total:last.total}]})})}
     if(tab==='fav'){const ps=S.store.products.filter(p=>L.favorites.includes(p.id));pb.innerHTML=ps.length?`<div class="grid3">${ps.map(pcard).join('')}</div>`:'<div class="empty"><i>♡</i>چیزی ذخیره نکرده‌اید.</div>'}
-    if(tab==='orders')pb.innerHTML=L.orders.length?`<div class="card"><table class="tbl"><thead><tr><th>شماره</th><th>تاریخ</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th></tr></thead><tbody>${L.orders.map(o=>`<tr><td>${fa(o.id)}</td><td>${jd(o.at)}</td><td>${fa(o.n)}</td><td class="free">رایگان</td><td><span class="tag" style="--c:var(--ok)">تکمیل شد</span></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty"><i>🧾</i>سفارشی ندارید.</div>';
+    if(tab==='orders'){const OST={paid:'تکمیل شد','paid-free':'رایگان',pending:'در انتظار پرداخت',failed:'ناموفق'};pb.innerHTML=L.orders.length?`<div class="card"><table class="tbl"><thead><tr><th>شماره</th><th>تاریخ</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody>${L.orders.map(o=>`<tr><td>${fa(o.id)}</td><td>${jd(o.at)}</td><td>${fa(o.n)}</td><td>${o.total?num(o.total)+' تومان':'رایگان'}</td><td><span class="tag" style="--c:${o.status==='paid'||o.status==='paid-free'?'var(--ok)':'var(--y)'}">${OST[o.status]||o.status}</span></td><td>${o.status==='pending'?`<button class="btn sm y" data-pay="${o.id}">پرداخت</button>`:''}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty"><i>🧾</i>سفارشی ندارید.</div>';
+      pb.onclick=async e=>{const b=e.target.closest('[data-pay]');if(!b)return;b.disabled=true;try{const r=await api('pay/request',{body:{order:+b.dataset.pay}});location.href=r.url}catch(er){toast(er.message);b.disabled=false}}}
     if(tab==='support'){pb.innerHTML=`<div class="grid3" style="grid-template-columns:1fr 1.4fr"><form class="card" id="nt"><h3>پیام تازه</h3><div class="f mt"><label>موضوع</label><select class="in" name="topic"><option value="help">راهنمایی</option><option value="bug">مشکل فنی</option><option value="content">پیشنهاد محتوا</option><option value="creator">همکاری سازنده</option><option value="school">مدرسه و معلم</option></select></div><div class="f"><label>عنوان</label><input class="in" name="subject" required></div><div class="f"><label>پیام</label><textarea class="in" name="body" required></textarea></div><button class="btn y" style="width:100%">ارسال</button></form>
       <div class="card"><h3>پیام‌های من</h3>${T.length?T.map(t=>`<div class="row click" style="padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer" data-tk="${t.id}"><b style="flex:1">${esc(t.subject)}</b><span class="tag st-${t.status}" style="--c:var(--c)">${STATUS[t.status]}</span><span class="dim" style="font-size:12px">${jdt(t.updated)}</span></div>`).join(''):'<p class="dim">پیامی ندارید.</p>'}</div></div>`;
       if(innerWidth<900)pb.firstChild.style.gridTemplateColumns='1fr';
@@ -223,8 +230,13 @@ function creators(){document.title='سازندگان محتوا · رسا آمو
   <section class="wrap" style="padding-bottom:60px"><div class="how"><div class="card"><b>۱</b><h3>بسازید</h3><p class="mute">با قالب گام‌به‌گام رسا یا ابزار خودتان. فقط یک فایل HTML خودکفا که بدون اینترنت هم کار کند.</p></div><div class="card"><b>۲</b><h3>نتیجه را اعلام کنید</h3><p class="mute">در پایان آزمونک یک خط کد اضافه کنید تا کارنامه ساخته شود:</p><pre class="out" dir="ltr" style="font-size:12px">parent.postMessage({type:'rasa:result',
  score:8,total:10,learner:'نام',
  topics:[{name:'محور عدد',score:4,total:5}]},'*')</pre></div><div class="card"><b>۳</b><h3>منتشر کنید</h3><p class="mute">ناظر کیفیت و سردبیر بازبینی می‌کنند و محصول با صفحهٔ اختصاصی منتشر می‌شود. آمار بازدید، دریافت و کارنامه‌ها را می‌بینید.</p></div></div>
-  <form class="card mt" id="cf" style="max-width:720px"><h2 style="font-size:22px">درخواست همکاری</h2><div class="f mt"><label>عنوان پیشنهادی محصول</label><input class="in" name="subject" required></div><div class="f"><label>توضیح، پایه و درس، و نمونه‌کار (لینک)</label><textarea class="in" name="body" required></textarea></div><button class="btn y">ارسال درخواست</button></form></section>`;
-  $('#cf').onsubmit=async e=>{e.preventDefault();if(!S.me)return authModal(()=>$('#cf').requestSubmit());try{await api('tickets',{body:{...Object.fromEntries(new FormData(e.target)),topic:'creator'}});toast('درخواست شما ثبت شد؛ از پشتیبانی پیگیری کنید');e.target.reset()}catch(er){toast(er.message)}}}
+  <form class="card mt" id="cf" style="max-width:720px"><h2 style="font-size:22px">درخواست همکاری و ارسال اثر</h2><div class="f mt"><label>عنوان پیشنهادی محصول</label><input class="in" name="subject" required></div><div class="f"><label>توضیح، پایه و درس، و نمونه‌کار (لینک)</label><textarea class="in" name="body" required></textarea></div>
+  <div class="f"><label>فایل اثر (HTML خودکفا، PDF یا ZIP — تا ۴۰ مگابایت)</label><input class="in" type="file" id="cff" accept=".html,.pdf,.zip,text/html,application/pdf,application/zip" style="padding:10px"></div>
+  <div class="err" id="cfe"></div><button class="btn y">ارسال درخواست</button><p class="dim" style="font-size:12px;margin:10px 0 0">فایل بلافاصله روی سرور امن ذخیره و برای تیم بازبینی می‌رود؛ بدون فایل هم می‌توانید درخواست دهید.</p></form></section>`;
+  $('#cf').onsubmit=async e=>{e.preventDefault();if(!S.me)return authModal(()=>$('#cf').requestSubmit());const f=$('#cff').files[0];
+    try{const r=await api('tickets',{body:{...Object.fromEntries(new FormData(e.target)),topic:'creator'}});
+      if(f){const up=await fetch(`/api/tickets/${r.id}/file`,{method:'PUT',headers:{'content-type':f.type||'application/octet-stream','x-file-name':encodeURIComponent(f.name)},body:f});if(!up.ok)throw new Error('ارسال فایل ناموفق بود؛ درخواست بدون فایل ثبت شد')}
+      toast('درخواست و فایل شما ثبت شد؛ از پشتیبانی پیگیری کنید');e.target.reset()}catch(er){toast(er.message)}}}
 
 // results posted by interactive lessons (open in a new tab or inside the preview)
 addEventListener('message',async e=>{const d=e.data;if(!d||d.type!=='rasa:result'||!S.me)return;const m=location.pathname.match(/^\/p\/([\w-]+)/);if(!m)return;
@@ -335,6 +347,26 @@ async function customerDrawer(id){const d=await api('admin/customers/'+id);close
   $('#rls',o)&&($('#rls',o).onclick=async()=>{await api(`admin/customers/${id}/roles`,{body:{roles:$$('#rl input:checked',o).map(x=>x.value)}});toast('نقش‌ها ذخیره شد')});
 }
 
+// ---------- legal / trust pages ----------
+const LEGAL={
+about:{t:'دربارهٔ رسا آموزش',d:'رسا آموزش پلتفرم یادگیری گام‌به‌گام فارسی است؛ درس و آزمون تعاملی، جزوه‌های گام‌به‌گام، مسیرهای یادگیری، برنامه‌ریز هوشمند و کارنامه‌ای روایی که به‌جای نمره می‌گوید فرزندتان چه بلد است و گام بعدی چیست.',s:[['ما چه می‌کنیم','محتوای آموزشی را به گام‌های کوچک، دیدنی و قابل‌لمس می‌شکنیم تا کودک با انجام‌دادن یاد بگیرد، نه با خواندنِ طولانی.'],['چرا','باور داریم هر دانش‌آموز ایرانی حق دارد هر روز یک گام روشن بردارد و خانواده‌اش آن را ببیند.']]},
+terms:{t:'قوانین و مقررات',d:'با استفاده از رسا آموزش این قوانین را می‌پذیرید.',s:[['کالاها','محصولات دیجیتال (درس، جزوه، گزارش) پس از پرداخت یا دریافت رایگان، برای استفادهٔ شخصی و خانواده مجاز است؛ کپی و انتشار تجاری بدون اجازه ممنوع.'],['حساب کاربری','اطلاعات ورود را محرمانه نگه دارید؛ مسئولیت فعالیت‌های حساب با شماست.'],['محتوای کاربر','سازندگان مالک محتوای خود هستند و رسا آموزش حق بازبینی و حذف محتوای نامناسب را دارد.'],['تغییرات','قوانین ممکن است به‌روز شود؛ ادامهٔ استفاده به معنای پذیرش نسخهٔ جدید است.']]},
+privacy:{t:'حریم خصوصی',d:'دادهٔ کودک مقدس است؛ این سیاست می‌گوید چه جمع می‌کنیم و چه نمی‌کنیم.',s:[['چه جمع می‌کنیم','نام، شمارهٔ موبایل یا ایمیل، نام فرزند و پیشرفت آموزشی (در صورت استفاده از سامانهٔ کلاس دوم)، و رویدادهای استفاده برای بهبود سرویس.'],['چه جمع نمی‌کنیم','دادهٔ کودک هرگز فروخته نمی‌شود و برای آموزش مدل هوش مصنوعی استفاده نمی‌گردد. تبلیغ شخص‌ثالث در محتوای کودک نداریم.'],['ذخیره و امنیت','داده‌ها روی سرورهای داخل ایران با رمزنگاری و دسترسی محدود نگه‌داری می‌شوند؛ بکاپ منظم گرفته می‌شود.'],['حقوق شما','در هر زمان می‌توانید داده‌ها را ببینید، اصلاح یا حذف کنید؛ برای این کار از بخش پشتیبانی پیام دهید.'],['کوکی‌ها','فقط برای نشست ورود و تنظیمات تم استفاده می‌شود.']]},
+refund:{t:'رویهٔ بازگشت وجه',d:'کالای دیجیتال؛ بازگشت وجه تا زمانی که محتوا باز نشده باشد.',s:[['شرایط بازگشت','اگر محصول را باز یا دانلود نکرده باشید، تا ۷ روز از خرید می‌توانید وجه را پس بگیرید.'],['چطور','از بخش «سفارش‌ها» در پروفایل یا پشتیبانی درخواست دهید؛ وجه به همان درگاه پرداخت برمی‌گردد.'],['استثنا','پس از باز کردن محتوا، بازگشت وجه فقط در صورت defect فنی اثبات‌شده و در صورت حل‌نشدن مشکل با پشتیبانی انجام می‌شود.']]},
+contact:{t:'تماس با ما',d:'پاسخ‌گویی در روزهای کاری، حداکثر تا ۲۴ ساعت.',s:[['پشتیبانی','از داخل سایت: پروفایل ← پشتیبانی؛ یا info@<domain>'],['همکاری سازندگان','در صفحهٔ «سازندگان» درخواست خود را با فایل ارسال کنید.'],['مدارس و معلمان','برای مجوز گروهی و نسخهٔ مدرسه با ما در تماس باشید.']]}
+};
+function legal(k){const L=LEGAL[k];if(!L)return;setMeta(L.t+' · رسا آموزش',L.d);
+  main().innerHTML=`<section class="wrap" style="padding:40px 20px 80px;max-width:760px"><div class="eyebrow">رسا آموزش</div><h1 class="h2" style="margin:8px 0 6px">${esc(L.t)}</h1><p class="mute">${esc(L.d)}</p>
+  <div class="mt">${L.s.map(x=>`<div class="card mb" style="padding:20px"><h3 style="font-size:17px">${esc(x[0])}</h3><p class="mute" style="margin:8px 0 0">${esc(x[1])}</p></div>`).join('')}</div>
+  <div class="row mt"><a class="btn y" href="/">بازگشت به صفحهٔ اصلی</a></div></section>`}
+
+function pricing(){const plans=S.store?.pricing?.plans||[];setMeta('تعرفه‌ها · رسا آموزش','پلن‌های رایگان، خانواده، مدرسه و سازنده در رسا آموزش.');
+  main().innerHTML=`<section class="wrap" style="padding:40px 20px 80px"><div class="eyebrow">تعرفه</div><h1 class="h2" style="margin:8px 0 6px">ساده و شفاف</h1><p class="mute">ابزارهای پایه رایگان‌اند؛ برای محتوا و خدمات ویژه پلن دارید.</p>
+  <div class="grid3 mt" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">${plans.map(pl=>`<div class="card" style="display:flex;flex-direction:column;${pl.id==='family'?'border-color:color-mix(in srgb,var(--y) 55%,transparent)':''}"><h3 style="font-size:19px">${esc(pl.title)}</h3><div class="mt"><span style="font-size:30px;font-weight:900">${pl.price?num(pl.price):'رایگان'}</span> <span class="dim">${esc(pl.period)}</span></div>
+  <ul style="list-style:none;padding:0;margin:16px 0;flex:1">${pl.features.map(f=>`<li style="padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px">✓ ${esc(f)}</li>`).join('')}</ul>
+  <a class="btn ${pl.id==='family'?'y':'ghost'}" href="/c" style="width:100%">${pl.id.startsWith('family')?'شروع خانواده':'مشاهده'}</a></div>`).join('')}</div>
+  <p class="dim mt" style="font-size:12.5px">قیمت‌ها به تومان و پیش‌نویس‌اند؛ پلن خانواده به‌زودی فعال می‌شود. برای مدرسه و سازندگان با ما در تماس باشید.</p></section>`}
+
 // ---------- router ----------
 async function route(){
   const p=location.pathname;closeModal();nav();
@@ -344,6 +376,8 @@ async function route(){
   else if(p==='/me')await profile();
   else if(p==='/creators')creators();
   else if(p.startsWith('/admin'))await admin(p.split('/')[2]);
+  else if(p==='/pricing')pricing();
+  else if(LEGAL[p.slice(1)])legal(p.slice(1));
   else main().innerHTML='<div class="empty"><i>🧭</i>این صفحه پیدا نشد.<br><a class="y" href="/">صفحهٔ اصلی</a></div>';
   if(p==='/'&&S.ref)ev('ref_visit',null);
 }

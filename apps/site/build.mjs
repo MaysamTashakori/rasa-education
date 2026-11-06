@@ -15,6 +15,7 @@ w(out + 'index.html', html);
 w(out + 'icon.svg', r(root + 'brand/logo.svg', 'utf8'));
 copyFileSync(root + 'brand/og.svg', out + 'og.svg');
 copyFileSync(root + 'brand/brandbook.html', out + 'brand.html');
+for (const f of ['logo-options.html', 'logo-a.svg', 'logo-b.svg', 'logo-c.svg']) copyFileSync(root + 'brand/' + f, out + f);
 w(out + 'manifest.webmanifest', JSON.stringify({name: 'رسا آموزش', short_name: 'رسا آموزش', lang: 'fa', dir: 'rtl', start_url: '/', scope: '/', display: 'standalone', background_color: '#050505', theme_color: '#050505', icons: [{src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable'}]}));
 const ver = Date.now().toString(36);
 w(out + 'sw.js', `const C='rasa-site-${ver}';
