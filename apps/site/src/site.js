@@ -120,7 +120,9 @@ function head(n,en,title,line){return `<div class="hl-head"><b class="st-index" 
 function home(){
   const st=S.store,live=st.products.filter(p=>p.status==='live'),lv=st.live||{},cats=st.categories.filter(c=>!c.parent);
   setMeta('رسا آموزش · هر روز یک گام روشن','رسا آموزش: پلتفرم یادگیری گام‌به‌گام — درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی برای دانش‌آموزان، والدین و معلمان.');
-  const roles=[
+  const feat=live.find(p=>p.kind==='lesson')||live[0],rest=live.filter(p=>p!==feat).slice(0,4);
+  const shCard=(p,i)=>`<article class="sh-it st-reveal" style="--i:${i}" data-go="/p/${esc(p.id)}">${cover(p)}<div class="sh-bd"><div class="row wrapr"><span class="tag" style="--c:var(--mute)">${KIND[p.kind]||''}</span>${i===0?'<span class="tag" style="--c:var(--y)">پرفروش</span>':''}</div><b>${esc(p.title)}</b><p>${esc(p.summary||'')}</p><div class="sh-ft"><span class="sh-price">${p.price?`${num(p.price)}<i>تومان</i>`:'<em>رایگان</em>'}</span><button class="sh-add" data-buy="${esc(p.id)}">+ سبد</button></div></div></article>`;
+const roles=[
    ['دانش‌آموز','📚',[['درس را گام‌به‌گام بخوان','هر مفهوم به گام‌های کوچک با بازخورد فوری','/c?kind=lesson'],['آزمونک بزن','بانک سؤال واقعی بر اساس مقطع و درس','/quiz'],['کارنامه‌ات را ببین','بلد است، در حال تمرین، گام بعدی','/me#report'],['برنامهٔ هفته‌ات را بچین','برنامه‌ریز با مرور فاصله‌دار','/planner/']],'/c'],
    ['والد','👪',[['کارنامهٔ روایی بگیر','روایت پیشرفت فرزند، نه فقط نمره','/me#report'],['به ربات وصل شو','یادآوری و گزارش در بله یا تلگرام','/me#notice'],['پیشرفت را دنبال کن','آزمونک‌ها و تلاش‌ها در یک نگاه','/me'],['به مدیر مدرسه وصل شو','گزارش سازمانی برای معلم و مدرسه','/services']],'/me'],
    ['معلم و سازنده','🛠️',[['جزوه بساز','موتور جزوهٔ تعاملی برای سازنده‌ها','/creators'],['در بازار بفروش','پیش‌نمایش زنده و صفحهٔ محصول','/c'],['آمار ببین','بازدید، فروش و نظرها در پنل','/admin'],['با مشتری در تماس باش','تیکت و پشتیبانی داخلی','/support']],'/creators'],
@@ -141,40 +143,16 @@ function home(){
       <div class="hl-roles"><span class="hl-rl">من…</span>${[['📚 دانش‌آموز','/c'],['👪 والد','/me'],['🛠️ سازنده','/creators'],['🏫 مدرسه','/pricing']].map(r=>`<a class="st-tag" href="${r[1]}">${r[0]}</a>`).join('')}</div>
       <div class="hl-live"><span class="st-live"></span><span><b data-cu="${live.length}">۰</b> محصول زنده · <b data-cu="${lv.attempts||0}">۰</b> آزمونک امروز · <b data-cu="${lv.families||0}">۰</b> خانواده</span></div>
     </div>
-    <div class="scr st-reveal" id="scr">
-      <div class="scr-chrome">
-        <span class="scr-dot r"></span><span class="scr-dot y"></span><span class="scr-dot g"></span>
-        <span class="scr-url" dir="ltr">rasa-prompt.ir/app</span>
-      </div>
-      <div class="scr-tabs" role="tablist">
-        ${[['lesson','📖','درس تعاملی'],['cal','🗓️','تقویم'],['rc','📊','کارنامه'],['pl','🧭','برنامه‌ریز']].map((d,i)=>`<button class="scr-tab ${i===0?'on':''}" data-app="${d[0]}" role="tab"><i>${d[1]}</i>${d[2]}</button>`).join('')}
-      </div>
-      <div class="scr-body">
-        <div class="scr-view on" data-v="lesson">
-          <div class="br-lesson" id="lesson">
-            <div class="br-top"><span class="st-eyebrow" dir="ltr">TRY IT · درس زنده</span><span class="br-stars" id="br-stars">☆☆☆</span></div>
-            <div class="br-stage" id="br-stage"></div>
-            <div class="br-bar"><i id="br-p"></i></div>
-          </div>
-          <div class="br-bot">
-            <div class="br-bh"><i>🧭</i> رسا آموزش · بله</div>
-            <div class="br-msg"><b>کارنامهٔ امروز امیر</b><br>ریاضی ۸/۱۰ · علوم ۷/۱۰<br><span class="dim">گام بعدی: کسرها — ۱۲ دقیقه مرور در برنامه‌ست.</span></div>
-            <div class="br-msg me">ممنون! 🌟</div>
-          </div>
-        </div>
-        <div class="scr-view" data-v="cal">
-          <div class="ph-cal" id="ph-cal"></div>
-          <div class="ph-calnote"><i>🟡</i> امروز: ریاضی ۴۰د · <i class="ph-cd study" style="display:inline-grid;place-items:center;width:14px;height:14px;border-radius:4px;font-size:8px"></i> روزهای مطالعه</div>
-        </div>
-        <div class="scr-view" data-v="rc">
-          <div class="ph-rc" id="ph-rc"></div>
-        </div>
-        <div class="scr-view" data-v="pl">
-          <div class="ph-planner">
-            <div class="br-rh"><span class="st-eyebrow" dir="ltr">RASA PLANNER</span><span class="dim" style="font-size:10px">برنامه‌ریز واقعی</span></div>
-            <iframe id="ph-pl" src="about:blank" title="برنامه‌ریز رسا آموزش" loading="lazy" tabindex="-1"></iframe>
-          </div>
-        </div>
+    <div class="shelf st-reveal">
+      <div class="sh-head"><span class="st-eyebrow" dir="ltr">LIVE SHELF · ویترین زنده</span><div class="row" style="justify-content:space-between;align-items:end;flex-wrap:wrap"><b>همین حالا در فروشگاه</b><a class="sh-all" href="/c">همهٔ ${fa(live.length)} محصول ←</a></div></div>
+      <div class="sh-grid">
+        <article class="sh-feat st-reveal" style="--i:0" data-go="/p/${esc(feat.id)}">
+          ${cover(feat,true)}
+          <div class="sh-feat-bd"><span class="tag" style="--c:var(--y)">پیشنهاد رسا</span><h3>${esc(feat.title)}</h3><p>${esc(feat.summary||'')}</p>
+          <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:wrap"><span class="sh-price lg">${feat.price?`${num(feat.price)}<i>تومان</i>`:'<em>رایگان</em>'}</span>
+          <span class="row"><button class="btn y sm" data-buy="${esc(feat.id)}">+ افزودن به سبد</button><button class="btn ghost sm" data-pv="${esc(feat.id)}">پیش‌نمایش</button></span></div></div>
+        </article>
+        ${rest.map((p,i)=>shCard(p,i+1)).join('')}
       </div>
     </div>
   </div></section>
@@ -328,7 +306,7 @@ const _jNow=_d2j(_g2d(_now.getFullYear(),_now.getMonth()+1,_now.getDate()));
 const _jFirst=_j2d(_jNow.jy,_jNow.jm,1),_jWdi=(_jFirst+2)%7;
 const _studyDays=new Set([3,7,12,15,19,22,26,29]); // sample study days this month
 function bindPhone(){
- const ph=$('#scr');
+ $$('[data-buy]').forEach(b=>b.onclick=e=>{e.stopPropagation();addCart(b.dataset.buy)});$$('[data-pv]').forEach(b=>b.onclick=e=>{e.stopPropagation();go('/p/'+b.dataset.pv)});
  $$('.scr-tab').forEach(b=>b.onclick=()=>{const v=b.dataset.app;$$('.scr-tab').forEach(x=>x.classList.toggle('on',x===b));$$('.scr-view').forEach(x=>x.classList.toggle('on',x.dataset.v===v));if(v==='pl'&&!$('#ph-pl').src.includes('planner'))$('#ph-pl').src='/planner/'});
  if(ph&&matchMedia('(pointer:fine)').matches){ph.addEventListener('pointermove',e=>{const r=ph.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;ph.style.transform=`perspective(900px) rotateY(${x*7}deg) rotateX(${-y*7}deg)`});ph.addEventListener('pointerleave',()=>ph.style.transform='')}
  const cal=$('#ph-cal');if(cal){const cells=[];for(let i=0;i<_jWdi;i++)cells.push('<i class="ph-cd off"></i>');for(let d=1;d<=_jLen(_jNow.jy,_jNow.jm);d++){const iso=_d2g(_j2d(_jNow.jy,_jNow.jm,d));const g=_d2g(iso);const isToday=d===_jNow.jd;cells.push(`<i class="ph-cd ${isToday?'today':''} ${_studyDays.has(d)?'study':''}">${fa(d)}</i>`)}
