@@ -860,6 +860,9 @@ a.st-tag:hover{color:var(--ink);border-color:var(--line2)}
 .sh-add:hover{background:var(--y);color:#111;border-color:var(--y)}
 @media(max-width:900px){.shelf{max-width:none}.sh-grid{grid-template-columns:1fr 1fr}.sh-feat{grid-column:1/-1;grid-row:auto;flex-direction:row}.sh-feat .cover{width:42%;flex:none}.sh-feat-bd{flex:1}}
 @media(max-width:560px){.sh-grid{grid-template-columns:1fr}.sh-feat{flex-direction:column}.sh-feat .cover{width:100%;height:130px}}
+.hl-trust{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}
+.hl-trust span{font-size:11.5px;color:var(--mute);display:flex;align-items:center;gap:5px}
+.hl-num{font-size:19px;font-weight:900;color:var(--y);font-variant-numeric:tabular-nums}
 </style></head><body><header class="nav" id="nav"></header><main id="main"></main><footer class="foot" id="foot"></footer><script>'use strict';
 // رسا آموزش — storefront + profile + command center (vanilla SPA, history routing)
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -999,11 +1002,12 @@ const roles=[
       <p class="st-eyebrow" dir="ltr">LEARNING × FAMILY</p>
       <h1 class="hl-h1">هر روز یک گام،<br><span class="st-grad">خانواده می‌بیند.</span></h1>
       <svg class="st-steps" viewBox="0 0 480 64" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="var(--line2)" stroke-width="1.5"><path d="M470 58 H428 V44 H386 V30 H344 V16 H302"/><path d="M470 52 H434 V40 H398 V28 H362 V18" opacity=".5"/></g><path id="stPath" d="M470 58 H428 V44 H386 V30 H344 V16 H302" fill="none" stroke="var(--y)" stroke-width="2.5" stroke-dasharray="4 6"/><circle r="6" fill="var(--y)"><animateMotion dur="7s" repeatCount="indefinite" rotate="0"><mpath href="#stPath" xlink:href="#stPath"/></animateMotion></circle><path d="M302 8 l4.5 9 10 .8 -7.4 6.8 2.1 9.8 -9.2-5.4 -9.2 5.4 2.1-9.8 -7.4-6.8 10-.8z" fill="var(--y)"><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.8;1" dur="7s" repeatCount="indefinite"/></path></svg>
-      <p class="hl-sub">رسا آموزش پلتفرم یادگیری گام‌به‌گام است: درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — برای دانش‌آموزان، والدین و معلمان.</p>
+      <p class="hl-sub">درس و جزوهٔ تعاملی، آزمون آنلاین، کارنامهٔ هوشمند و برنامه‌ریز درسی — برای دانش‌آموز، والد و معلم.</p>
       <form class="search hl-search" id="hs"><input name="q" placeholder="جست‌وجو: ریاضی هشتم، کلاس دوم، کارنامه…" aria-label="جست‌وجو"><button class="btn y">جست‌وجو</button></form>
       <div class="hl-chips">${[['درس تعاملی','/c?kind=lesson'],['آزمون آنلاین','/quiz'],['کارنامه','/me#report'],['برنامه‌ریز','/planner/']].map(c=>`<a class="st-tag" href="${c[1]}">${c[0]}</a>`).join('')}</div>
       <div class="hl-roles"><span class="hl-rl">من…</span>${[['📚 دانش‌آموز','/c'],['👪 والد','/me'],['🛠️ سازنده','/creators'],['🏫 مدرسه','/pricing']].map(r=>`<a class="st-tag" href="${r[1]}">${r[0]}</a>`).join('')}</div>
-      <div class="hl-live"><span class="st-live"></span><span><b data-cu="${live.length}">۰</b> محصول زنده · <b data-cu="${lv.attempts||0}">۰</b> آزمونک امروز · <b data-cu="${lv.families||0}">۰</b> خانواده</span></div>
+      <div class="hl-trust"><span>🔒 پرداخت امن زرین‌پال</span><span>👁 پیش‌نمایش رایگان</span><span>↩ بازگشت وجه</span></div>
+      <div class="hl-live"><span class="st-live"></span><span><b class="hl-num" data-cu="${live.length}">۰</b> محصول · <b class="hl-num" data-cu="${lv.attempts||0}">۰</b> آزمونک امروز · <b class="hl-num" data-cu="${lv.families||0}">۰</b> خانواده</span></div>
     </div>
     <div class="shelf st-reveal">
       <div class="sh-head"><span class="st-eyebrow" dir="ltr">LIVE SHELF · ویترین زنده</span><div class="row" style="justify-content:space-between;align-items:end;flex-wrap:wrap"><b>همین حالا در فروشگاه</b><a class="sh-all" href="/c">همهٔ ${fa(live.length)} محصول ←</a></div></div>
